@@ -64,6 +64,12 @@ export default {
 
 			this.currency = selected;
 			if (store) CurrencyStore.set(selected.value);
+			
+			this.$2watch("$refs.button").then(button => {
+				button.setValue(selected);
+			}).catch(e => { 
+				console.error(e);
+			});
 		}
 	},
 

@@ -1,5 +1,6 @@
 <template>
 	<v-button
+		ref="button"
 		class="currency-switcher"
 		vType="light"
 		:vSize="vSize"
