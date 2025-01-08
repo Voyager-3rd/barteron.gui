@@ -46,7 +46,6 @@ export default {
 			if (this.address?.length) {
 				/* Get my offers list */
 				const myOffers = await this.sdk.getBrtOffers(this.address)
-					.then(offers => offers.filter(offer => offer.active))
 					.catch(e => console.error(e));
 	
 				/* Get potential exchange offers */

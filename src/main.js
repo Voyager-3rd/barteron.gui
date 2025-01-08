@@ -288,9 +288,6 @@ Vue.prototype.shared = Vue.observable({
 			return this.sdk.getBrtOffersFeed({
 				location,
 				pageSize
-			}).then(offers => {
-				// TODO: remove the filter below (filters should only be on the backend)
-				return offers.filter(offer => offer.active);
 			}).catch(e => { 
 				console.error(e);
 			}).finally(() => {
