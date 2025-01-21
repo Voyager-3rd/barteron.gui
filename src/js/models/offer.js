@@ -15,7 +15,7 @@ class Offer {
 	constructor(data) {
 		/* Extract JSON values and format object */
 		const
-			{ t, a, c, p } = JSON.parse(data?.p?.s4 || '{"t":"","a":[],"c":"new","p":"publish"}'),
+			{ t, a, c, p } = JSON.parse(data?.p?.s4 || '{"t":"","a":[],"c":"new","p":"published"}'),
 			images = JSON.parse(data?.p?.s5 || "[]");
 		
 		/* Iterable properties */
@@ -32,7 +32,10 @@ class Offer {
 		this.images = data?.images || images;
 		this.geohash = data?.geohash || data?.p?.s6 || "";
 		this.price = (data?.price || data?.p?.i1 / 100 || 0);
-		this.published = (data?.published ?? p ?? "published"); // published, withdrawed, removed
+
+		// data?.p?.s4.p - DEPRECATED! The field will be deleted after one year (standard period of offer activity).
+		// Use data?.s3 instead.
+		this.published = (data?.published || data?.s3 || p || "published"); // published, withdrawed, removed
 
 		const
 			isMs = (timestamp) => {
