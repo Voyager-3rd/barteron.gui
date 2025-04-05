@@ -25,14 +25,13 @@
 							vType="hit"
 							@click="dialogAction"
 						>
-							<span>{{ $t('buttonLabels.cancel') }}</span>
+							<span>{{ $t(`buttonLabels.${actionButtonI18nKeys.isSelected}`) }}</span>
 						</v-button>
 						<v-button
 							v-else
-							vType="hit"
 							@click="dialogAction"
 						>
-							<span>{{ $t('buttonLabels.select') }}</span>
+							<span>{{ $t(`buttonLabels.${actionButtonI18nKeys.regular}`) }}</span>
 						</v-button>
 					</template>
 					<v-button

@@ -23,6 +23,13 @@ export default {
 			type: String,
 			required: true
 		},
+		actionButtonI18nKeys: {
+			type: Object,
+			default: () => ({
+				regular: "select",
+				isSelected: "cancel",
+			})
+		},
 	},
 
 	data() {

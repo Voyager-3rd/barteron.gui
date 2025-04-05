@@ -53,29 +53,6 @@
 					</template>
 				</ul>
 			</div>
-
-
-			<div class="row">
-				<div class="buttons-holder full-width">
-					<v-button
-						v-if="item.additionalInfo"
-						vType="bulma-stroke"
-						@click="showItem"
-					>{{ $t('buttonLabels.show') }}</v-button>
-					<template v-if="mode !== 'readonly'">
-						<v-button
-							v-if="isSelected"
-							vType="hit-stroke"
-							@click="unselectItem"
-						>{{ $t('buttonLabels.cancel') }}</v-button>
-						<v-button
-							v-else
-							vType="hit"
-							@click="selectItem"
-						>{{ $t('buttonLabels.select') }}</v-button>
-					</template>
-				</div>
-			</div>
 		</div>
 
 		<!-- Regular pickup point -->
@@ -151,11 +128,10 @@
 				>{{ item.caption }}</div>
 
 				<div 
-					v-if="item.delivery?.pickupPoint?.address"
 					class="row address" 
 					:title="item.delivery?.pickupPoint?.address"
 					@click="showItem"
-				>{{ item.delivery?.pickupPoint?.address }}</div>
+				>{{ item.delivery?.pickupPoint?.address || $t('deliveryLabels.address_not_specified') }}</div>
 
 				<div class="row info" v-if="item.time || item.geohash">
 					<slot name="info" v-if="$slots.info && !(hasRelay || isRemoved)"></slot>
@@ -185,30 +161,28 @@
 				<div class="row offer" v-if="$slots.offer">
 					<slot name="offer"></slot>
 				</div>
-
-				<div class="row">
-					<div class="buttons-holder full-width">
-						<v-button
-							vType="bulma-stroke"
-							@click="showItem"
-						>{{ $t('buttonLabels.show') }}</v-button>
-						<template v-if="mode !== 'readonly'">
-							<v-button
-								v-if="isSelected"
-								vType="hit-stroke"
-								@click="unselectItem"
-							>{{ $t('buttonLabels.cancel') }}</v-button>
-							<v-button
-								v-else
-								vType="hit"
-								@click="selectItem"
-							>{{ $t('buttonLabels.select') }}</v-button>
-						</template>
-					</div>
-				</div>
-
 			</template>
 		</div>
+
+		<!-- <div class="row"> -->
+			<div class="buttons-holder full-width action-buttons">
+				<v-button
+					vType="bulma-stroke"
+					@click="showItem"
+				>{{ $t('buttonLabels.show') }}</v-button>
+				<template v-if="mode !== 'readonly'">
+					<v-button
+						v-if="isSelected"
+						vType="hit-stroke"
+						@click="unselectItem"
+					>{{ $t('buttonLabels.cancel') }}</v-button>
+					<v-button
+						v-else
+						@click="selectItem"
+					>{{ $t('buttonLabels.select') }}</v-button>
+				</template>
+			</div>
+		<!-- </div> -->
 
 	</div>
 </template>

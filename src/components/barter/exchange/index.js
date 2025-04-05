@@ -17,6 +17,7 @@ export default {
 			selected: null,
 			items: [],
 			isLoading: false,
+			purchaseState: "startPurchase",
 			// groupExchange: []
 		}
 	},
@@ -82,12 +83,7 @@ export default {
 					}
 				} else {
 					needCreateRoom = false;
-					const section = this.$t("deliveryLabels.label");
-					this.dialog?.instance
-						.view("info", this.$t("dialogLabels.need_select_delivery_option", { section }))
-						.then(() => {
-							this.scrollToElement("#pickup-point-list", { block: "center" });
-						});
+					this.purchaseState = "goToPickupPointList";
 				}
 			}
 			
@@ -134,11 +130,18 @@ export default {
 		},
 
 		/**
-		 * Contact seller
+		 * Start purchase
 		 */
-		contactSeller() {
+		startPurchase() {
 			this.createRoom(this.item, {isPurchase: true});
-		}
+		},
+
+		/**
+		 * Go to pickup point list
+		 */
+		goToPickupPointList() {
+			this.scrollToElement("#pickup-point-list", { block: "center" });
+		},
 	},
 
 	async mounted() {
