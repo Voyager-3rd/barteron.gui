@@ -3,8 +3,14 @@ export default {
 
 	computed: {
 		mainComponent() {
-			return this.$components.content?.$refs.barterItem;
+			return this.isLoaded ? this.$components.content?.$refs.barterItem : null;
 		},
+	},
+
+	data() {
+		return {
+			isLoaded: false,
+		}
 	},
 
 	methods: {
@@ -36,4 +42,10 @@ export default {
 			this.mainComponent?.buyAtSelectedPickupPoint?.();
 		},
 	},
+
+	mounted() {
+		this.$2watch("$components.content?.$refs.barterItem").then(() => {
+			this.isLoaded = true;
+		});
+	}
 }

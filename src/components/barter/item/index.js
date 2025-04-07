@@ -540,22 +540,14 @@ export default {
 		},
 
 		buyAtPickupPoint(offer, options) {
-			// console.log(offer, options);
+			if (this.selectedOfferId !== offer.hash) {
+				this.selectedOfferId = offer.hash;
+			};
 			this.buyAtSelectedPickupPoint();
 		},
 
 		selectedOfferIds() {
 			return this.selectedOfferId ? [this.selectedOfferId] : [];
-		},
-
-		clearSelectedPickupPoint() {
-			const 
-				hash = this.item?.hash,
-				targetOffer = hash && this.sdk.barteron._offers[hash];
-			
-			if (targetOffer && targetOffer.selectedPickupPoint) {
-				delete targetOffer.selectedPickupPoint;
-			};
 		},
 
 		/**
@@ -598,7 +590,7 @@ export default {
 			};
 
 			if (this.deliveryOptionsAvailable && options?.isPurchase) {
-				const pickupPoint = this.sdk.barteron.offers[offer.hash]?.selectedPickupPoint;
+				const pickupPoint = this.selectedOfferId && this.pickupPointItems.find(f => f.hash === this.selectedOfferId);
 				if (pickupPoint?.isSelfPickup) {
 					data.messages.push(this.$t("deliveryLabels.chat_message_self_pickup_selected"));
 				} else if (pickupPoint?.hash) {
@@ -654,19 +646,7 @@ export default {
 		},
 
 		selectedOfferId(newValue) {
-			const 
-				hash = this.item?.hash,
-				targetOffer = hash && this.sdk.barteron._offers[hash],
-				option = (newValue && this.pickupPointItems.find(f => f.hash === newValue));
-
-			if (targetOffer) {
-				targetOffer.selectedPickupPoint = option;
-				this.purchaseState = (option ? "pickupPointSelected" : "goToPickupPointList");
-			};
+			this.purchaseState = (newValue ? "pickupPointSelected" : "goToPickupPointList");
 		},
-	},
-
-	beforeDestroy() {
-		this.clearSelectedPickupPoint();
 	},
 }
