@@ -17,8 +17,6 @@
 				<!-- Someone's offer -->
 				<BarterExchange
 					v-if="!isMyOffer"
-					ref="barterExchange"
-					:item="item"
 				/>
 			</div>
 		</div>

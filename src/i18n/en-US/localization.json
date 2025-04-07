@@ -76,8 +76,9 @@
 		"address": "Address",
 		"address_not_specified": "Address not specified",
 		"how_to_get": "How to get",
-		"hint_for_delivery_option_selection": "Select the Pickup point or Self-pickup option (if available) on the map or from the list",
+		"hint_for_delivery_option_selection": "Select an Pickup point or Self-pickup option (if available) on the map or in the list",
 		"hint_for_purchase_at_pickup_point": "Clicking on the \"Buy\" button will open a chat to complete the purchase",
+		"chat_message_exchange_proposed": "I propose the exchange",
 		"chat_message_self_pickup_selected": "Delivery option: \"Self-pickup\"",
 		"chat_message_pickup_point_selected": "Delivery option: \"Pickup point\""
 	},

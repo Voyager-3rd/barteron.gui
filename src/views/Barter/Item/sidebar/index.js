@@ -56,10 +56,4 @@ export default {
 			return this.sdk.barteron.accounts[this.address];
 		}
 	},
-
-	methods: {
-		selectedPickupPointChanged() {
-			this.$refs.barterExchange?.selectedPickupPointChanged();
-		},
-	}
 }

@@ -1,10 +1,10 @@
 <template>
 	<div class="barter-exchange">
-		<template v-if="items.length">
+		<template v-if="exchangeAvailable()">
 
 			<div class="propose">
 				<v-button 
-					:disabled="isLoading"
+					:disabled="isChatLoading()"
 					@click="selectOffer"
 				>
 					<i class="fa fa-sync"></i>
@@ -34,15 +34,15 @@
 
 		<div class="buy">
 			<v-button 
-				v-if="purchaseState === 'startPurchase'"
-				:disabled="isLoading"
+				v-if="purchaseState() === 'startPurchase'"
+				:disabled="isChatLoading()"
 				@click="startPurchase"
 			><span>{{ $t('buttonLabels.start_purchase') }}</span>
 			</v-button>
 
-			<template v-if="purchaseState === 'goToPickupPointList'">
+			<template v-if="purchaseState() === 'goToPickupPointList'">
 				<v-button 
-					:disabled="isLoading"
+					:disabled="isChatLoading()"
 					@click="goToPickupPointList"
 				><span>{{ $t('buttonLabels.go_to_selection') }}</span>
 				</v-button>
@@ -52,15 +52,15 @@
 					class="v-label"
 				>
 					<i class="fa fa-info-circle"></i>
-					{{ $t('deliveryLabels.hint_for_delivery_option_selection', {section: $t('deliveryLabels.label')}) }}
+					{{ $t('deliveryLabels.hint_for_delivery_option_selection') }}
 				</label>
 			</template>
 
-			<template v-if="purchaseState === 'pickupPointSelected'">
+			<template v-if="purchaseState() === 'pickupPointSelected'">
 				<v-button 
 					vType="hit"
-					:disabled="isLoading"
-					@click="buyAtPickupPoint"
+					:disabled="isChatLoading()"
+					@click="buyAtSelectedPickupPoint"
 				><span>{{ $t('buttonLabels.buy') }}</span>
 				</v-button>
 

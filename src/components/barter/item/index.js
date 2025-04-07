@@ -11,8 +11,10 @@ import BarterExchange from "@/components/barter/exchange/index.vue";
 import Profile from "@/components/profile/index.vue";
 import LegalInfo from "@/components/legal-info/index.vue";
 import LikeStore from "@/stores/like.js";
+import SelectOfferDialog from "@/views/Barter/SelectOfferDialog/index.vue";
 import PhotoSwipe from "photoswipe";
 import "photoswipe/style.css";
+import Vue from 'vue';
 
 export default {
 	name: "BarterItem",
@@ -30,6 +32,7 @@ export default {
 		Profile,
 		CurrencySwitcher,
 		LegalInfo,
+		SelectOfferDialog,
 	},
 
 	props: {
@@ -61,6 +64,11 @@ export default {
 			hover: 0,
 			active: 0,
 			addr: {},
+			myOffers: [],
+
+            exchangeAvailable: false,
+            purchaseState: "startPurchase",
+            isChatLoading: false,
 
 			pickupPointItems: [],
 			pickupPointsLoading: false,
@@ -71,7 +79,7 @@ export default {
 		}
 	},
 
-	inject: ["dialog"],
+	inject: ["dialog", 'lightboxContainer'],
 
 	computed: {
 		/**
@@ -449,6 +457,28 @@ export default {
 			});
 		},
 
+		/**
+		 * Select your offer to propose exchange seller's offer
+		 */
+		selectOfferToExchange() {
+			var ComponentClass = Vue.extend(SelectOfferDialog);
+			var instance = new ComponentClass({
+				propsData: {
+					item: this.item,
+					items: this.myOffers,
+				}
+			});
+			
+			instance.$on('onSelect', vm => {
+				const targetOffer = this.myOffers[vm.selected];
+				this.createRoom(targetOffer, {isExchange: true});
+			});
+
+			instance.$mount();
+			this.lightboxContainer().appendChild(instance.$el);
+			instance.show();
+		},
+
 		loadPickupPointsIfNeeded() {
 			if (this.deliveryOptionsAvailable) {
 
@@ -510,19 +540,12 @@ export default {
 		},
 
 		buyAtPickupPoint(offer, options) {
-			//this.$components.sidebar
-			// TODO: buy
-			console.log(offer, options);
-			
+			// console.log(offer, options);
+			this.buyAtSelectedPickupPoint();
 		},
 
 		selectedOfferIds() {
 			return this.selectedOfferId ? [this.selectedOfferId] : [];
-		},
-
-		selectedPickupPointChanged() {
-			this.$components.sidebar?.selectedPickupPointChanged(); // for sidebar case
-			this.$refs.barterExchange?.selectedPickupPointChanged(); // for no-sidebar case
 		},
 
 		clearSelectedPickupPoint() {
@@ -533,16 +556,103 @@ export default {
 			if (targetOffer && targetOffer.selectedPickupPoint) {
 				delete targetOffer.selectedPickupPoint;
 			};
-		}
+		},
+
+		/**
+		 * Start purchase
+		 */
+		startPurchase() {
+			this.createRoom(this.item, {isPurchase: true});
+		},
+
+		/**
+		 * Go to pickup point list
+		 */
+		goToPickupPointList() {
+			this.scrollToElement("#pickup-point-list", { block: "center" });
+		},
+
+		/**
+		 * Buy at selected pickup point
+		 */
+		buyAtSelectedPickupPoint() {
+			this.startPurchase();
+		},
+
+		/**
+		 * Create room and send message
+		 * 
+		 * @param {Offer} offer
+		 * @param {Object} options
+		 */
+		createRoom(offer, options = {}) {
+			if (this.sdk.willOpenRegistration()) return;
+
+			let needCreateRoom = true;
+
+			const data = {
+				name: offer.caption,
+				members: [this.address],
+				messages: [this.sdk.appLink(`barter/${ offer.hash }`)],
+				openRoom: true,
+			};
+
+			if (this.deliveryOptionsAvailable && options?.isPurchase) {
+				const pickupPoint = this.sdk.barteron.offers[offer.hash]?.selectedPickupPoint;
+				if (pickupPoint?.isSelfPickup) {
+					data.messages.push(this.$t("deliveryLabels.chat_message_self_pickup_selected"));
+				} else if (pickupPoint?.hash) {
+					const 
+						address = pickupPoint.address,
+						hash = pickupPoint.hash;
+					
+					if (address && hash) {
+						if (!(data.members.includes(address))) {
+							data.members.push(address);
+						}
+						data.messages.push(this.sdk.appLink(`barter/${ hash }`));
+						data.messages.push(this.$t("deliveryLabels.chat_message_pickup_point_selected"));
+					}
+				} else {
+					needCreateRoom = false;
+					this.purchaseState = "goToPickupPointList";
+				}
+			} else if (options?.isExchange && this.item?.hash) {
+				data.messages.push(this.sdk.appLink(`barter/${ this.item?.hash }`));
+				data.messages.push(this.$t("deliveryLabels.chat_message_exchange_proposed"));
+			}
+			
+			if (!(needCreateRoom)) return;
+
+			this.isChatLoading = true;
+			this.dialog?.instance.view("load", this.$t("dialogLabels.opening_room"));
+			this.sendMessage(data).then(() => {
+				this.dialog?.instance.hide();
+			}).catch(e => {
+				this.showError(e);
+			}).finally(() => {
+				this.isChatLoading = false;
+			});
+		},
 	},
 
 	mounted() {
 		this.$2watch("item.address").then(() => {
 			this.loadPickupPointsIfNeeded();
 		});
+
+		this.sdk.getBrtOffers().then(items => {
+			this.myOffers = items;
+		}).catch(e => {
+			console.error(e);
+		});
 	},
 
 	watch: {
+		myOffers() {
+			this.exchangeAvailable = (this.myOffers?.length > 0);
+		},
+
 		selectedOfferId(newValue) {
 			const 
 				hash = this.item?.hash,
@@ -551,10 +661,9 @@ export default {
 
 			if (targetOffer) {
 				targetOffer.selectedPickupPoint = option;
+				this.purchaseState = (option ? "pickupPointSelected" : "goToPickupPointList");
 			};
-
-			this.selectedPickupPointChanged();
-		}
+		},
 	},
 
 	beforeDestroy() {

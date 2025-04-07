@@ -1,6 +1,7 @@
 <template>
 	<v-content>
 		<BarterItem
+			ref="barterItem"
 			:item="item"
 			vType="page"
 		/>
