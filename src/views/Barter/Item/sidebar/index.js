@@ -58,8 +58,8 @@ export default {
 	},
 
 	methods: {
-		selectedDeliveryOptionChanged() {
-			this.$refs.barterExchange?.selectedDeliveryOptionChanged();
+		selectedPickupPointChanged() {
+			this.$refs.barterExchange?.selectedPickupPointChanged();
 		},
 	}
 }

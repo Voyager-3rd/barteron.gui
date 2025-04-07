@@ -520,18 +520,18 @@ export default {
 			return this.selectedOfferId ? [this.selectedOfferId] : [];
 		},
 
-		selectedDeliveryOptionChanged() {
-			this.$components.sidebar?.selectedDeliveryOptionChanged(); // for sidebar case
-			this.$refs.barterExchange?.selectedDeliveryOptionChanged(); // for no-sidebar case
+		selectedPickupPointChanged() {
+			this.$components.sidebar?.selectedPickupPointChanged(); // for sidebar case
+			this.$refs.barterExchange?.selectedPickupPointChanged(); // for no-sidebar case
 		},
 
-		clearSelectedDeliveryOption() {
+		clearSelectedPickupPoint() {
 			const 
 				hash = this.item?.hash,
 				targetOffer = hash && this.sdk.barteron._offers[hash];
 			
-			if (targetOffer && targetOffer.selectedDeliveryOption) {
-				delete targetOffer.selectedDeliveryOption;
+			if (targetOffer && targetOffer.selectedPickupPoint) {
+				delete targetOffer.selectedPickupPoint;
 			};
 		}
 	},
@@ -550,14 +550,14 @@ export default {
 				option = (newValue && this.pickupPointItems.find(f => f.hash === newValue));
 
 			if (targetOffer) {
-				targetOffer.selectedDeliveryOption = option;
+				targetOffer.selectedPickupPoint = option;
 			};
 
-			this.selectedDeliveryOptionChanged();
+			this.selectedPickupPointChanged();
 		}
 	},
 
 	beforeDestroy() {
-		this.clearSelectedDeliveryOption();
+		this.clearSelectedPickupPoint();
 	},
 }
