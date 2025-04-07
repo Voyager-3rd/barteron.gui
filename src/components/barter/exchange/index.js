@@ -67,12 +67,12 @@ export default {
 
 			if (this.deliveryOptionsAvailable && options?.isPurchase) {
 				const option = this.sdk.barteron.offers[offer.hash]?.selectedDeliveryOption;
-				if (option?.selfPickup) {
+				if (option?.isSelfPickup) {
 					data.messages.push(this.$t("deliveryLabels.chat_message_self_pickup_selected"));
-				} else if (option?.pickupPoint) {
+				} else if (option?.hash) {
 					const 
-						address = option?.pickupPoint?.address,
-						hash = option?.pickupPoint?.hash;
+						address = option.address,
+						hash = option.hash;
 					
 					if (address && hash) {
 						if (!(data.members.includes(address))) {
@@ -141,6 +141,19 @@ export default {
 		 */
 		goToPickupPointList() {
 			this.scrollToElement("#pickup-point-list", { block: "center" });
+		},
+
+		selectedDeliveryOptionChanged() {
+			if (this.deliveryOptionsAvailable && this.item?.hash) {
+				const option = this.sdk.barteron.offers[this.item?.hash]?.selectedDeliveryOption;
+				if (option) {
+					this.purchaseState = "pickupPointSelected";
+				}
+			};
+		},
+
+		buyAtPickupPoint() {
+			this.startPurchase();
 		},
 	},
 

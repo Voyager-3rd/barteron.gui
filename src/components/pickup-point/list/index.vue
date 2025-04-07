@@ -25,6 +25,7 @@
 						:isSelected="isSelectedItem(item)"
 						@selectItem="selectItem"
 						@unselectItem="unselectItem"
+						@buyAtItem="buyAtItem"
 					/>
 				</slide>
 			</carousel>

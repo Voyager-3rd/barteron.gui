@@ -509,12 +509,20 @@ export default {
 			}
 		},
 
-		unselectPickupPoint() {
-			this.selectedOfferId = null;
+		buyAtPickupPoint(offer, options) {
+			//this.$components.sidebar
+			// TODO: buy
+			console.log(offer, options);
+			
 		},
 
 		selectedOfferIds() {
 			return this.selectedOfferId ? [this.selectedOfferId] : [];
+		},
+
+		selectedDeliveryOptionChanged() {
+			this.$components.sidebar?.selectedDeliveryOptionChanged(); // for sidebar case
+			this.$refs.barterExchange?.selectedDeliveryOptionChanged(); // for no-sidebar case
 		},
 
 		clearSelectedDeliveryOption() {
@@ -536,20 +544,16 @@ export default {
 
 	watch: {
 		selectedOfferId(newValue) {
-			let option = null;
-			if (newValue) {
-				option = (newValue === this.selfPickupItemId) 
-					? {selfPickup: true} 
-					: {pickupPoint: this.pickupPointItems.filter(f => f.hash === newValue).pop()};
-			};
-
 			const 
 				hash = this.item?.hash,
-				targetOffer = hash && this.sdk.barteron._offers[hash];
+				targetOffer = hash && this.sdk.barteron._offers[hash],
+				option = (newValue && this.pickupPointItems.find(f => f.hash === newValue));
 
 			if (targetOffer) {
 				targetOffer.selectedDeliveryOption = option;
 			};
+
+			this.selectedDeliveryOptionChanged();
 		}
 	},
 

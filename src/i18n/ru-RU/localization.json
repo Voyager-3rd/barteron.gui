@@ -76,7 +76,8 @@
 		"address": "Адрес",
 		"address_not_specified": "Адрес не указан",
 		"how_to_get": "Как добраться",
-		"hint_for_delivery_option_selection": "Выберите вариант получения заказа и нажмите кнопку \"Купить\" для перехода в чат",
+		"hint_for_delivery_option_selection": "Выберите опцию Пункт выдачи заказов или Самовывоз (при наличии) на карте или из списка",
+		"hint_for_purchase_at_pickup_point": "Нажатие на кнопку \"Купить\" откроет чат для оформления покупки",
 		"chat_message_self_pickup_selected": "Вариант доставки: \"Самовывоз\"",
 		"chat_message_pickup_point_selected": "Вариант доставки: \"Пункт выдачи заказов\""
 	},

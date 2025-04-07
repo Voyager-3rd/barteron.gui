@@ -39,6 +39,7 @@
 								@showItem="showPickupPoint"
 								@selectItem="selectPickupPoint"
 								@unselectItem="unselectPickupPoint"
+								@buyAtItem="buyAtPickupPoint"
 							/>
 							<BarterItem 
 								v-else

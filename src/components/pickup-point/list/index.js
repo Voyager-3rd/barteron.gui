@@ -69,6 +69,10 @@ export default {
 			this.$emit("unselectItem", offer, {source: "list"});
 		},
 
+		buyAtItem(offer) {
+			this.$emit("buyAtItem", offer, {source: "list"});
+		},
+
 		repeatLoading() {
 			this.$emit("repeatLoading", this);
 		},

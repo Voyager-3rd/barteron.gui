@@ -579,6 +579,13 @@ export default {
 			}, 300);
 		},
 
+		buyAtPickupPoint(offer) {
+			this.mapObject.closePopup();
+			setTimeout(() => {
+				this.$emit("buyAtPickupPoint", offer, {source: "map"});
+			}, 300);
+		},
+
 		isSelectedOffer(offer) {
 			return this.selectedOfferIds.some(f => f === offer.hash);
 		},

@@ -451,7 +451,7 @@
 					:offers="mapOffers()"
 					:selectedOfferIds="selectedOfferIds()"
 					@selectPickupPoint="selectPickupPoint"
-					@unselectPickupPoint="unselectPickupPoint"
+					@buyAtPickupPoint="buyAtPickupPoint"
 				/>
 			</div>
 
@@ -475,7 +475,7 @@
 					:loadingError="pickupPointsLoadingError"
 					@repeatLoading="pickupPointsRepeatLoading"
 					@selectItem="selectPickupPoint"
-					@unselectItem="unselectPickupPoint"
+					@buyAtItem="buyAtPickupPoint"
 				/>
 
 			</div>
@@ -503,6 +503,7 @@
 				<!-- Someone's offer -->
 				<BarterExchange
 					v-if="!isMyOffer"
+					ref="barterExchange"
 					:item="item"
 				/>
 			</div>

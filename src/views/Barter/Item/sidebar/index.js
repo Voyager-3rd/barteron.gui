@@ -56,4 +56,10 @@ export default {
 			return this.sdk.barteron.accounts[this.address];
 		}
 	},
+
+	methods: {
+		selectedDeliveryOptionChanged() {
+			this.$refs.barterExchange?.selectedDeliveryOptionChanged();
+		},
+	}
 }

@@ -45,6 +45,26 @@ export default {
 	},
 
 	computed: {
+		isInputMode() {
+			return this.mode === "input";
+		},
+
+		isSelectionMode() {
+			return this.mode === "selection";
+		},
+
+		isReadonlyMode() {
+			return this.mode === "readonly";
+		},
+
+		isPopupRole() {
+			return this.role === "popup";
+		},
+
+		isListItemRole() {
+			return this.role === "listItem";
+		},
+		
 		/**
 		 * Get author address
 		 * 
@@ -185,6 +205,10 @@ export default {
 					item: this.item,
 					isSelected: this.isSelected,
 					mode: this.mode,
+					actionButtonI18nKeys: {
+						regular: "select",
+						isSelected: (this.isSelectionMode ? "buy" : "cancel"),
+					},
 				},
 			});
 			
@@ -200,9 +224,13 @@ export default {
 		},
 
 		dialogAction() {
-			if (this.mode !== "readonly") {
+			if (!(this.isReadonlyMode)) {
 				if (this.isSelected) {
-					this.unselectItem();
+					if (this.isInputMode) {
+						this.unselectItem();
+					} else if (this.isSelectionMode) {
+						this.buyAtItem()
+					}
 				} else {
 					this.selectItem();
 				};
@@ -215,6 +243,10 @@ export default {
 
 		unselectItem() {
 			this.$emit("unselectItem", this.item);
+		},
+
+		buyAtItem() {
+			this.$emit("buyAtItem", this.item);
 		},
 	},
 }

@@ -2,7 +2,7 @@
 	<div :class="{
 		[`pickup-point-item`]: true,
 		'pickup-point-item-relay': hasRelay,
-		'selected': isSelected && mode === 'selection' && role === 'listItem'
+		'selected': isSelected && isSelectionMode && isListItemRole
 	}">
 		<i class="fa fa-check-circle"></i>
 		
@@ -164,26 +164,35 @@
 			</template>
 		</div>
 
-		<!-- <div class="row"> -->
-			<div class="buttons-holder full-width action-buttons">
+		<div class="buttons-holder full-width action-buttons">
+			<v-button
+				vType="bulma-stroke"
+				@click="showItem"
+			>{{ $t('buttonLabels.show') }}</v-button>
+			<template v-if="!(isReadonlyMode)">
+
 				<v-button
-					vType="bulma-stroke"
-					@click="showItem"
-				>{{ $t('buttonLabels.show') }}</v-button>
-				<template v-if="mode !== 'readonly'">
+					v-if="!(isSelected)"
+					@click="selectItem"
+				>{{ $t('buttonLabels.select') }}</v-button>
+
+				<template v-if="isInputMode">
 					<v-button
 						v-if="isSelected"
 						vType="hit-stroke"
 						@click="unselectItem"
 					>{{ $t('buttonLabels.cancel') }}</v-button>
-					<v-button
-						v-else
-						@click="selectItem"
-					>{{ $t('buttonLabels.select') }}</v-button>
 				</template>
-			</div>
-		<!-- </div> -->
 
+				<template v-if="isSelectionMode">
+					<v-button
+						v-if="isSelected"
+						vType="hit"
+						@click="buyAtItem"
+					>{{ $t('buttonLabels.buy') }}</v-button>
+				</template>
+			</template>
+		</div>
 	</div>
 </template>
 

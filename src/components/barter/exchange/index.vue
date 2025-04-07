@@ -40,21 +40,38 @@
 			><span>{{ $t('buttonLabels.start_purchase') }}</span>
 			</v-button>
 
-			<v-button 
-				v-if="purchaseState === 'goToPickupPointList'"
-				:disabled="isLoading"
-				@click="goToPickupPointList"
-			><span>{{ $t('buttonLabels.go_to_selection') }}</span>
-			</v-button>
+			<template v-if="purchaseState === 'goToPickupPointList'">
+				<v-button 
+					:disabled="isLoading"
+					@click="goToPickupPointList"
+				><span>{{ $t('buttonLabels.go_to_selection') }}</span>
+				</v-button>
 
-			<label
-				v-if="purchaseState === 'goToPickupPointList'"
-				id="delivery-option-selection-label"
-				class="v-label"
-			>
-				<i class="fa fa-info-circle"></i>
-				{{ $t('deliveryLabels.hint_for_delivery_option_selection') }}
-			</label>
+				<label
+					id="delivery-option-selection-label"
+					class="v-label"
+				>
+					<i class="fa fa-info-circle"></i>
+					{{ $t('deliveryLabels.hint_for_delivery_option_selection', {section: $t('deliveryLabels.label')}) }}
+				</label>
+			</template>
+
+			<template v-if="purchaseState === 'pickupPointSelected'">
+				<v-button 
+					vType="hit"
+					:disabled="isLoading"
+					@click="buyAtPickupPoint"
+				><span>{{ $t('buttonLabels.buy') }}</span>
+				</v-button>
+
+				<label
+					id="purchase-label"
+					class="v-label"
+				>
+					<i class="fa fa-info-circle"></i>
+					{{ $t('deliveryLabels.hint_for_purchase_at_pickup_point') }}
+				</label>
+			</template>
 
 			<!-- <v-button vType="roshi">
 				<span>{{ $t('buttonLabels.buy_for', { cost: $n(item.price) }) }}</span>
