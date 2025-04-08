@@ -199,16 +199,51 @@ export default {
 		},
 
 		showDialog() {
+			let actionButtonSettings = undefined;
+			if (this.isInputMode) {
+				actionButtonSettings = {
+					i18nKeys: {
+						regular: "select",
+						isSelected: "cancel",
+					},
+					vType: {
+						regular: undefined,
+						isSelected: "hit",
+					}
+				};
+			} else if (this.isSelectionMode) {
+				if (this.isPopupRole) {
+					actionButtonSettings = {
+						i18nKeys: {
+							regular: "buy",
+							isSelected: "buy",
+						},
+						vType: {
+							regular: "hit",
+							isSelected: "hit",
+						}
+					};
+				} else {
+					actionButtonSettings = {
+						i18nKeys: {
+							regular: "select",
+							isSelected: "buy",
+						},
+						vType: {
+							regular: undefined,
+							isSelected: "hit",
+						}
+					};
+				}
+			};
+
 			var ComponentClass = Vue.extend(SelectPickupPointDialog);
 			var instance = new ComponentClass({
 				propsData: {
 					item: this.item,
 					isSelected: this.isSelected,
 					mode: this.mode,
-					actionButtonI18nKeys: {
-						regular: "select",
-						isSelected: (this.isSelectionMode ? "buy" : "cancel"),
-					},
+					actionButtonSettings,
 				},
 			});
 			
@@ -225,14 +260,24 @@ export default {
 
 		dialogAction() {
 			if (!(this.isReadonlyMode)) {
-				if (this.isSelected) {
-					if (this.isInputMode) {
+				if (this.isInputMode) {
+					if (this.isSelected) {
 						this.unselectItem();
-					} else if (this.isSelectionMode) {
-						this.buyAtItem()
+					} else {
+						this.selectItem();
 					}
-				} else {
-					this.selectItem();
+				};
+
+				if (this.isSelectionMode) {
+					if (this.isPopupRole) {
+						this.buyAtItem();
+					} else {
+						if (this.isSelected) {
+							this.buyAtItem();
+						} else {
+							this.selectItem();
+						}
+					}
 				};
 			};
 		},

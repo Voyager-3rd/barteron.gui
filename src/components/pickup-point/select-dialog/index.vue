@@ -22,16 +22,17 @@
 					<template v-if="mode !== 'readonly'">
 						<v-button
 							v-if="isSelected"
-							vType="hit"
+							:vType="actionButtonSettings.vType.isSelected"
 							@click="dialogAction"
 						>
-							<span>{{ $t(`buttonLabels.${actionButtonI18nKeys.isSelected}`) }}</span>
+							<span>{{ $t(`buttonLabels.${actionButtonSettings.i18nKeys.isSelected}`) }}</span>
 						</v-button>
 						<v-button
 							v-else
+							:vType="actionButtonSettings.vType.regular"
 							@click="dialogAction"
 						>
-							<span>{{ $t(`buttonLabels.${actionButtonI18nKeys.regular}`) }}</span>
+							<span>{{ $t(`buttonLabels.${actionButtonSettings.i18nKeys.regular}`) }}</span>
 						</v-button>
 					</template>
 					<v-button

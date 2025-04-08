@@ -169,14 +169,14 @@
 				vType="bulma-stroke"
 				@click="showItem"
 			>{{ $t('buttonLabels.show') }}</v-button>
+
 			<template v-if="!(isReadonlyMode)">
-
-				<v-button
-					v-if="!(isSelected)"
-					@click="selectItem"
-				>{{ $t('buttonLabels.select') }}</v-button>
-
 				<template v-if="isInputMode">
+					<v-button
+						v-if="!(isSelected)"
+						@click="selectItem"
+					>{{ $t('buttonLabels.select') }}</v-button>
+
 					<v-button
 						v-if="isSelected"
 						vType="hit-stroke"
@@ -185,11 +185,25 @@
 				</template>
 
 				<template v-if="isSelectionMode">
-					<v-button
-						v-if="isSelected"
-						vType="hit"
-						@click="buyAtItem"
-					>{{ $t('buttonLabels.buy') }}</v-button>
+					<template v-if="isPopupRole">
+						<v-button
+							vType="hit"
+							@click="buyAtItem"
+						>{{ $t('buttonLabels.buy') }}</v-button>
+					</template>
+
+					<template v-else>
+						<v-button
+							v-if="!(isSelected)"
+							@click="selectItem"
+						>{{ $t('buttonLabels.select') }}</v-button>
+
+						<v-button
+							v-if="isSelected"
+							vType="hit"
+							@click="buyAtItem"
+						>{{ $t('buttonLabels.buy') }}</v-button>
+					</template>
 				</template>
 			</template>
 		</div>
