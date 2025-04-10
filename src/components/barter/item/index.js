@@ -223,7 +223,7 @@ export default {
 				i18nKey: ""
 			};
 			
-			if (this.purchaseState === "waitForSelection") {
+			if (this.purchaseState === "waitForPickupPoint") {
 				result.isEnabled = true;
 				result.iconClass = "fa fa-chevron-circle-up";
 				result.i18nKey = "deliveryLabels.hint_for_delivery_option_selection";
@@ -577,7 +577,7 @@ export default {
 			this.createRoom(this.item, {isPurchase: true});
 		},
 
-		waitForSelection() {
+		waitForPickupPoint() {
 			this.goToPickupPointList();
 		},
 
@@ -631,7 +631,7 @@ export default {
 					}
 				} else {
 					needCreateRoom = false;
-					this.purchaseState = "waitForSelection";
+					this.purchaseState = "waitForPickupPoint";
 					this.goToPickupPointList();
 				}
 			} else if (options?.isExchange && this.item?.hash) {
@@ -671,7 +671,7 @@ export default {
 		},
 
 		selectedOfferId(newValue) {
-			this.purchaseState = (newValue ? "pickupPointSelected" : "waitForSelection");
+			this.purchaseState = (newValue ? "pickupPointSelected" : "waitForPickupPoint");
 		},
 	},
 }

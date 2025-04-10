@@ -40,10 +40,10 @@
 			><span>{{ $t('buttonLabels.start_purchase') }}</span>
 			</v-button>
 
-			<template v-if="purchaseState() === 'waitForSelection'">
+			<template v-if="purchaseState() === 'waitForPickupPoint'">
 				<v-button 
 					:disabled="isChatLoading()"
-					@click="waitForSelection"
+					@click="waitForPickupPoint"
 				><span>{{ $t('buttonLabels.start_purchase') }}</span>
 				</v-button>
 

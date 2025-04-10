@@ -41,8 +41,8 @@ export default {
 			this.mainComponent?.startPurchase?.();
 		},
 
-		waitForSelection() {
-			this.mainComponent?.waitForSelection?.();
+		waitForPickupPoint() {
+			this.mainComponent?.waitForPickupPoint?.();
 		},
 
 		buyAtSelectedPickupPoint() {
