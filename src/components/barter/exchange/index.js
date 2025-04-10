@@ -1,6 +1,13 @@
 export default {
 	name: "BarterExchange",
 
+	props: {
+		purchaseStateLabels: {
+			type: Boolean,
+			default: false
+		}
+	},
+
 	computed: {
 		mainComponent() {
 			return this.isLoaded ? this.$components.content?.$refs.barterItem : null;
@@ -34,8 +41,8 @@ export default {
 			this.mainComponent?.startPurchase?.();
 		},
 
-		goToPickupPointList() {
-			this.mainComponent?.goToPickupPointList?.();
+		waitForSelection() {
+			this.mainComponent?.waitForSelection?.();
 		},
 
 		buyAtSelectedPickupPoint() {

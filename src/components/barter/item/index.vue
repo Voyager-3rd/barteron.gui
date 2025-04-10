@@ -478,10 +478,18 @@
 					@buyAtItem="buyAtPickupPoint"
 				/>
 
+				<label
+					v-if="purchaseStateLabel.isEnabled"
+					class="v-label warning-level no-sidebar"
+				>
+					<i :class="purchaseStateLabel.iconClass"></i>
+					{{ $t(purchaseStateLabel.i18nKey) }}
+				</label>
+
 			</div>
 
 			<!-- without sidebar -->
-			<div class="row block sep no-sidebar">
+			<div class="row block top-sep no-sidebar">
 			</div>
 
 			<!-- without sidebar -->

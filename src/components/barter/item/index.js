@@ -216,6 +216,26 @@ export default {
 			return "self_pickup";
 		},
 
+		purchaseStateLabel() {
+			const result = {
+				isEnabled: false,
+				iconClass: "",
+				i18nKey: ""
+			};
+			
+			if (this.purchaseState === "waitForSelection") {
+				result.isEnabled = true;
+				result.iconClass = "fa fa-chevron-circle-up";
+				result.i18nKey = "deliveryLabels.hint_for_delivery_option_selection";
+			} else if (this.purchaseState === "pickupPointSelected") {
+				result.isEnabled = true;
+				result.iconClass = "fa fa-info-circle";
+				result.i18nKey = "deliveryLabels.hint_for_purchase_at_pickup_point"
+			};
+
+			return result;
+		},
+
 		/**
 		 * Get map mode
 		 * 
@@ -557,6 +577,10 @@ export default {
 			this.createRoom(this.item, {isPurchase: true});
 		},
 
+		waitForSelection() {
+			this.goToPickupPointList();
+		},
+
 		/**
 		 * Go to pickup point list
 		 */
@@ -607,7 +631,8 @@ export default {
 					}
 				} else {
 					needCreateRoom = false;
-					this.purchaseState = "goToPickupPointList";
+					this.purchaseState = "waitForSelection";
+					this.goToPickupPointList();
 				}
 			} else if (options?.isExchange && this.item?.hash) {
 				data.messages.push(this.sdk.appLink(`barter/${ this.item?.hash }`));
@@ -646,7 +671,7 @@ export default {
 		},
 
 		selectedOfferId(newValue) {
-			this.purchaseState = (newValue ? "pickupPointSelected" : "goToPickupPointList");
+			this.purchaseState = (newValue ? "pickupPointSelected" : "waitForSelection");
 		},
 	},
 }
