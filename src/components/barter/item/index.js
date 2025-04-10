@@ -579,6 +579,9 @@ export default {
 
 		waitForPickupPoint() {
 			this.goToPickupPointList();
+			if (this.purchaseState === "waitForPickupPoint") {
+				this.$refs.pickupPointList?.animateSelection();
+			}
 		},
 
 		/**

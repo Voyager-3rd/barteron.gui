@@ -41,6 +41,8 @@ export default {
 		return {
 			hover: 0,
 			active: 0,
+			isAnimating: false,
+			selectionModeButtonVType: undefined,
 		}
 	},
 
@@ -279,6 +281,32 @@ export default {
 						}
 					}
 				};
+			};
+		},
+
+		animateSelection() {
+			const needAnimate = (
+				this.isSelectionMode 
+				&& this.isListItemRole 
+				&& !(this.isAnimating)
+			);
+
+			if (needAnimate) {
+				this.isAnimating = true;
+
+				const delay = (ms) => {
+					return new Promise(resolve => setTimeout(resolve, ms));
+				};
+
+				delay(100).then(() => {
+					this.selectionModeButtonVType = "bulma-stroke";
+					return delay(300);
+				}).then(() => {
+					this.selectionModeButtonVType = undefined;
+					return delay(300);
+				}).then(() => {
+					this.isAnimating = false;
+				});
 			};
 		},
 

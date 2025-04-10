@@ -84,6 +84,15 @@ export default {
 			}
 		},
 
+		animateSelection() {
+			if (!(this.loaderState)) {
+				(this.items || []).map(m => m?.hash).filter(f => f).forEach(el => {
+					const ref = this.$refs[el]?.[0];
+					ref?.animateSelection?.();
+				});
+			}
+		},
+
 		validate() {
 			return this.items?.length;
 		},

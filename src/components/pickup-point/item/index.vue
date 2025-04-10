@@ -195,6 +195,7 @@
 					<template v-else>
 						<v-button
 							v-if="!(isSelected)"
+							:vType="selectionModeButtonVType"
 							@click="selectItem"
 						>{{ $t('buttonLabels.select') }}</v-button>
 

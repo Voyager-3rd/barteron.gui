@@ -19,6 +19,7 @@
 					/>
 					<PickupPointItem
 						v-else
+						:ref="item?.hash"
 						:item="item"
 						role="listItem"
 						:mode="mode"
