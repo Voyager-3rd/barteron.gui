@@ -76,6 +76,7 @@
 		"address": "Address",
 		"address_not_specified": "Address not specified",
 		"how_to_get": "How to get",
+		"pickup_point_creation_is_forbidden": "The pickup points functionality is currently in public testing. If you want to open a pickup point, please contact support@bastyon.com first",
 		"hint_for_delivery_option_selection": "Select an Pickup point or Self-pickup option (if available) on the map or in the list",
 		"hint_for_purchase_at_pickup_point": "The \"Buy\" option will open a chat to complete the purchase",
 		"chat_message_exchange_proposed": "I propose the exchange",

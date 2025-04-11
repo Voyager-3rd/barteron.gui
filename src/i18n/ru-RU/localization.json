@@ -76,6 +76,7 @@
 		"address": "Адрес",
 		"address_not_specified": "Адрес не указан",
 		"how_to_get": "Как добраться",
+		"pickup_point_creation_is_forbidden": "Функционал ПВЗ сейчас находится в публичном тестировании. Если вы хотите открыть ПВЗ, свяжитесь сначала с support@bastyon.com",
 		"hint_for_delivery_option_selection": "Выберите опцию Пункт выдачи заказов или Самовывоз (при наличии) на карте или в списке",
 		"hint_for_purchase_at_pickup_point": "Опция \"Купить\" откроет чат для оформления покупки",
 		"chat_message_exchange_proposed": "Предлагаю обмен",
