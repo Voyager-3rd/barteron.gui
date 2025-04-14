@@ -115,6 +115,15 @@
 							@mouseleave="() => hover = 0"
 						>{{ index }}</li>
 					</ul>
+					<Score
+						v-if="averageOfferScore?.value"
+						mode="preview"
+						:rating="'behind'"
+						:stars="1"
+						:value="averageOfferScore?.value"
+						:starsValue="5"
+						:votesCount="averageOfferScore?.count"
+					/>
 				</template>
 			</picture>
 

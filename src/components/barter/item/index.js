@@ -12,6 +12,7 @@ import Profile from "@/components/profile/index.vue";
 import LegalInfo from "@/components/legal-info/index.vue";
 import LikeStore from "@/stores/like.js";
 import SelectOfferDialog from "@/views/Barter/SelectOfferDialog/index.vue";
+import Score from "@/components/score/index.vue";
 import PhotoSwipe from "photoswipe";
 import "photoswipe/style.css";
 import Vue from 'vue';
@@ -33,6 +34,7 @@ export default {
 		CurrencySwitcher,
 		LegalInfo,
 		SelectOfferDialog,
+		Score,
 	},
 
 	props: {
@@ -337,6 +339,10 @@ export default {
 		/* Get offer images */
 		images() {
 			return (this.item.images || []).map(url => this.sdk.manageBastyonImageSrc(url));
+		},
+
+		averageOfferScore() {
+			return this.sdk.barteron.averageOfferScores[this.item.hash];
 		},
 
 		/**
@@ -657,15 +663,17 @@ export default {
 	},
 
 	mounted() {
-		this.$2watch("item.address").then(() => {
-			this.loadPickupPointsIfNeeded();
-		});
-
-		this.sdk.getBrtOffers().then(items => {
-			this.myOffers = items;
-		}).catch(e => {
-			console.error(e);
-		});
+		if (this.vType === "page") {
+			this.$2watch("item.address").then(() => {
+				this.loadPickupPointsIfNeeded();
+			});
+	
+			this.sdk.getBrtOffers().then(items => {
+				this.myOffers = items;
+			}).catch(e => {
+				console.error(e);
+			});
+		}
 	},
 
 	watch: {

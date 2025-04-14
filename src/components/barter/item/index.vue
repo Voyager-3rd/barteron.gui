@@ -1,14 +1,12 @@
 <template>
 	<div :class="{
 		[`barter-item-${ vType }`]: true,
-		'barter-item-relay': hasRelay
+		'barter-item-relay': hasRelay,
+		'compact-view': compactView,
+		'hide-info': hideInfo,
 	}">
 		<!-- Picture -->
 		<picture 
-			:class="{
-				'compact-view': compactView,
-				'hide-info': hideInfo
-			}"
 			v-if="images?.length && vType !== 'page'"
 		>
 			<router-link :to="!(hasRelay || isRemoved) ? offerLink : {}">
@@ -70,6 +68,15 @@
 							@mouseleave="() => hover = 0"
 						>{{ index }}</li>
 					</ul>
+					<Score
+						v-if="averageOfferScore?.value"
+						mode="preview"
+						:rating="'behind'"
+						:stars="1"
+						:value="averageOfferScore?.value"
+						:starsValue="5"
+						:votesCount="averageOfferScore?.count"
+					/>
 				</template>
 			</router-link>
 		</picture>

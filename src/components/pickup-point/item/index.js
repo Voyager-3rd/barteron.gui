@@ -4,6 +4,7 @@ import Loader from "@/components/loader/index.vue";
 import Caption from "@/components/barter/item/caption/index.vue";
 import PhotoSwipe from "photoswipe";
 import SelectPickupPointDialog from "@/components/pickup-point/select-dialog/index.vue";
+import Score from "@/components/score/index.vue";
 import "photoswipe/style.css";
 
 export default {
@@ -14,6 +15,7 @@ export default {
 		Loader,
 		Caption,
 		SelectPickupPointDialog,
+		Score,
 	},
 
 	inject: ['dialog', 'lightboxContainer'],
@@ -130,6 +132,10 @@ export default {
 		/* Get offer images */
 		images() {
 			return (this.item.images || []).map(url => this.sdk.manageBastyonImageSrc(url));
+		},
+
+		averageOfferScore() {
+			return this.sdk.barteron.averageOfferScores[this.item.hash];
 		},
 
 		/**
