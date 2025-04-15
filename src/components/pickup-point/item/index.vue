@@ -121,7 +121,7 @@
 						:rating="'behind'"
 						:stars="1"
 						:value="averageOfferScore?.value"
-						:starsValue="5"
+						:starsValue="averageOfferScore?.value"
 						:votesCount="averageOfferScore?.count"
 					/>
 				</template>
