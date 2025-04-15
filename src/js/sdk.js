@@ -1281,18 +1281,46 @@ class SDK {
 	 * Get barteron average offers score
 	 * 
 	 * @param {Array[String]} offerIds
+	 * @param {Object} options
 	 * 
 	 * @returns {Promise}
 	 */
-	getBrtAverageOfferScores(offerIds = []) {
+	getBrtAverageOfferScores(
+		offerIds = [], 
+		options = { forceUpdate: false }
+	) {
 		offerIds.forEach(hash => {
 			if (!this.barteron._averageOfferScores[hash]) {
 				Vue.set(this.barteron._averageOfferScores, hash, {});
 			}
 		});
 
+		const 
+			cacheInterval = 12 * 60 * 60_000,
+			nowDate = Date.now();
+
+		const filteredIds = offerIds.filter(hash => {
+			let needUpdate = false;
+			const 
+				item = this.barteron._averageOfferScores[hash],
+				createdAt = item?.createdAt;
+
+			if (
+				options?.forceUpdate
+				|| !(createdAt)
+				|| createdAt && (nowDate - createdAt >= cacheInterval)
+			) {
+				needUpdate = true;
+			}
+			return needUpdate;
+		})
+
+		if (!(filteredIds.length)) {
+			return;
+		}
+
 		return this.rpc("getbarteronoffersdetails", {
-			offerIds,
+			offerIds: filteredIds,
 			includeAccounts: false,
 			includeScores: true,
 			includeComments: false,
@@ -1300,7 +1328,7 @@ class SDK {
 		}).then(details => {
 			const offerScores = details?.offerScores;
 			if (offerScores) {
-				offerIds.forEach(hash => {
+				filteredIds.forEach(hash => {
 					const scores = offerScores
 						.filter(f => f.s2 === hash)
 						.map(m => Number(m.i1))
@@ -1308,11 +1336,13 @@ class SDK {
 					
 					const 
 						count = scores.length,
-						value = scores.reduce((acc, value) => acc + value, 0) / (scores.length || 1);
+						value = scores.reduce((acc, value) => acc + value, 0) / (scores.length || 1),
+						createdAt = Date.now();
 					
 					const data = {
 						count,
 						value,
+						createdAt,
 					};
 					
 					Vue.set(this.barteron._averageOfferScores, hash, data);
@@ -1557,6 +1587,8 @@ class SDK {
 	 * @param {String} data.offerId
 	 * @param {String} data.value
 	 * @param {String} data.address
+	 * 
+	 * @returns {Promise}
 	 */
 	setBrtOfferVote(data) {
 		return this.sdk.barteron.vote({
