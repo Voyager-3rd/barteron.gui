@@ -811,7 +811,7 @@ export default {
 		 * 
 		 * @param {Error} error
 		 */
-		errorEvent(error) {
+		mapErrorEvent(error) {
 			this.showError(error);
 		},
 	},

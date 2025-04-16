@@ -660,6 +660,15 @@ export default {
 				this.isChatLoading = false;
 			});
 		},
+
+		/**
+		 * Show error from the map
+		 * 
+		 * @param {Error} error
+		 */
+		mapErrorEvent(error) {
+			this.showError(error);
+		},
 	},
 
 	mounted() {

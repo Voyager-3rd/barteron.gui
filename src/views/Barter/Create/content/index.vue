@@ -360,7 +360,7 @@
 					:selectedOfferIds="selectedOfferIds()"
 					:center="geohash || location || undefined"
 					:mapActionData="mapActionData"
-					@errorEvent="errorEvent"
+					@errorEvent="mapErrorEvent"
 					@mapAction="mapAction"
 					@selectPickupPoint="selectPickupPoint"
 					@unselectPickupPoint="unselectPickupPoint"

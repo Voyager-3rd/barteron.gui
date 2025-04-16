@@ -457,6 +457,7 @@
 					:zoom="10"
 					:offers="mapOffers()"
 					:selectedOfferIds="selectedOfferIds()"
+					@errorEvent="mapErrorEvent"
 					@selectPickupPoint="selectPickupPoint"
 					@buyAtPickupPoint="buyAtPickupPoint"
 				/>

@@ -611,6 +611,9 @@ export default {
 						result, 
 						Math.max(this.scale, minZoom)
 					);
+					if (this.isViewMode || this.isDeliverySelectionMode) {
+						this.marker = result;
+					}
 				} else {
 					throw new Error('Location data is not defined');
 				}
