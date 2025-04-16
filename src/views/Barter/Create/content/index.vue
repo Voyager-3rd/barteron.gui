@@ -1,5 +1,5 @@
 <template>
-	<v-content class="shrink-right">
+	<v-content class="shrink-right overflow-auto">
 		<v-form 
 			ref="form"
 			:rules="validationRules"

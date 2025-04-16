@@ -1,5 +1,5 @@
 <template>
-	<v-content>
+	<v-content class="overflow-auto">
 		<BarterItem
 			ref="barterItem"
 			:item="item"
