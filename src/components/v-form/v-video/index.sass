@@ -1,0 +1,88 @@
+@import "@/css/vars.sass"
+
+.video-uploader
+	position: relative
+	margin: 0 0 $r
+
+	.video-query
+		padding: 7px 7px 0 0
+
+		.ready-to-upload
+			cursor: pointer
+			height: 175px
+			width: 100%
+			border: 2px solid $trunks
+			border-radius: 12px
+			display: flex
+			flex-direction: column
+			align-items: center
+			justify-content: center
+			color: $popo
+
+			.fa
+				color: inherit
+				display: block
+				font-size: 1.5em
+				text-align: center
+				margin: 0 0 8px
+
+		.processing-of-uploaded-video
+			position: relative
+
+			picture,
+			img
+				display: block
+				height: 300px
+				width: 100%
+			
+			img
+				object-fit: contain
+				background-color: $beerus
+
+			.processing-status-holder
+				position: absolute
+				bottom: $r * 2
+				left: 0
+				right: 0
+				display: flex
+				justify-content: center
+				align-items: center
+
+				.processing-status
+					padding: $r $r * 2
+					color: $hit
+					background-color: $gohan
+					border-radius: 12px
+
+		.video-uploaded
+			position: relative
+
+			.video-js 
+				height: 300px
+				width: 100%
+
+		.processing-of-uploaded-video,
+		.video-uploaded
+			.remove
+				+transition(background-color)
+				background-color: $dodoria
+				border-radius: 50%
+				color: $primary
+				cursor: pointer
+				font-size: 17px
+				display: flex
+				align-items: center
+				justify-content: center
+				padding: $r
+				position: absolute
+				top: -7px
+				right: -7px
+				height: 28px
+				width: 28px
+				z-index: 10
+
+		.error-state
+
+	// .status
+	// 	display: block
+	// 	margin: $r * 3 0 0

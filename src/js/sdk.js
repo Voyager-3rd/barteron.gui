@@ -777,6 +777,74 @@ class SDK {
 		})
 	}
 
+	uploadingVideoIsAvailable() {
+		return !!(this.sdk.videos.opendialog);
+	}
+
+	uploadingVideoDialog() {
+
+		// let test = {
+		// 	link: "peertube://test.peertube.pocketnet.app/ee68bc13-0ef8-4527-a354-140467e60c88", //"peertube://test.peertube.pocketnet.app/b5972eca-5e8b-4159-8fc5-b655f9169826",
+		// 	name: null,
+		// };
+
+		// let test = {
+		// 	link: "peertube://test.peertube.pocketnet.app/b5972eca-5e8b-4159-8fc5-b655f9169826",
+		// 	name: null,
+		// };
+
+		// return Promise.resolve(test);
+
+		const data = {
+			fileSizeMaxLimit: null, //50 * 1024 * 1024,
+		};
+
+		return this.sdk.videos.opendialog(data).then(result => {
+			this.lastresult = "uploadingVideoDialog: success"
+			return result;
+		}).catch(e => {
+			this.setLastResult(e);
+			// if (errorForwarding) {
+			// 	throw new AppErrors.UploadImagesError(e);
+			// } else {
+				console.error(e);
+			// }
+		})
+	}
+
+	getVideoInfo(urls) {
+		return this.sdk.get.videos(urls).then(res => {
+			this.lastresult = "getVideoInfo: success";
+
+			return (res || []).map(m => {
+				const
+					name = m?.data?.original?.name,
+					state = m?.data?.original?.state,
+					playlistUrl = m?.data?.original?.streamingPlaylists[0]?.playlistUrl,
+					thumbnail = m?.data?.thumbnail;
+
+				return {
+					name,
+					state,
+					playlistUrl,
+					thumbnail,
+				};
+			})
+		}).catch(e => {
+			this.setLastResult(e);
+			throw e;
+		});
+	}
+
+	removeVideo(url) {
+		return this.sdk.videos.remove({url}).then(() => {
+			this.lastresult = "removeVideo: success";
+		}).catch(e => {
+			this.setLastResult(e);
+			throw e;
+		});
+	}
+
 	/**
 	 * Manage bastyon image source
 	 * 

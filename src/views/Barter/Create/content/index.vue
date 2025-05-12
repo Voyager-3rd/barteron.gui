@@ -68,6 +68,28 @@
 			</div>
 
 			<div 
+				v-if="addingVideoAvailable && offerCreationParams().isAllowed" 
+				class="row block sep"
+			>
+				<strong class="title">{{ $t('stepsLabels.video') }}</strong>
+
+				<v-video
+					ref="video"
+					id="video"
+					class="field-novalidate"
+					:url="undefined"
+				/>
+
+				<!-- Paragraph: Video upload text -->
+				<p>
+					<i class="fa fa-info-circle"></i>
+					{{
+						$t('videosLabels.upload_video_text')
+					}}
+				</p>
+			</div>
+
+			<div 
 				v-if="offerCreationParams().isAllowed" 
 				id="get" 
 				class="row block"

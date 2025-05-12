@@ -111,6 +111,13 @@ export default {
 		},
 
 		/**
+		 * Adding video option is available
+		 */
+		addingVideoAvailable() {
+			return (this.sdk.getTransactionsApiVersion() >= 4);
+		},
+
+		/**
 		 * Format currencies to list
 		 */
 		currencies() {

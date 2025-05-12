@@ -40,6 +40,7 @@ Vue.component("v-input", () => import("@/components/v-form/v-input/index.vue"));
 Vue.component("v-lightbox", () => import("@/components/v-form/v-lightbox/index.vue"));
 Vue.component("v-map", () => import("@/components/v-form/v-map/index.vue"));
 Vue.component("v-photos", () => import("@/components/v-form/v-photos/index.vue"));
+Vue.component("v-video", () => import("@/components/v-form/v-video/index.vue"));
 Vue.component("v-select", () => import("@/components/v-form/v-select/index.vue"));
 Vue.component("v-switch", () => import("@/components/v-form/v-switch/index.vue"));
 Vue.component("v-tabs", () => import("@/components/v-form/v-tabs/index.vue"));

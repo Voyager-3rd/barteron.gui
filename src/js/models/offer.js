@@ -15,7 +15,7 @@ class Offer {
 	constructor(data) {
 		/* Extract JSON values and format object */
 		const
-			{ t, a, c, p, d, f } = JSON.parse(data?.p?.s4 || '{"t":"","a":[],"c":"new","p":"published","d":{},"f":{}}'),
+			{ t, a, c, p, d, f, v } = JSON.parse(data?.p?.s4 || '{"t":"","a":[],"c":"new","p":"published","d":{},"f":{},"v":{}}'),
 			images = JSON.parse(data?.p?.s5 || "[]");
 		
 		/* Iterable properties */
@@ -31,6 +31,7 @@ class Offer {
 		this.condition = data?.condition || c || "new";
 		this.images = (data?.images || images || []).filter(f => f);
 		this.delivery = (data?.delivery ?? d ?? {});
+		this.videos = (data?.videos ?? v ?? {});
 		this.geohash = data?.geohash || data?.p?.s6 || "";
 		this.currencyPrice = data?.currencyPrice || f || {};
 		this.price = (data?.price || data?.p?.i1 / 100 || 0);
