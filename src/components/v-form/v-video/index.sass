@@ -26,7 +26,8 @@
 				text-align: center
 				margin: 0 0 8px
 
-		.processing-of-uploaded-video
+		.processing-of-uploaded-video,
+		.video-processing-failed
 			position: relative
 
 			picture,
@@ -49,10 +50,18 @@
 				align-items: center
 
 				.processing-status
+					margin: 0 $r
 					padding: $r $r * 2
-					color: $hit
 					background-color: $gohan
 					border-radius: 12px
+
+		.processing-of-uploaded-video
+			.processing-status
+				color: $hit
+
+		.video-processing-failed
+			.processing-status
+				color: $dodoria
 
 		.video-uploaded
 			position: relative
@@ -62,7 +71,8 @@
 				width: 100%
 
 		.processing-of-uploaded-video,
-		.video-uploaded
+		.video-uploaded,
+		.video-processing-failed
 			.remove
 				+transition(background-color)
 				background-color: $dodoria

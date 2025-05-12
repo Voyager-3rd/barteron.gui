@@ -308,7 +308,8 @@
 	"videosLabels": {
 		"upload_video": "Загрузить видео",
 		"upload_video_text": "Вы можете загрузить не более одного видео. Загрузка видео необязательна.",
-		"video_is_being_processed": "Видео обрабатывается"
+		"video_is_being_processed": "Видео обрабатывается",
+		"video_processing_failed": "Обработка видео завершилась ошибкой. Удалите видео и повторите попытку"
 	},
 
 	"voteLabels": {

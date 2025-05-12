@@ -308,7 +308,8 @@
 	"videosLabels": {
 		"upload_video": "Upload video",
 		"upload_video_text": "You can upload up to one video. Uploading a video is optional.",
-		"video_is_being_processed": "Video is being processed"
+		"video_is_being_processed": "Video is being processed",
+		"video_processing_failed": "Video processing failed. Please delete the video and try again."
 	},
 
 	"voteLabels": {

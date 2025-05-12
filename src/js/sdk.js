@@ -812,8 +812,8 @@ class SDK {
 		})
 	}
 
-	getVideoInfo(urls) {
-		return this.sdk.get.videos(urls).then(res => {
+	getVideoInfo(urls, update = false) {
+		return this.sdk.get.videos(urls, update).then(res => {
 			this.lastresult = "getVideoInfo: success";
 
 			return (res || []).map(m => {

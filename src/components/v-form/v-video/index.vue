@@ -3,6 +3,7 @@
 
 		<div class="video-query">
 
+			<!-- State: readyToUpload -->
 			<div 
 				v-if="state === 'readyToUpload'"
 				class="ready-to-upload"
@@ -12,6 +13,7 @@
 				<span>{{ $t('videosLabels.upload_video') }}</span>
 			</div>
 
+			<!-- State: processingOfUploadedVideo -->
 			<div 
 				v-if="state === 'processingOfUploadedVideo'"
 				class="processing-of-uploaded-video"
@@ -33,6 +35,29 @@
 				></i>
 			</div>
 
+			<!-- State: videoProcessingFailed -->
+			<div 
+				v-if="state === 'videoProcessingFailed'"
+				class="video-processing-failed"
+			>
+				<picture>
+					<img :src="videoInfo?.thumbnail" :alt="videoInfo?.name || 'thumbnail'">
+				</picture>
+
+				<div class="processing-status-holder">
+					<div class="processing-status">
+						<i class="fa fa-exclamation-triangle"></i>
+						{{ $t('videosLabels.video_processing_failed') }}
+					</div>
+				</div>
+
+				<i 
+					class="fa fa-times remove" 
+					@click="removeVideo"
+				></i>
+			</div>
+
+			<!-- State: videoUploaded -->
 			<div 
 				v-if="state === 'videoUploaded'"
 				class="video-uploaded"
@@ -48,6 +73,7 @@
 			</div>
 
 
+			<!-- State: errorState -->
 			<div 
 				v-if="state === 'errorState'"
 				class="error-state"

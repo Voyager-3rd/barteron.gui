@@ -62,11 +62,14 @@ export default {
 				case "processingOfUploadedVideo":
 					this.waitForVideoProcessing();
 					break;
-				
+
+				case "videoProcessingFailed":
+					break;
+						
 				case "videoUploaded":
 					this.updateSourceAsync();
 					break;
-				
+					
 				case "errorState":
 					break;
 			
@@ -80,7 +83,7 @@ export default {
 			this.sdk.uploadingVideoDialog().then(result => {
 				this.currentUrl = result?.link;
 				if (this.currentUrl) {
-					this.sdk.getVideoInfo([this.currentUrl]).then(items => {
+					this.sdk.getVideoInfo([this.currentUrl], true).then(items => {
 						this.videoInfo = items?.[0];
 						this.changeStateTo("processingOfUploadedVideo");
 					}).catch(e => { 
@@ -93,23 +96,35 @@ export default {
 
 		waitForVideoProcessing() {
 			this.processingCheckInterval = setInterval(() => {
-				this.sdk.getVideoInfo([this.currentUrl]).then(items => {
+				this.sdk.getVideoInfo([this.currentUrl], true).then(items => {
 					this.videoInfo = items?.[0];
-					const isPublished = (this.videoInfo?.state?.id === 1);
+					const 
+						stateId = this.videoInfo?.state?.id,
+						isPublished = (stateId === 1),
+						isTranscoding = (stateId === 2 || stateId === 3),
+						isFailed = (stateId === 7);
 					if (isPublished) {
-						clearInterval(this.processingCheckInterval);
-						this.processingCheckInterval = null;
-
+						this.stopVideoProcessingChecking();
 						this.changeStateTo("videoUploaded");
+					} else if (isTranscoding) {
+
+					} else if (isFailed) {
+						this.stopVideoProcessingChecking();
+						this.changeStateTo("videoProcessingFailed");
 					};
 				}).catch(e => { 
-					clearInterval(this.processingCheckInterval);
-					this.processingCheckInterval = null;
-
+					this.stopVideoProcessingChecking();
 					this.error = e;
 					this.changeStateTo("errorState");
 				});
 			}, 20_000);
+		},
+
+		stopVideoProcessingChecking() {
+			if (this.processingCheckInterval) {
+				clearInterval(this.processingCheckInterval);
+				this.processingCheckInterval = null;
+			};
 		},
 
 		updateSourceAsync() {
@@ -151,10 +166,7 @@ export default {
 		},
 
 		removeVideo() {
-			if (this.processingCheckInterval) {
-				clearInterval(this.processingCheckInterval);
-				this.processingCheckInterval = null;
-			};
+			this.stopVideoProcessingChecking();
 
 			this.sdk.removeVideo(this.currentUrl).then(() => {
 				this.changeStateTo("readyToUpload");
