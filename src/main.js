@@ -407,7 +407,7 @@ Vue.prototype.shared = Vue.observable({
 			
 			if (needReplace) {
 				return this.$router.replace(to).catch(e => {
-					this.showError(e);
+					console.error(e);
 				});
 			}
 		},
@@ -425,6 +425,24 @@ Vue.prototype.shared = Vue.observable({
 			return keys.reduce((result, item) => {
 				return result = result && JSON.stringify(route1[item]) === JSON.stringify(route2[item]);
 			}, true);
+		},
+
+		/**
+		 * Show info
+		 * 
+		 * @param {String} message
+		 */
+		showInfo(message) {
+			this.dialog?.instance.view("info", message);
+		},
+
+		/**
+		 * Show warning
+		 * 
+		 * @param {String} message
+		 */
+		showWarning(message) {
+			this.dialog?.instance.view("warn", message);
 		},
 
 		/**

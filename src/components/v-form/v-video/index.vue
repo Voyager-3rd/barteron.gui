@@ -72,13 +72,17 @@
 				></i>
 			</div>
 
-
 			<!-- State: errorState -->
 			<div 
 				v-if="state === 'errorState'"
 				class="error-state"
 			>
-				<p>{{ error.message }}</p>
+				<div class="error-info">
+					<p>{{ error?.message }}</p>
+					<v-button
+						@click="repeatLoading"
+					>{{ $t('buttonLabels.repeat') }}</v-button>
+				</div>
 			</div>
 
 		</div>

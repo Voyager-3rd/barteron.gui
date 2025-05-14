@@ -264,6 +264,7 @@
 		"offer_withdraw": "Are you sure you want withdraw this offer?",
 		"offer_delete": "Are you sure you want remove this offer?",
 		"video_delete": "Are you sure you want to remove this video?",
+		"need_remove_unpublished_video": "The video has been uploaded but not published. It will be removed. Continue?",
 		"pending_reg": "Please wait until your account being activacted",
 		"opening_room": "The chat is opening. Please wait.",
 		"submit_rating": "Do you want to submit the rating?",
@@ -307,9 +308,14 @@
 
 	"videosLabels": {
 		"upload_video": "Upload video",
-		"upload_video_text": "You can upload up to one video. Uploading a video is optional.",
+		"upload_video_text": "You can upload up to one video. Uploading a video is optional. Uploaded videos can be found in the \"My Videos\" list on Bastyon.",
 		"video_is_being_processed": "Video is being processed",
-		"video_processing_failed": "Video processing failed. Please delete the video and try again."
+		"video_processing_failed": "Video processing failed. Please delete the video and try again.",
+		"wait_until_video_processed": "Please wait until the video is processed or delete it",
+		"finish_working_with_video": "Please finish working with the video",
+		"order_selection_title": "Arrange relative to images:",
+		"order_first": "First",
+		"order_last": "Last"
 	},
 
 	"voteLabels": {

@@ -16,11 +16,12 @@ export default {
 
 	data() {
 		return {
-			state: "empty",
+			state: "readyToUpload",
 			currentUrl: this.url,
 			error: null,
 			videoInfo: null,
 			processingCheckInterval: null,
+			videoExists: false,
 		}
 	},
 
@@ -55,22 +56,28 @@ export default {
 					this.currentUrl = null;
 					this.videoInfo = null;
 					this.error = null;
+					this.videoExists = false;
 
 					this.updateSourceAsync();
 					break;
 			
 				case "processingOfUploadedVideo":
+					this.videoExists = true;
+					this.$emit("newVideoAdded", this);
 					this.waitForVideoProcessing();
 					break;
 
 				case "videoProcessingFailed":
+					this.videoExists = true;
 					break;
 						
 				case "videoUploaded":
+					this.videoExists = true;
 					this.updateSourceAsync();
 					break;
 					
 				case "errorState":
+					this.videoExists = false;
 					break;
 			
 				default:
@@ -156,48 +163,79 @@ export default {
 		},
 
 		removeVideoEvent() {
-			this.dialog?.instance
-				.view("question", this.$t("dialogLabels.video_delete"))
-				.then(state => {
-					if (state) {
-						this.removeVideo();
-					};
-				});
+			const dialog = this.dialog?.instance;
+			dialog.view("question", {
+				text: this.$t("dialogLabels.video_delete"),
+				buttons: [
+					{ text: this.$t("buttonLabels.no"), vType: "blue", vSize: "sm", click: () => dialog.hide(false) },
+					{ text: this.$t("buttonLabels.yes"), vType: "dodoria", vSize: "sm", click: () => dialog.hide(true) }
+				]
+			}).then(state => {
+				if (state) {
+					this.removeVideo();
+				};
+			});
 		},
 
 		removeVideo() {
-			this.stopVideoProcessingChecking();
-
-			this.sdk.removeVideo(this.currentUrl).then(() => {
-				this.changeStateTo("readyToUpload");
-			}).catch(e => {
+			this.videoRemoving().catch(e => {
 				this.showError(e);
 			});
 		},
 
-		// /**
-		//  * Check at least one photo attached
-		//  */
-		// validate() {
-		// 	if (!this.max) {
-		// 		return this.files.length;
-		// 	} else {
-		// 		return this.files.length && this.files.length <= this.max;
-		// 	}
-		// },
+		videoRemoving() {
+			return Promise.resolve().then(() => {
+				this.stopVideoProcessingChecking();
+			}).then(() => {
+				return this.sdk.removeVideo(this.currentUrl);
+			}).then(() => {
+				this.changeStateTo("readyToUpload");
+			})
+		},
 
-		// /**
-		//  * Serialize files to FormData
-		//  * 
-		//  * @returns {Object}
-		//  */
-		// serialize() {
-		// 	const formData = new FormData();
+		repeatLoading() {
+			this.changeStateTo("readyToUpload");
+		},
 
-		// 	this.files.forEach(file => formData.append(file.id, file.image));
+		canSerialize() {
+			let result = {
+				canSerialize: true,
+			};
 
-		// 	return Object.fromEntries(formData.entries());
-		// }
+			const serializationStates = [
+				"readyToUpload",
+				"videoUploaded",
+				"errorState",
+			];
+
+			if (!(serializationStates.includes(this.state))) {
+				let i18nVideosKey = "finish_working_with_video";
+
+				if (this.state === "processingOfUploadedVideo") {
+					i18nVideosKey = "wait_until_video_processed";
+				} else if (this.state === "videoProcessingFailed") {
+					i18nVideosKey = "video_processing_failed";
+				};
+
+				result = {
+					canSerialize: false,
+					message: this.$t(`videosLabels.${i18nVideosKey}`),
+				};
+			}
+
+			return result;
+		},
+
+		getData() {
+			const 
+				url = (this.state === "videoUploaded" ? this.currentUrl : null),
+				videoExists = this.videoExists;
+
+			return {
+				url,
+				videoExists,
+			};
+		},
 	},
 
 	mounted() {
@@ -205,24 +243,7 @@ export default {
 			this.changeStateTo("videoUploaded");
 		} else {
 			this.changeStateTo("readyToUpload");
-		};
-		
-
-
-
-		// const link = "peertube://test.peertube.pocketnet.app/b5972eca-5e8b-4159-8fc5-b655f9169826";
-		// this.sdk.getVideoInfo([link]).then(res => {
-		// 	console.log('getVideoInfo !!!!!!!!!!!!!!!!!!!!!!!!!!', res);
-			
-		// 	const playlistUrl = res[0]?.data.original.streamingPlaylists[0]?.playlistUrl;
-		// 	const thumbnail = res[0]?.data.thumbnail;
-
-		// 	// Vue.set(this.videoOptions, "sources", [{src: playlistUrl}]);
-		// 	// console.log('this.videoOptions', this.videoOptions);
-			
-			
-		// });
-
+		};		
 	},
 
 }
