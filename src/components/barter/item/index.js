@@ -1,5 +1,7 @@
 import ImageLoad from "@/components/image-load/index.vue";
 import Loader from "@/components/loader/index.vue";
+import VideoPreview from "@/components/video-preview/index.vue";
+import VideoPlayer from "@/components/video-player/index.vue";
 import ExchangeList from "@/components/barter/exchange/list/index.vue";
 import WorkSchedule from "@/components/work-schedule/index.vue";
 import CurrencySwitcher from "@/components/currency-switcher/index.vue";
@@ -14,7 +16,7 @@ import LegalInfo from "@/components/legal-info/index.vue";
 import LikeStore from "@/stores/like.js";
 import SelectOfferDialog from "@/views/Barter/SelectOfferDialog/index.vue";
 import Score from "@/components/score/index.vue";
-import PhotoSwipe from "photoswipe";
+import PhotoSwipeLightbox from "photoswipe/lightbox";
 import "photoswipe/style.css";
 import Vue from 'vue';
 
@@ -24,6 +26,8 @@ export default {
 	components: {
 		ImageLoad,
 		Loader,
+		VideoPreview,
+		VideoPlayer,
 		ExchangeList,
 		WorkSchedule,
 		Caption,
@@ -65,6 +69,7 @@ export default {
 
 	data() {
 		return {
+			videoItem: null,
 			hover: 0,
 			active: 0,
 			addr: {},
@@ -343,6 +348,45 @@ export default {
 			return (this.item.images || []).map(url => this.sdk.manageBastyonImageSrc(url));
 		},
 
+		mediaItems() {
+			const imageItems = (this.images || []).map(m => ({
+				url: m,
+				type: "image",
+			}));
+
+			let result = imageItems;
+
+			this.setVideoItem();
+
+			if (this.videoItem) {
+				const order = this.item.videos?.order;
+				if (order === "first") {
+					result = [this.videoItem, ...imageItems];
+				} else {
+					result = [...imageItems, this.videoItem];
+				};
+			};
+
+			return result;
+		},
+
+		videoPlayerOptions() {
+			return {
+				autoplay: false,
+				controls: true,
+				disablePictureInPicture: true,
+				enableDocumentPictureInPicture: false,
+				controlBar: {
+					fullscreenToggle: false,
+					pictureInPictureToggle: false,
+				},
+				userActions: {
+					doubleClick: false,
+					hotkeys: false,
+				},
+			};
+		},
+
 		averageOfferScore() {
 			return this.sdk.barteron.averageOfferScores[this.item.hash];
 		},
@@ -446,44 +490,137 @@ export default {
 			return arguments[arguments.length - 1];
 		},
 
+		setVideoItem() {
+			if (!(this.videoItem)) {
+				const 
+					videos = this.item.videos,
+					url = videos?.items?.[0]?.url;
+				
+				if (url) {
+					Vue.set(this, "videoItem", {
+						url: url,
+						type: "video",
+						data: null,
+						error: null,
+					});
+
+					this.sdk.getVideoInfo([url]).then(dataItems => {
+						Vue.set(this.videoItem, "data", dataItems?.[0]);
+					}).catch(e => {
+						Vue.set(this.videoItem, "error", e);
+						console.error(e);
+					});
+				};
+			};
+		},
+
 		/**
-		 * Click on image
+		 * Click on media item
 		 * 
 		 * @param {Number} index
 		 */
-		imageClick(index) {
+		mediaItemClick(index) {
 			const options = {
-				index,
 				initialZoomLevel: "fit",
 				secondaryZoomLevel: 2,
 				maxZoomLevel: 4,
 				wheelToZoom: true,
-				showHideAnimationType: "fade"
+				showHideAnimationType: "fade",
+				pswpModule: () => import('photoswipe'),
 			};
 
-			const promises = this.images.map(item => {
-				return new Promise(resolve => {
-					let image = new Image();
-					image.onload = () => resolve(image);
-					image.onerror = () => resolve(image);
-					image.src = item;
-				})
+			const promises = this.mediaItems.map(item => {
+				let result = Promise.resolve();
+
+				if (item.type === "image") {
+					result = new Promise(resolve => {
+						let image = new Image();
+						const data = {
+							image,
+							mediaItem: item,
+						};
+						image.onload = () => resolve(data);
+						image.onerror = () => resolve(data);
+						image.src = item.url;
+					});
+				} else if (item.type === "video") {
+					const data = {
+						mediaItem: item,
+					};
+					result = Promise.resolve(data);
+				};
+
+				return result;
 			});
 
 			Promise.allSettled(promises).then(results => {
 				options.dataSource = results
 					.map(item => item.value)
-					.filter(image => image)
-					.map(image => {
-						return {
-							src:    image.src,
-							width:  image.width,
-							height: image.height
-						}
+					.filter(data => (data.mediaItem.type === "image" && data.image || data.mediaItem.type !== "image"))
+					.map(data => {
+						return data.mediaItem.type === "image" 
+							? {
+								src:    data.image.src,
+								width:  data.image.width,
+								height: data.image.height,
+								mediaItem: data.mediaItem,
+							}
+							: {
+								mediaItem: data.mediaItem,
+							};
 					});
 
-				const gallery = new PhotoSwipe(options);
-				gallery.init();
+				const lightbox = new PhotoSwipeLightbox(options);
+
+				lightbox.on('contentLoad', (event) => {
+					const { content, isLazy } = event;
+
+					const 
+						mediaItem = content.data?.mediaItem,
+						isVideo = (mediaItem?.type === "video");
+
+					if (isVideo) {
+						event.preventDefault();
+
+						content.element = document.createElement('div');
+						content.element.className = 'pswp__video-container';
+				  
+						var ComponentClass = Vue.extend(VideoPlayer);
+						var instance = new ComponentClass({
+							propsData: {
+								options: this.videoPlayerOptions,
+							}
+						});
+						
+						instance.$mount();
+						content.element.appendChild(instance.$el);
+						content.playerInstance = instance;
+						const data = {
+							playlistUrl: mediaItem?.data?.playlistUrl,
+							thumbnailUrl: mediaItem?.data?.thumbnailUrl,
+						};
+						instance.setSource(data);
+					};
+				});
+
+				const makePauseOnVideo = (event) => {
+					const { content } = event;
+
+					const 
+						mediaItem = content.data?.mediaItem,
+						isVideo = (mediaItem?.type === "video");
+					
+					if (isVideo) {
+						content.playerInstance?.pauseAsync();
+					}
+				};
+
+				lightbox.on('contentDeactivate', makePauseOnVideo);
+				lightbox.on('contentDestroy', makePauseOnVideo);
+				lightbox.on('contentRemove', makePauseOnVideo);
+
+				lightbox.init();
+				lightbox.loadAndOpen(index);
 			}).catch(e => {
 				console.error(e);
 			});
@@ -683,12 +820,18 @@ export default {
 				this.loadPickupPointsIfNeeded();
 			});
 	
-			this.sdk.getBrtOffers().then(items => {
-				this.myOffers = items;
-			}).catch(e => {
-				console.error(e);
-			});
-		}
+			const 
+				needCheckExchangeAvailability = !(this.isMyOffer),
+				needRequestMyOffers = needCheckExchangeAvailability;
+
+			if (needRequestMyOffers) {
+				this.sdk.getBrtOffers().then(items => {
+					this.myOffers = items;
+				}).catch(e => {
+					console.error(e);
+				});
+			};
+		};
 	},
 
 	watch: {

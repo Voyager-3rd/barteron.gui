@@ -308,7 +308,7 @@
 
 	"videosLabels": {
 		"upload_video": "Upload video",
-		"upload_video_text": "You can upload up to one video. Uploading a video is optional. Uploaded videos can be found in the \"My Videos\" list on Bastyon.",
+		"upload_video_text": "You can upload up to one video. Recommended video parameters: duration up to 2 minutes, resolution up to 720p. Uploading a video is optional. Uploaded videos can be found in the \"My Videos\" list on Bastyon.",
 		"video_is_being_processed": "Video is being processed",
 		"video_processing_failed": "Video processing failed. Please delete the video and try again.",
 		"wait_until_video_processed": "Please wait until the video is processed or delete it",

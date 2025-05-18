@@ -941,7 +941,7 @@ export default {
 				]
 			}).then(state => {
 				if (state) {
-					this.$refs.video?.videoRemoving().then(() => {
+					this.$refs.video?.videoRemoving({disableStateChange: true}).then(() => {
 						this.offer.newVideoAdded = false;
 						next();
 					}).catch(e => {

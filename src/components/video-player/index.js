@@ -8,9 +8,7 @@ export default {
 	props: {
 		options: {
 			type: Object,
-			default() {
-			return {};
-			}
+			default: () => ({})
 		}
 	},
 
@@ -21,27 +19,63 @@ export default {
 	},
 
 	methods: {
-		setup() {
+		init() {
 			this.$2watch("$refs.videoPlayer").then(() => {
 				this.player = videojs(this.$refs.videoPlayer, this.options, () => {
-					this.player.log('onPlayerReady', this);
-				});
-				this.player.hlsQualitySelector({
-					displayCurrentQuality: true,
+					this.player.hlsQualitySelector({
+						displayCurrentQuality: true,
+					});
+					// this.player.log('onPlayerReady', this);
 				});
 			}).catch(e => { 
 				console.error(e);
 			});
 		},
+
+		setSource(data) {
+			if (this.player) {
+				this._applySourceData(data);
+			} else {
+				this.$2watch("player").then(() => {
+					this._applySourceData(data);
+				}).catch(e => { 
+					this.error = e;
+				});
+			};
+		},
+
+		_applySourceData(data) {
+			const player = this.player;
+			player?.ready(() => {
+				if (data.playlistUrl) {
+					player.src([{ src: data.playlistUrl }]);
+					if (data.thumbnailUrl) {
+						player.poster(data.thumbnailUrl);
+					};
+				} else {
+					player.src();
+					player.poster();
+				};
+			});
+		},
+
+		pauseAsync() {
+			const player = this.player;
+			player?.ready(() => {
+				if (!(player.paused())) {
+					player.pause();
+				};
+			});
+		},
 	},
 
 	mounted() {
-		this.setup();
+		this.init();
 	},
 
 	beforeDestroy() {
 		if (this.player) {
 			this.player.dispose();
-		}
+		};
 	}
 }

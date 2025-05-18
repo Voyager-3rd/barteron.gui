@@ -22,6 +22,7 @@ export default {
 			videoInfo: null,
 			processingCheckInterval: null,
 			videoExists: false,
+			newVideoAdded: false,
 		}
 	},
 
@@ -57,12 +58,11 @@ export default {
 					this.videoInfo = null;
 					this.error = null;
 					this.videoExists = false;
-
-					this.updateSourceAsync();
 					break;
 			
 				case "processingOfUploadedVideo":
 					this.videoExists = true;
+					this.newVideoAdded = true;
 					this.$emit("newVideoAdded", this);
 					this.waitForVideoProcessing();
 					break;
@@ -105,14 +105,17 @@ export default {
 			this.processingCheckInterval = setInterval(() => {
 				this.sdk.getVideoInfo([this.currentUrl], true).then(items => {
 					this.videoInfo = items?.[0];
+
 					const 
 						stateId = this.videoInfo?.state?.id,
 						isPublished = (stateId === 1),
 						isTranscoding = (stateId === 2 || stateId === 3),
 						isFailed = (stateId === 7);
+
 					if (isPublished) {
 						this.stopVideoProcessingChecking();
 						this.changeStateTo("videoUploaded");
+
 					} else if (isTranscoding) {
 
 					} else if (isFailed) {
@@ -135,16 +138,22 @@ export default {
 		},
 
 		updateSourceAsync() {
-			this.$2watch("$refs.videoPlayer?.player").then(player => {
-				this.updateSourceForPlayerAsync(player);
+			this.$2watch("$refs.videoPlayer").then(() => {
+				return this.loadVideoInfo();
+			}).then(() => {
+				const data = {
+					playlistUrl: this.videoInfo?.playlistUrl,
+					thumbnailUrl: this.videoInfo?.thumbnailUrl,
+				};
+				this.$refs.videoPlayer?.setSource(data);
 			}).catch(e => { 
 				this.error = e;
 				this.changeStateTo("errorState");
 			});
 		},
 
-		updateSourceForPlayerAsync(player) {
-			new Promise(resolve => {
+		loadVideoInfo() {
+			return new Promise(resolve => {
 				if (this.currentUrl && !(this.videoInfo)) {
 					return this.sdk.getVideoInfo([this.currentUrl]).then(items => {
 						this.videoInfo = items?.[0];
@@ -152,13 +161,7 @@ export default {
 					});
 				} else {
 					resolve();
-				}
-			}).then(() => {
-				const src = this.videoInfo?.playlistUrl || null;
-				player.src([{ src }]);
-			}).catch(e => { 
-				this.error = e;
-				this.changeStateTo("errorState");
+				};
 			});
 		},
 
@@ -179,17 +182,23 @@ export default {
 
 		removeVideo() {
 			this.videoRemoving().catch(e => {
-				this.showError(e);
+				this.error = e;
+				this.changeStateTo("errorState");
 			});
 		},
 
-		videoRemoving() {
+		videoRemoving(options = {disableStateChange: false}) {
 			return Promise.resolve().then(() => {
 				this.stopVideoProcessingChecking();
+				this.$refs.videoPlayer?.pauseAsync(); //this.$refs.videoPlayer?.player?.dispose();
+				const needRemoveFile = this.newVideoAdded;
+				if (needRemoveFile) {
+					return this.sdk.removeVideo(this.currentUrl);
+				};
 			}).then(() => {
-				return this.sdk.removeVideo(this.currentUrl);
-			}).then(() => {
-				this.changeStateTo("readyToUpload");
+				if (!(options?.disableStateChange)) {
+					this.changeStateTo("readyToUpload");
+				};
 			})
 		},
 
@@ -227,23 +236,24 @@ export default {
 		},
 
 		getData() {
-			const 
-				url = (this.state === "videoUploaded" ? this.currentUrl : null),
-				videoExists = this.videoExists;
-
 			return {
-				url,
-				videoExists,
+				url: (this.state === "videoUploaded" ? this.currentUrl : null),
+				videoExists: this.videoExists,
 			};
 		},
 	},
 
 	mounted() {
 		if (this.currentUrl) {
-			this.changeStateTo("videoUploaded");
+			this.loadVideoInfo().then(() => {
+				if (this.videoInfo.playlistUrl) {
+					this.changeStateTo("videoUploaded");
+				} else {
+					this.changeStateTo("readyToUpload");
+				};
+			})
 		} else {
 			this.changeStateTo("readyToUpload");
 		};		
 	},
-
 }

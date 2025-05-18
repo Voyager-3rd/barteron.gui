@@ -821,13 +821,13 @@ class SDK {
 					name = m?.data?.original?.name,
 					state = m?.data?.original?.state,
 					playlistUrl = m?.data?.original?.streamingPlaylists[0]?.playlistUrl,
-					thumbnail = m?.data?.thumbnail;
+					thumbnailUrl = m?.data?.thumbnail;
 
 				return {
 					name,
 					state,
 					playlistUrl,
-					thumbnail,
+					thumbnailUrl,
 				};
 			})
 		}).catch(e => {

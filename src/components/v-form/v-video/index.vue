@@ -19,7 +19,7 @@
 				class="processing-of-uploaded-video"
 			>
 				<picture>
-					<img :src="videoInfo?.thumbnail" :alt="videoInfo?.name || 'thumbnail'">
+					<img :src="videoInfo?.thumbnailUrl" :alt="videoInfo?.name || 'thumbnail'">
 				</picture>
 
 				<div class="processing-status-holder">
@@ -41,7 +41,7 @@
 				class="video-processing-failed"
 			>
 				<picture>
-					<img :src="videoInfo?.thumbnail" :alt="videoInfo?.name || 'thumbnail'">
+					<img :src="videoInfo?.thumbnailUrl" :alt="videoInfo?.name || 'thumbnail'">
 				</picture>
 
 				<div class="processing-status-holder">
@@ -78,13 +78,12 @@
 				class="error-state"
 			>
 				<div class="error-info">
-					<p>{{ error?.message }}</p>
+					<p>{{ error?.message || error?.text }}</p>
 					<v-button
 						@click="repeatLoading"
 					>{{ $t('buttonLabels.repeat') }}</v-button>
 				</div>
 			</div>
-
 		</div>
 
 		<!-- <span
