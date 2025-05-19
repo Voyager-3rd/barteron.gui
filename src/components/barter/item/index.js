@@ -571,6 +571,7 @@ export default {
 					});
 
 				const lightbox = new PhotoSwipeLightbox(options);
+				const videoContainerId = "pswp-video-container";
 
 				lightbox.on('contentLoad', (event) => {
 					const { content, isLazy } = event;
@@ -582,28 +583,33 @@ export default {
 					if (isVideo) {
 						event.preventDefault();
 
-						content.element = document.createElement('div');
-						content.element.className = 'pswp__video-container';
+						const videoContainer = document.createElement('div');
+						videoContainer.className = 'pswp__video-container';
+						videoContainer.id = videoContainerId;
 				  
 						var ComponentClass = Vue.extend(VideoPlayer);
-						var instance = new ComponentClass({
+						var playerInstance = new ComponentClass({
 							propsData: {
 								options: this.videoPlayerOptions,
 							}
 						});
 						
-						instance.$mount();
-						content.element.appendChild(instance.$el);
-						content.playerInstance = instance;
+						playerInstance.$mount();
+						videoContainer.appendChild(playerInstance.$el);
+						lightbox.playerInstance = playerInstance;
 						const data = {
 							playlistUrl: mediaItem?.data?.playlistUrl,
 							thumbnailUrl: mediaItem?.data?.thumbnailUrl,
 						};
-						instance.setSource(data);
+						playerInstance.setSource(data);
+
+						content.element = videoContainer;
+
+						content.onLoaded();
 					};
 				});
 
-				const makePauseOnVideo = (event) => {
+				lightbox.on('contentDeactivate', (event) => {
 					const { content } = event;
 
 					const 
@@ -611,13 +617,20 @@ export default {
 						isVideo = (mediaItem?.type === "video");
 					
 					if (isVideo) {
-						content.playerInstance?.pauseAsync();
+						lightbox.playerInstance?.pauseAsync();
 					}
-				};
+				});
 
-				lightbox.on('contentDeactivate', makePauseOnVideo);
-				lightbox.on('contentDestroy', makePauseOnVideo);
-				lightbox.on('contentRemove', makePauseOnVideo);
+				lightbox.on('pointerUp', (event) => {
+					if (event.originalEvent?.target?.id === videoContainerId) {
+						lightbox.pswp?.close();
+					};
+				});
+
+				lightbox.on('destroy', () => {
+					lightbox.playerInstance?.$destroy();
+					lightbox.playerInstance = null;
+				});				
 
 				lightbox.init();
 				lightbox.loadAndOpen(index);

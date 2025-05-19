@@ -19,7 +19,7 @@ export default {
 	},
 
 	methods: {
-		init() {
+		initPlayer() {
 			this.$2watch("$refs.videoPlayer").then(() => {
 				this.player = videojs(this.$refs.videoPlayer, this.options, () => {
 					this.player.hlsQualitySelector({
@@ -70,12 +70,10 @@ export default {
 	},
 
 	mounted() {
-		this.init();
+		this.initPlayer();
 	},
 
 	beforeDestroy() {
-		if (this.player) {
-			this.player.dispose();
-		};
+		this.player?.dispose();
 	}
 }
