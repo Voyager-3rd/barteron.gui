@@ -115,6 +115,24 @@ function showMediaItems(mediaItems, startIndex) {
 			}
 		});
 
+		lightbox.on('pointerDown', (event) => {
+			const 
+				targetClassList = event.originalEvent?.target?.classList,
+				controlClasses = [
+					"vjs-mouse-display",
+					"vjs-progress-control",
+					"vjs-volume-control",
+					"vjs-volume-horizontal",
+					"vjs-volume-vertical",
+					"vjs-control"
+				],
+				isControlClick = controlClasses.some(f => targetClassList?.contains(f));
+
+			if (isControlClick) {
+				event.preventDefault();
+			};
+		});
+
 		lightbox.on('pointerUp', (event) => {
 			if (event.originalEvent?.target?.id === videoContainerId) {
 				lightbox.pswp?.close();
