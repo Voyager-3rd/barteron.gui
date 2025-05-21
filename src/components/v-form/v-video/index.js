@@ -28,25 +28,6 @@ export default {
 
 	inject: ["dialog"],
 	
-	computed: {
-		videoOptions() {
-			return {
-				autoplay: false,
-				controls: true,
-				disablePictureInPicture: true,
-				enableDocumentPictureInPicture: false,
-				controlBar: {
-					fullscreenToggle: false,
-					pictureInPictureToggle: false,
-				},
-				userActions: {
-					doubleClick: false,
-					hotkeys: false,
-				},
-			};
-		},
-	},
-
 	methods: {
 		changeStateTo(newState) {
 			this.state = newState;

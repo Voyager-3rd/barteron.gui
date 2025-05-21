@@ -64,7 +64,7 @@
 			>
 				<VideoPlayer 
 					ref="videoPlayer"
-					:options="videoOptions"
+					:options="{}"
 				/>
 				<i 
 					class="fa fa-times remove" 

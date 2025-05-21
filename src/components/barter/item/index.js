@@ -1,7 +1,6 @@
 import ImageLoad from "@/components/image-load/index.vue";
 import Loader from "@/components/loader/index.vue";
 import VideoPreview from "@/components/video-preview/index.vue";
-import VideoPlayer from "@/components/video-player/index.vue";
 import ExchangeList from "@/components/barter/exchange/list/index.vue";
 import WorkSchedule from "@/components/work-schedule/index.vue";
 import CurrencySwitcher from "@/components/currency-switcher/index.vue";
@@ -16,7 +15,7 @@ import LegalInfo from "@/components/legal-info/index.vue";
 import LikeStore from "@/stores/like.js";
 import SelectOfferDialog from "@/views/Barter/SelectOfferDialog/index.vue";
 import Score from "@/components/score/index.vue";
-import PhotoSwipeLightbox from "photoswipe/lightbox";
+import { showMediaItems } from "@/js/mediaUtils.js";
 import "photoswipe/style.css";
 import Vue from 'vue';
 
@@ -27,7 +26,6 @@ export default {
 		ImageLoad,
 		Loader,
 		VideoPreview,
-		VideoPlayer,
 		ExchangeList,
 		WorkSchedule,
 		Caption,
@@ -360,31 +358,14 @@ export default {
 
 			if (this.videoItem) {
 				const order = this.item.videos?.order;
-				if (order === "first") {
-					result = [this.videoItem, ...imageItems];
-				} else {
+				if (order === "last") {
 					result = [...imageItems, this.videoItem];
+				} else {
+					result = [this.videoItem, ...imageItems];
 				};
 			};
 
 			return result;
-		},
-
-		videoPlayerOptions() {
-			return {
-				autoplay: false,
-				controls: true,
-				disablePictureInPicture: true,
-				enableDocumentPictureInPicture: false,
-				controlBar: {
-					fullscreenToggle: false,
-					pictureInPictureToggle: false,
-				},
-				userActions: {
-					doubleClick: false,
-					hotkeys: false,
-				},
-			};
 		},
 
 		averageOfferScore() {
@@ -520,123 +501,7 @@ export default {
 		 * @param {Number} index
 		 */
 		mediaItemClick(index) {
-			const options = {
-				initialZoomLevel: "fit",
-				secondaryZoomLevel: 2,
-				maxZoomLevel: 4,
-				wheelToZoom: true,
-				showHideAnimationType: "fade",
-				pswpModule: () => import('photoswipe'),
-			};
-
-			const promises = this.mediaItems.map(item => {
-				let result = Promise.resolve();
-
-				if (item.type === "image") {
-					result = new Promise(resolve => {
-						let image = new Image();
-						const data = {
-							image,
-							mediaItem: item,
-						};
-						image.onload = () => resolve(data);
-						image.onerror = () => resolve(data);
-						image.src = item.url;
-					});
-				} else if (item.type === "video") {
-					const data = {
-						mediaItem: item,
-					};
-					result = Promise.resolve(data);
-				};
-
-				return result;
-			});
-
-			Promise.allSettled(promises).then(results => {
-				options.dataSource = results
-					.map(item => item.value)
-					.filter(data => (data.mediaItem.type === "image" && data.image || data.mediaItem.type !== "image"))
-					.map(data => {
-						return data.mediaItem.type === "image" 
-							? {
-								src:    data.image.src,
-								width:  data.image.width,
-								height: data.image.height,
-								mediaItem: data.mediaItem,
-							}
-							: {
-								mediaItem: data.mediaItem,
-							};
-					});
-
-				const lightbox = new PhotoSwipeLightbox(options);
-				const videoContainerId = "pswp-video-container";
-
-				lightbox.on('contentLoad', (event) => {
-					const { content, isLazy } = event;
-
-					const 
-						mediaItem = content.data?.mediaItem,
-						isVideo = (mediaItem?.type === "video");
-
-					if (isVideo) {
-						event.preventDefault();
-
-						const videoContainer = document.createElement('div');
-						videoContainer.className = 'pswp__video-container';
-						videoContainer.id = videoContainerId;
-				  
-						var ComponentClass = Vue.extend(VideoPlayer);
-						var playerInstance = new ComponentClass({
-							propsData: {
-								options: this.videoPlayerOptions,
-							}
-						});
-						
-						playerInstance.$mount();
-						videoContainer.appendChild(playerInstance.$el);
-						lightbox.playerInstance = playerInstance;
-						const data = {
-							playlistUrl: mediaItem?.data?.playlistUrl,
-							thumbnailUrl: mediaItem?.data?.thumbnailUrl,
-						};
-						playerInstance.setSource(data);
-
-						content.element = videoContainer;
-
-						content.onLoaded();
-					};
-				});
-
-				lightbox.on('contentDeactivate', (event) => {
-					const { content } = event;
-
-					const 
-						mediaItem = content.data?.mediaItem,
-						isVideo = (mediaItem?.type === "video");
-					
-					if (isVideo) {
-						lightbox.playerInstance?.pauseAsync();
-					}
-				});
-
-				lightbox.on('pointerUp', (event) => {
-					if (event.originalEvent?.target?.id === videoContainerId) {
-						lightbox.pswp?.close();
-					};
-				});
-
-				lightbox.on('destroy', () => {
-					lightbox.playerInstance?.$destroy();
-					lightbox.playerInstance = null;
-				});				
-
-				lightbox.init();
-				lightbox.loadAndOpen(index);
-			}).catch(e => {
-				console.error(e);
-			});
+			showMediaItems(this.mediaItems, index);
 		},
 
 		/**

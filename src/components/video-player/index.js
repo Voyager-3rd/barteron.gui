@@ -18,10 +18,30 @@ export default {
 		}
 	},
 
+	computed: {
+		defaultOptions() {
+			return {
+				autoplay: false,
+				controls: true,
+				disablePictureInPicture: true,
+				enableDocumentPictureInPicture: false,
+				controlBar: {
+					fullscreenToggle: false,
+					pictureInPictureToggle: false,
+				},
+				userActions: {
+					doubleClick: false,
+					hotkeys: false,
+				},
+			};
+		},
+	},
+
 	methods: {
 		initPlayer() {
 			this.$2watch("$refs.videoPlayer").then(() => {
-				this.player = videojs(this.$refs.videoPlayer, this.options, () => {
+				const customOptions = {...this.defaultOptions, ...this.options};
+				this.player = videojs(this.$refs.videoPlayer, customOptions, () => {
 					this.player.hlsQualitySelector({
 						displayCurrentQuality: true,
 					});
