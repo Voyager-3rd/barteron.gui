@@ -171,7 +171,7 @@ export default {
 		videoRemoving(options = {disableStateChange: false}) {
 			return Promise.resolve().then(() => {
 				this.stopVideoProcessingChecking();
-				this.$refs.videoPlayer?.pauseAsync(); //this.$refs.videoPlayer?.player?.dispose();
+				this.$refs.videoPlayer?.pauseAsync();
 				const needRemoveFile = this.newVideoAdded;
 				if (needRemoveFile) {
 					return this.sdk.removeVideo(this.currentUrl);

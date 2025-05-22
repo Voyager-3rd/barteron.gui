@@ -31,8 +31,9 @@ class Offer {
 		this.condition = data?.condition || c || "new";
 		this.images = (data?.images || images || []).filter(f => f);
 		this.delivery = (data?.delivery ?? d ?? {});
-		this.videos = (data?.videos ?? v ?? {});
+		this.videoSettings = (data?.videoSettings ?? v ?? {});
 		this.geohash = data?.geohash || data?.p?.s6 || "";
+		this.video = data?.video || data?.p?.s7 || "";
 		this.currencyPrice = data?.currencyPrice || f || {};
 		this.price = (data?.price || data?.p?.i1 / 100 || 0);
 		this.published = (data?.published ?? p ?? "published"); // published, withdrawed, removed

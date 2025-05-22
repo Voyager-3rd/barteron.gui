@@ -210,7 +210,7 @@ export default {
 		},
 
 		fillVideoData(offer) {
-			this.videoOrderVariant = offer.videos?.order || "first";
+			this.videoOrderVariant = offer.videoSettings?.order || "first";
 		},
 
 		fillTagsData(offer) {
@@ -542,21 +542,22 @@ export default {
 		},
 
 		serializeVideo() {
-			let result = {};
+			let result = {
+				videoSettings: {},
+				video: "",
+			};
 
 			if (this.addingVideoAvailable) {
 				const
-					url = this.$refs.video?.getData()?.url,
-					order = this.videoOrderVariant;
+					url = this.$refs.videoUploader?.getData()?.url || "",
+					order = this.videoOrderVariant || "first";
 
 				if (url) {
 					result = {
-						items: [
-							{
-								url,
-							},
-						],
-						order,
+						videoSettings: {
+							order,
+						},
+						video: url,
 					};
 				};
 			};
@@ -608,14 +609,14 @@ export default {
 			let metaData = {};
 
 			const 
-				video = this.$refs.video, // optional
-				videoCheckingResult = video?.canSerialize();
+				videoUploader = this.$refs.videoUploader, // optional
+				videoCheckingResult = videoUploader?.canSerialize();
 
 			if (videoCheckingResult && !(videoCheckingResult.canSerialize)) {
 				metaData = {
 					completed: false,
 					message: videoCheckingResult.message,
-					field: video.$el,
+					field: videoUploader.$el,
 				};
 				return { metaData };
 			};
@@ -627,7 +628,7 @@ export default {
 				center = this.$refs.map["marker"],
 				data = form.serialize(),
 				images = photos.serialize(),
-				videos = this.serializeVideo(),
+				serializedVideo = this.serializeVideo(),
 				delivery = this.serializeDelivery(data),
 				workSchedule = this.$refs.workSchedule, // optional
 				pickupPointList = this.$refs.pickupPointList, // optional
@@ -648,7 +649,8 @@ export default {
 				images: Object.values(images),
 				geohash: GeoHash.encodeGeoHash.apply(null, center),
 				currencyPrice,
-				videos,
+				video: serializedVideo.video,
+				videoSettings: serializedVideo.videoSettings,
 				delivery,
 				price: Number(data.pkoin || 0)
 			});
@@ -925,8 +927,8 @@ export default {
 
 	beforeRouteLeave (to, from, next) {
 		const
-			isPreviewRoute = (to?.name === "barterItem" && to?.params?.id === "draft"),
-			videoData = this.$refs.video?.getData(),
+			isPreviewRoute = (to?.name === "barterItem" && to?.query?.preview),
+			videoData = this.$refs.videoUploader?.getData(),
 			unpublishedVideo = (videoData?.videoExists && this.offer.newVideoAdded);
 
 		if (isPreviewRoute) {
@@ -941,7 +943,7 @@ export default {
 				]
 			}).then(state => {
 				if (state) {
-					this.$refs.video?.videoRemoving({disableStateChange: true}).then(() => {
+					this.$refs.videoUploader?.videoRemoving({disableStateChange: true}).then(() => {
 						this.offer.newVideoAdded = false;
 						next();
 					}).catch(e => {

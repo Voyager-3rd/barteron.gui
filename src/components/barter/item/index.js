@@ -357,7 +357,7 @@ export default {
 			this.setVideoItem();
 
 			if (this.videoItem) {
-				const order = this.item.videos?.order;
+				const order = this.item.videoSettings?.order;
 				if (order === "last") {
 					result = [...imageItems, this.videoItem];
 				} else {
@@ -473,10 +473,7 @@ export default {
 
 		setVideoItem() {
 			if (!(this.videoItem)) {
-				const 
-					videos = this.item.videos,
-					url = videos?.items?.[0]?.url;
-				
+				const url = this.item.video;
 				if (url) {
 					Vue.set(this, "videoItem", {
 						url: url,

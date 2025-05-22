@@ -74,11 +74,11 @@
 				<strong class="title">{{ $t('stepsLabels.video') }}</strong>
 
 				<v-video
-					ref="video"
+					ref="videoUploader"
 					id="video"
 					class="field-novalidate"
 					@newVideoAdded="newVideoAdded"
-					:url="offer.videos?.items?.[0]?.url"
+					:url="offer.video"
 				/>
 
 				<!-- Paragraph: Video upload text -->
