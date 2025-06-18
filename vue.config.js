@@ -1,6 +1,7 @@
 const
 	{ defineConfig } = require("@vue/cli-service"),
 	path = require("path"),
+	ScriptExtHtmlWebpackPlugin = require("script-ext-html-webpack-plugin"),
 	buildDir = path.resolve(__dirname, process.env.VUE_APP_EXPORT || "./dist");
 
 module.exports = defineConfig({
@@ -16,6 +17,17 @@ module.exports = defineConfig({
 					args[0].template = "./public/index.php";
 					return args;
 				});
+
+			config.output
+				.filename('bundle-[name].js')
+				.chunkFilename('files/[chunkhash].js');
+
+			config
+				.plugin('script-ext')
+				.after('html')
+				.use(ScriptExtHtmlWebpackPlugin, [{
+					inline: [/^bundle-.*\.js$/],   
+				}]); 
 		}
 	},
 
