@@ -1,6 +1,7 @@
 const
 	{ defineConfig } = require("@vue/cli-service"),
 	path = require("path"),
+	HtmlInlineScriptPlugin = require("html-inline-script-webpack-plugin"),
 	buildDir = path.resolve(__dirname, process.env.VUE_APP_EXPORT || "./dist");
 
 module.exports = defineConfig({
@@ -14,9 +15,30 @@ module.exports = defineConfig({
 				.plugin("html")
 				.tap(args => {
 					args[0].template = "./public/index.php";
+					args[0].inject = "body";
 					return args;
 				});
-		}
+
+			config
+				.optimization
+				.splitChunks(false).runtimeChunk(false);
+
+			config.output
+				.filename("js/bundle.[contenthash].js") // ← .js!
+				.chunkFilename("js/bundle.[contenthash].js");
+	
+			config.plugins.delete("prefetch");
+			config.plugins.delete("preload");
+	
+			config
+				.plugin("html-inline")
+				.after('html')
+				.use(HtmlInlineScriptPlugin, [
+					{
+						scriptMatchPattern: [/js\/bundle\..*\.js$/],
+					},
+				]);
+			}
 	},
 
 	transpileDependencies: true,
