@@ -36,7 +36,10 @@ class Offer {
 		this.video = data?.video || data?.p?.s7 || "";
 		this.currencyPrice = data?.currencyPrice || f || {};
 		this.price = (data?.price || data?.p?.i1 / 100 || 0);
-		this.published = (data?.published ?? p ?? "published"); // published, withdrawed, removed
+
+		// data?.p?.s4.p - DEPRECATED! The field will be deleted after one year (standard period of offer activity).
+		// Use data?.s3 instead.
+		this.published = (data?.published || data?.s3 || p || "published"); // published, withdrawed, removed
 
 		const
 			isMs = (timestamp) => {
