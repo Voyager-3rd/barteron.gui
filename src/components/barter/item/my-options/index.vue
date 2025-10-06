@@ -22,7 +22,7 @@
 
 		<template v-if="!isPreview">
 			<v-button
-				v-if="item.published === 'published'"
+				v-if="item.active"
 				vType="bulma-stroke"
 				@click="withdrawOffer"
 			>

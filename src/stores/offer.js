@@ -94,6 +94,7 @@ const
                     ...this._filtersForRequest(),
                     ...tagsData.tagsProps,
                     ...(search && { search: `%${ search }%` }),
+                    state: ["published"],
                     location: mixin.methods.getStoredLocation() || [],
                     topHeight: data?.topHeight,
                     pageStart: data?.pageStart || 0,

@@ -387,6 +387,7 @@ export default {
 					location = approximator.getGeohashItems();
 
 				const request = {
+					state: ["published"],
 					tags,
 					location,
 					pageSize,

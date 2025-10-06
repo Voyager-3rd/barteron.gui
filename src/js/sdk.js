@@ -1609,6 +1609,7 @@ class SDK {
 	 * 
 	 * Base
 	 * 
+	 * @param {Array} request.state State array for filter offers
 	 * @param {String} request.lang en-US, ru-RU, etc
 	 * @param {Array} request.tags Tags for filter offers
 	 * @param {String} request.location location like "ABC%"
@@ -1682,6 +1683,7 @@ class SDK {
 	 * 
 	 * Base
 	 * 
+	 * @param {Array} request.state State array for filter offers
 	 * @param {Array} request.addresses Filter potencial offers with these account addresses
 	 * @param {Array} request.excludeAddresses Filter potencial offers by excluding offers with these addresses
 	 * @param {String} request.location An SQLite3 language expression to be used with `LIKE` operator when comparing locations
@@ -1734,6 +1736,7 @@ class SDK {
 	 * 
 	 * Base
 	 * 
+	 * @param {Array} request.state State array for filter offers
 	 * @param {Array} request.myTags Filter potencial offers by the tags they are exchangable for
 	 * @param {Array} request.theirTags
 	 * @param {String} request.location An SQLite3 language expression to be used with `LIKE` operator when comparing locations

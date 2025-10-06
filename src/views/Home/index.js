@@ -35,6 +35,7 @@ export default {
 					this.mayMatchExchanges = await Promise.all(
 						myOffers.map(async offer => {
 							return this.sdk.getBrtOfferComplexDeals({
+								state: ["published"],
 								location: this.getStoredLocation() || [],
 								myTag: offer.tag,
 								theirTags: await this.sdk.getTheirTags(offer),
@@ -122,6 +123,7 @@ export default {
 			Promise.all(
 				(groupedTags || []).map(groupedItem => {
 					return this.sdk.getBrtOfferComplexDeals({
+						state: ["published"],
 						location: this.getStoredLocation() || [],
 						myTag: groupedItem.myTag,
 						theirTags: groupedItem.theirTags,

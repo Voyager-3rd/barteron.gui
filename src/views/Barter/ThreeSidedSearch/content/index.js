@@ -63,6 +63,7 @@ export default {
 			sdk = Vue.prototype.sdk,
 			source = await sdk.getBrtOffersByHashes([to.query?.source]).then(result => result?.pop()),
 			dealsResult = await sdk.getBrtOfferComplexDeals({
+				state: ["published"],
 				myTag: source?.tag,
 				theirTags: await sdk.getTheirTags(source),
 				excludeAddresses: [source?.address]
