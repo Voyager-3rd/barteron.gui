@@ -17,6 +17,18 @@ export default {
 			type: Boolean,
 			default: false
 		},
+		hideRating: {
+			type: Boolean,
+			default: false
+		},
+		hideInfo: {
+			type: Boolean,
+			default: false
+		},
+		compactView: {
+			type: Boolean,
+			default: false
+		},
 	},
 
 	data() {

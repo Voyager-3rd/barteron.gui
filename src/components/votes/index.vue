@@ -26,7 +26,18 @@
 				:rejected="hasRejectedOfferScore()"
 				@change="vote"
 			/>
-			<span>{{ $tc('voteLabels.votes', offerScoresCount()) }}</span>
+			<div class="offer-scores-count">
+				<v-button
+					v-if="offerScoresCount()"
+					vType="bulma-stroke"
+					vSize="sm"
+					@click="showOfferScores"
+				>
+					<i class="fa fa-user"></i>
+					<span>{{ offerScoresCount() }}</span>
+				</v-button>
+				<span v-else>{{ $tc('voteLabels.votes', 0) }}</span>
+			</div>
 			<div v-if="hasRejectedOfferScore()" class="vote-rejected">{{ $t('voteLabels.voteNotPublished') }}</div>
 			<div v-if="hasRejectedComment()" class="comment-rejected">{{ $t('voteLabels.reviewNotPublished') }}</div>
 		</header>

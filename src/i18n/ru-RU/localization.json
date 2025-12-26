@@ -379,7 +379,8 @@
 		"voteNotPublished": "Оценка не опубликована",
 		"reviewNotPublished": "Отзыв не опубликован",
 		"placeholder": "Оставьте свой отзыв о покупке",
-		"empty": "Здесь ещё нет отзывов"
+		"empty": "Здесь ещё нет отзывов",
+		"ratings_from_users": "Оценки пользователей"
 	},
 
 	"safeDealLabels": {

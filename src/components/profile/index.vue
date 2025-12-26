@@ -1,10 +1,14 @@
 <template>
 	<div class="profile">
-		<div class="row author">
+		<div 
+			class="row author"
+			:class="hideRating ? 'hide-rating' : ''"
+		>
 			<div class="col">
 				<router-link
 					v-if="hash"
 					class="avatar"
+					:class="compactView ? 'compact-view' : ''"
 					:to="{ name: 'profile', params: { id: hash } }"
 				>
 					<i
@@ -30,13 +34,15 @@
 						</router-link>
 					</li>
 
-					<li>
-						<Score :value="account?.rating || 0" />
-					</li>
+					<template  v-if="!(hideRating)">
+						<li>
+							<Score :value="account?.rating || 0" />
+						</li>
 
-					<li>
-						<span>{{ ratingInfo }}</span>
-					</li>
+						<li>
+							<span>{{ ratingInfo }}</span>
+						</li>
+					</template>
 				</ul>
 			</div>
 		</div>
@@ -47,7 +53,10 @@
 		</div>
 
 		<!-- Profile info -->
-		<div class="row info">
+		<div 
+			v-if="!(hideInfo)" 
+			class="row info"
+		>
 			<dl class="list">
 				<template v-if="account?.regdate">
 					<dt><i class="fa fa-calendar-day"></i></dt>

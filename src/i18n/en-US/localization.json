@@ -379,7 +379,8 @@
 		"voteNotPublished": "Vote not published",
 		"reviewNotPublished": "Review not published",
 		"placeholder": "Leave your review of your purchase here",
-		"empty": "There is no reviews yet"
+		"empty": "There is no reviews yet",
+		"ratings_from_users": "Ratings from users"
 	},
 
 	"safeDealLabels": {

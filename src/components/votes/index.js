@@ -1,6 +1,8 @@
 import Score from "@/components/score/index.vue";
 import Comment from "@/components/votes/comment.vue";
 import Loader from "@/components/loader/index.vue";
+import OfferScoresDialog from "./offer-scores-dialog/index.vue";
+import Vue from "vue";
 
 export default {
 	name: "Votes",
@@ -44,7 +46,7 @@ export default {
 		}
 	},
 
-	inject: ["dialog"],
+	inject: ["dialog", "lightboxContainer"],
 
 	computed: {
 		details() {
@@ -194,11 +196,30 @@ export default {
 				|| this.isOfferScoreConfirm) ? this.score : null;
 		},
 
+		completedOfferScores() {
+			return this.offerScores.filter(f => f.completed);
+		},
+
 		completedOfferScoresAverage() {
-			const items = this.offerScores.filter(f => f.completed);
+			const items = this.completedOfferScores();
 			return items.reduce((a, v) => {
 				return a += v?.value;
 			}, 0) / (items.length || 1);
+		},
+
+		showOfferScores() {
+			const ComponentClass = Vue.extend(OfferScoresDialog);
+			const instance = new ComponentClass({
+				propsData: {
+					items: this.completedOfferScores(),
+				},
+			});
+			
+			instance.$mount();
+			this.lightboxContainer().appendChild(instance.$el);
+			this.$nextTick(() => {
+				instance.show();
+			});
 		},
 
 		hasRelayOfferScore() {
@@ -223,7 +244,7 @@ export default {
 		},
 
 		offerScoresCount() {
-			return this.offerScores.filter(f => f.completed).length;
+			return this.completedOfferScores().length;
 		},
 
 		voteable() {

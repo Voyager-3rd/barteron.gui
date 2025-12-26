@@ -379,7 +379,8 @@
 		"voteNotPublished": "Оцена није објављена",
 		"reviewNotPublished": "Рецензија није објављена",
 		"placeholder": "Оставите своју рецензију о куповини",
-		"empty": "Још нема рецензија"
+		"empty": "Још нема рецензија",
+		"ratings_from_users": "Оцене корисника"
 	},
 
 	"safeDealLabels": {

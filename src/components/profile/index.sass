@@ -39,6 +39,9 @@
 		gap: 12px
 		width: 100%
 
+		&.hide-rating
+			align-items: center
+
 		.col
 			margin: 0
 
@@ -50,6 +53,10 @@
 			height: 64px
 			width: 64px
 
+			&.compact-view
+				height: 32px
+				width: 32px
+
 			&[class*="status"]
 				&:before
 					background: $gray
@@ -59,8 +66,8 @@
 					position: absolute
 					right: -1px
 					bottom: -1px
-					height: 16px
-					width: 16px
+					height: 25%
+					width: 25%
 
 				&[class*="online"]
 					&:before

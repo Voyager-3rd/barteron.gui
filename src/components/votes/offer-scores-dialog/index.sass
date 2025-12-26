@@ -1,0 +1,19 @@
+@import "@/css/vars.sass"
+
+.offer-scores-dialog
+	.offer-scores-list
+		+resetList()
+		display: flex
+		flex-direction: column
+		gap: $r * 3
+		margin: $r 0
+
+		.offer-score-item
+			display: flex
+			gap: $r * 2
+			justify-content: space-between
+
+			.profile
+				.author
+					.label
+						overflow-wrap: anywhere
