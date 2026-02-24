@@ -39,9 +39,9 @@ class NetworkManager {
 }
 
 class ChannelManager extends NetworkManager {
-	constructor({ cannel, path }) {
+	constructor({ channel, path }) {
 		super();
-		this.cannel = cannel;
+		this.channel = channel;
 		this.path = path;
 	}
 
@@ -81,7 +81,7 @@ class ChannelManager extends NetworkManager {
 				if (response.ok) {
 					const subscription = result?.subscription;
 					if (subscription) {
-						subscription.channel = this.cannel;
+						subscription.channel = this.channel;
 					};
 					return { subscription };
 				};
@@ -114,13 +114,13 @@ class ChannelManager extends NetworkManager {
 
 class TelegramManager extends ChannelManager {
 	constructor() {
-		super({ cannel: "telegram", path: "telegram-notifications" });
+		super({ channel: "telegram", path: "telegram-notifications" });
 	}
 }
 
 class VKManager extends ChannelManager {
 	constructor() {
-		super({ cannel: "vk", path: "vk-notifications" });
+		super({ channel: "vk", path: "vk-notifications" });
 	}
 }
 
@@ -134,9 +134,8 @@ class NotificationSender extends NetworkManager {
 		messageType, 
 		options = {selectedChannels: null}
 	) {
-		(userAddresses || []).forEach(f => {
-			this.sendToUser(f, messageType, options);
-		});
+		const promises = (userAddresses || []).map(m => this.sendToUser(m, messageType, options));
+		return Promise.allSettled(promises);
 	}
 
 	sendToUser(
@@ -144,7 +143,7 @@ class NotificationSender extends NetworkManager {
 		messageType, 
 		options
 	) {
-		this.getSubscriptions(userAddress, options).then(subscriptions => {
+		return this.getSubscriptions(userAddress, options).then(subscriptions => {
 			return subscriptions.reduce((result, value) => {
 				result[value.channel] = { messageType };
 				return result;

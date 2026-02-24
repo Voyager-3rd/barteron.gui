@@ -1,7 +1,7 @@
-import { TelegramManager, VKManager } from "@/js/notificationUtils.js";
+import { NotificationSender, TelegramManager, VKManager } from "@/js/notificationUtils.js";
 import Loader from "@/components/loader/index.vue";
-import Vue from 'vue';
 import i18n from "@/i18n/index.js";
+import Vue from 'vue';
 import {
 	default as profileStore,
 } from "@/stores/profile.js";
@@ -27,6 +27,7 @@ export default {
 			vkData: {
 				currentState: "",
 			},
+			sendingTestMessage: {},
 			notificationsBannerDisabled: false,
 		}
 	},
@@ -172,6 +173,12 @@ export default {
 						error: e,
 					},
 				};
+
+				if (process.env.NODE_ENV !== "production") {
+					this.telegramData = {
+						currentState: "disconnected",
+					};
+				};
 			});
 		},
 
@@ -188,7 +195,7 @@ export default {
 		},
 
 		connectTelegramBot() {
-			const username = (this.$refs.telegramUsername.inputs[0].value || "").trim().replaceAll("@","");
+			const username = this.getUsername("telegram");
 			if (username) {
 				const data = {
 					address: this.address,
@@ -286,6 +293,12 @@ export default {
 						error: e,
 					},
 				};
+
+				if (process.env.NODE_ENV !== "production") {
+					this.vkData = {
+						currentState: "disconnected",
+					};
+				};
 			});
 		},
 
@@ -302,7 +315,7 @@ export default {
 		},
 
 		connectVKBot() {
-			const username = (this.$refs.vkUsername.inputs[0].value || "").trim().replaceAll("@","");
+			const username = this.getUsername("vk");
 			if (username) {
 				const data = {
 					address: this.address,
@@ -366,6 +379,58 @@ export default {
 						error: e,
 					},
 				};
+			});
+		},
+
+		// Common ------------------------------------------------------
+
+		getUsername(channel) {
+			let result = "";
+
+			const pathFromURL = (str) => {
+				try {
+					str = (str.includes("http://") || str.includes("https://")) ? str : `https://${str}`;
+					const url = new URL(str);
+					return url.pathname.split("/").filter(f => f)[0] || "";
+				} catch (e) {
+					console.error(e);
+					return "";
+				};
+			}
+
+			if (channel === "telegram") {
+				let 
+					str = (this.$refs.telegramUsername.inputs[0].value || "").trim(),
+					isURL = (str.indexOf("t.me") >= 0);
+
+				result = isURL ? pathFromURL(str) : str.replaceAll("@","");
+
+			} else if (channel === "vk") {
+				const 
+					str = (this.$refs.vkUsername.inputs[0].value || "").trim(),
+					isURL = (str.indexOf("vk.com") >= 0);
+
+				result = isURL ? pathFromURL(str) : str.replaceAll("@","");
+			}
+
+			return result;
+		},
+
+		sendTestMessage(channel) {
+			Vue.set(this.sendingTestMessage, channel, true);
+
+			const 
+				ns = new NotificationSender(),
+				selectedChannels = [channel];
+
+			ns.send(
+				[this.address], 
+				"test", 
+				{ selectedChannels }
+			).then(results => {
+				console.log("Sending test message result", results);
+			}).finally(() => {
+				this.sendingTestMessage[channel] = false;
 			});
 		},
 	},
