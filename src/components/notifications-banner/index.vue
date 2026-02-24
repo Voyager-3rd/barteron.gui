@@ -110,6 +110,16 @@
 									</label>
 								</div>
 
+								<div class="telegram-test-message-holder">
+									<span>{{ $t("notificationSettingsLabels.telegram_send_test_message") }}</span>
+									<v-button
+										vSize="xs"
+										vType="roshi"
+										:disabled="!!(sendingTestMessage.telegram)"
+										@click="sendTestMessage('telegram')"
+									><i class="fa fa-play"></i></v-button>
+								</div>
+
 								<v-button
 									class="top-space"
 									@click="disconnectTelegramBotEvent"
@@ -133,8 +143,14 @@
 									</label>
 								</div>
 
+								<p class="info top-space">
+									<span>{{ $t("notificationSettingsLabels.telegram_notifications_steps_title") }}:</span>
+								</p>
+
 								<p class="info half-top-space">
-									<span>{{ $t("notificationSettingsLabels.telegram_notifications_step1") }}: </span>
+									<span
+										v-html="$t('notificationSettingsLabels.telegram_notifications_step1').replaceAll('\n', '<br>') + ': '"
+									></span>
 									<a 
 										href="#" 
 										class="link" 
@@ -226,6 +242,16 @@
 									</label>
 								</div>
 
+								<div class="vk-test-message-holder">
+									<span>{{ $t("notificationSettingsLabels.vk_send_test_message") }}</span>
+									<v-button
+										vSize="xs"
+										vType="roshi"
+										:disabled="!!(sendingTestMessage.vk)"
+										@click="sendTestMessage('vk')"
+									><i class="fa fa-play"></i></v-button>
+								</div>
+
 								<v-button
 									class="top-space"
 									@click="disconnectVKBotEvent"
@@ -249,8 +275,14 @@
 									</label>
 								</div>
 
+								<p class="info top-space">
+									<span>{{ $t("notificationSettingsLabels.vk_notifications_steps_title") }}:</span>
+								</p>
+
 								<p class="info half-top-space">
-									<span>{{ $t("notificationSettingsLabels.vk_notifications_step1") }}: </span>
+									<span
+										v-html="$t('notificationSettingsLabels.vk_notifications_step1').replaceAll('\n', '<br>') + ': '"
+									></span>
 									<a 
 										href="#" 
 										class="link" 
