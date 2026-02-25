@@ -176,6 +176,7 @@ class NotificationSender extends NetworkManager {
 			});
 		}).catch(e => {
 			console.error(e);
+			return Promise.reject(e);
 		});
 	}
 

@@ -145,6 +145,8 @@
 		"telegram_bot_connected": "Телеграм-бот подключен",
 		"telegram_bot_disconnected": "Телеграм-бот не подключен",
 		"telegram_send_test_message": "Отправить тестовое сообщение",
+		"telegram_test_message_sent": "Тестовое сообщение отправлено",
+		"telegram_test_message_failed": "Ошибка отправки тестового сообщения: {error}",
 		"disconnect_telegram_bot_info": "Настройки подключения телеграм-бота будут удалены, уведомления доставляться не будут",
 
 		"vk_notifications": "Уведомления ВКонтакте",
@@ -156,6 +158,8 @@
 		"vk_bot_connected": "VK-бот подключен",
 		"vk_bot_disconnected": "VK-бот не подключен",
 		"vk_send_test_message": "Отправить тестовое сообщение",
+		"vk_test_message_sent": "Тестовое сообщение отправлено",
+		"vk_test_message_failed": "Ошибка отправки тестового сообщения: {error}",
 		"disconnect_vk_bot_info": "Настройки подключения VK-бота будут удалены, уведомления доставляться не будут",
 
 		"dont_show_again": "Больше не показывать",
