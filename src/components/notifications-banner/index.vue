@@ -111,13 +111,29 @@
 								</div>
 
 								<div class="telegram-test-message-holder">
-									<span>{{ $t("notificationSettingsLabels.telegram_send_test_message") }}</span>
-									<v-button
-										vSize="xs"
-										vType="roshi"
-										:disabled="!!(sendingTestMessage.telegram)"
-										@click="sendTestMessage('telegram')"
-									><i class="fa fa-play"></i></v-button>
+									<template v-if="!(telegramTestMessage.currentState) || telegramTestMessage.currentState === 'sending'">
+										<p class="info test">{{ $t("notificationSettingsLabels.telegram_send_test_message") }}</p>
+										<v-button
+											vSize="xs"
+											vType="roshi"
+											:disabled="(telegramTestMessage.currentState === 'sending')"
+											@click="sendTestMessage('telegram')"
+										><i class="fa fa-play"></i></v-button>
+									</template>
+
+									<template v-if="telegramTestMessage.currentState === 'sent'">
+										<label class="v-label success-level">
+											<i class="fa fa-check-circle"></i>
+											{{ $t("notificationSettingsLabels.telegram_test_message_sent") }}
+										</label>
+									</template>
+
+									<template v-if="telegramTestMessage.currentState === 'error'">
+										<label class="v-label error-level">
+											<i class="fa fa-info-circle"></i>
+											{{ $t("notificationSettingsLabels.telegram_test_message_failed", {error: telegramTestMessage.error}) }}
+										</label>
+									</template>
 								</div>
 
 								<v-button
@@ -243,13 +259,29 @@
 								</div>
 
 								<div class="vk-test-message-holder">
-									<span>{{ $t("notificationSettingsLabels.vk_send_test_message") }}</span>
-									<v-button
-										vSize="xs"
-										vType="roshi"
-										:disabled="!!(sendingTestMessage.vk)"
-										@click="sendTestMessage('vk')"
-									><i class="fa fa-play"></i></v-button>
+									<template v-if="!(vkTestMessage.currentState) || vkTestMessage.currentState === 'sending'">
+										<p class="info test">{{ $t("notificationSettingsLabels.vk_send_test_message") }}</p>
+										<v-button
+											vSize="xs"
+											vType="roshi"
+											:disabled="(vkTestMessage.currentState === 'sending')"
+											@click="sendTestMessage('vk')"
+										><i class="fa fa-play"></i></v-button>
+									</template>
+
+									<template v-if="vkTestMessage.currentState === 'sent'">
+										<label class="v-label success-level">
+											<i class="fa fa-check-circle"></i>
+											{{ $t("notificationSettingsLabels.vk_test_message_sent") }}
+										</label>
+									</template>
+
+									<template v-if="vkTestMessage.currentState === 'error'">
+										<label class="v-label error-level">
+											<i class="fa fa-info-circle"></i>
+											{{ $t("notificationSettingsLabels.vk_test_message_failed", {error: vkTestMessage.error}) }}
+										</label>
+									</template>
 								</div>
 
 								<v-button

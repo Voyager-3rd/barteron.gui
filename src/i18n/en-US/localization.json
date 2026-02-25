@@ -145,6 +145,8 @@
 		"telegram_bot_connected": "Telegram bot connected",
 		"telegram_bot_disconnected": "Telegram bot not connected",
 		"telegram_send_test_message": "Send test message",
+		"telegram_test_message_sent": "Test message sent",
+		"telegram_test_message_failed": "Error sending test message: {error}",
 		"disconnect_telegram_bot_info": "Telegram bot connection settings will be removed, notifications will not be delivered",
 
 		"vk_notifications": "VK notifications",
@@ -156,6 +158,8 @@
 		"vk_bot_connected": "VK bot connected",
 		"vk_bot_disconnected": "VK bot not connected",
 		"vk_send_test_message": "Send test message",
+		"vk_test_message_sent": "Test message sent",
+		"vk_test_message_failed": "Error sending test message: {error}",
 		"disconnect_vk_bot_info": "VK bot connection settings will be removed, notifications will not be delivered",
 
 		"dont_show_again": "Do not show again",

@@ -19,15 +19,23 @@ export default {
 		return {
 			lightbox: false,
 			activeIndexes: {},
+
 			telegramNotificationsAllowed: false,
 			telegramData: {
 				currentState: "",
 			},
+			telegramTestMessage: {
+				currentState: "",
+			},
+
 			vkNotificationsAllowed: false,
 			vkData: {
 				currentState: "",
 			},
-			sendingTestMessage: {},
+			vkTestMessage: {
+				currentState: "",
+			},
+
 			notificationsBannerDisabled: false,
 		}
 	},
@@ -176,7 +184,7 @@ export default {
 
 				if (process.env.NODE_ENV !== "production") {
 					this.telegramData = {
-						currentState: "disconnected",
+						currentState: "connected",
 					};
 				};
 			});
@@ -417,20 +425,61 @@ export default {
 		},
 
 		sendTestMessage(channel) {
-			Vue.set(this.sendingTestMessage, channel, true);
+			const key = `${channel}TestMessage`;
+			Vue.set(this, key, { currentState: "sending" });
 
 			const 
-				ns = new NotificationSender(),
-				selectedChannels = [channel];
+				sender = new NotificationSender(),
+				addresses = [this.address],
+				messageType = "test",
+				options = { 
+					selectedChannels: [channel], 
+				};
 
-			ns.send(
-				[this.address], 
-				"test", 
-				{ selectedChannels }
+			sender.send(
+				addresses, 
+				messageType, 
+				options
 			).then(results => {
-				console.log("Sending test message result", results);
-			}).finally(() => {
-				this.sendingTestMessage[channel] = false;
+				const 
+					result = results[0],
+					sendingStatus = result.value?.results?.[channel]?.status,
+					sendingMessage = result.value?.results?.[channel]?.message,
+					success = (result.status === "fulfilled" && sendingStatus === "sent");
+				
+				if (success) {
+					Vue.set(this, key, { currentState: "sent" });
+				} else {
+					let error = "unknown error";
+
+					if (result.status === "rejected") {
+						error = result.reason;
+					} else {
+						if (sendingStatus === "disabled") {
+							error = "subscription disabled";
+						} else if (sendingStatus === "not_found") {
+							error = "subscription not found";
+						} else if (sendingStatus === "error") {
+							error = sendingMessage || "";
+						} else if (!(result.value)) {
+							error = "failed to get subscription";
+						};
+					};
+
+					const value = { 
+						currentState: "error", 
+						error, 
+					};
+
+					Vue.set(this, key, value);
+				};
+			}).catch(e => {
+				const value = { 
+					currentState: "error", 
+					error: e.message, 
+				};
+
+				Vue.set(this, key, value);
 			});
 		},
 	},

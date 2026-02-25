@@ -286,9 +286,21 @@ Vue.prototype.shared = Vue.observable({
 						images: data.images || []
 					}
 				});
-			}).then(() => {
-				const ns = new NotificationSender();
-				ns.send(data.members, "dialog");
+			}).then(result => {
+				this.sendNotifications(data.members, "dialog");
+				return result;
+			});
+		},
+
+		sendNotifications(addresses, messageType) {
+			const ns = new NotificationSender();
+			ns.send(addresses, messageType).then(results => {
+				results
+					.filter(f => f.status === "rejected")
+					.map(m => m.reason)
+					.forEach(f => {
+						console.error(f);
+					});
 			});
 		},
 
