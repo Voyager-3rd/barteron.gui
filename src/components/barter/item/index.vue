@@ -87,7 +87,7 @@
 				<span class="price">
 					<template v-if="item.price">
 						<span class="currency icon-pkoin"></span>
-						{{ pkoinPrice ? (pricePrefix + $n(pkoinPrice, 'shortPkoin')) : '...' }}
+						{{ pkoinPriceText }}
 						<span>{{ $t('profileLabels.coins') }}</span>
 					</template>
 					<template v-else>
@@ -223,7 +223,7 @@
 					<span class="price">
 						<template v-if="item.price">
 							<span class="currency icon-pkoin"></span>
-							{{ pkoinPrice ? (pricePrefix + $n(pkoinPrice, 'shortPkoin')) : '...' }}
+							{{ pkoinPriceText }}
 							<span>{{ $t('profileLabels.coins') }}</span>
 						</template>
 						<template v-else>

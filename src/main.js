@@ -98,6 +98,10 @@ Vue.prototype.shared = Vue.observable({
 		appsLink() {
 			return "https://bastyon.com/applications";
 		},
+
+		pkoinTotalSupply() {
+			return 24_375_000;
+		},
 	},
 
 	methods: {

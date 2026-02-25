@@ -267,7 +267,8 @@
 		"under": "Испод {to}",
 		"range": "Од {from} До {to}",
 		"over": "Преко {from}",
-		"no_matter": "Није важно"
+		"no_matter": "Није важно",
+		"pkoin_price_over_total_supply": "Више од 100%"
 	},
 
 	"exchangeOptions": {
@@ -376,6 +377,7 @@
 		"images_max_count_exceeded_error": "Прекорачен максималан број слика",
 		"images_failed_upload_numbers_error": "Није било могуће учитати слике са бројевима: {numbers}. Ако је величина слика већа од 1 МБ, смањите их.",
 		"get_from_to_transactions_availability_error": "У тренутној верзији апликације Bastyon нема опције безбедне трансакције. Користите веб верзију или ажурирајте апликацију (ако је доступна нова верзија)",
+		"pkoin_price_over_total_supply_error": "Цена у PKOIN-у премашује укупну понуду ове криптовалуте",
 		"payment_error": "Дошло је до грешке при преносу износа",
 		"current_block_not_defined": "Није било могуће добити број текућег блока у блокчејну",
 		"total_amount_smaller_amount_error": "На вашем рачуну има мање новца него што желите да пошаљете",
