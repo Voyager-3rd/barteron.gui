@@ -760,10 +760,20 @@ export default {
 				pickupPointList = this.$refs.pickupPointList, // optional
 				safeDeal = this.$refs.safeDeal, // optional
 				serializedSafeDeal = safeDeal?.serialize() || {},
+				price = Number(data.pkoin || 0),
 				currencyPrice = this.serializeCurrencyPrice(),
 				tags = this.getting === "something" 
 					? (data.tags ? data.tags.split(",").map(tag => Number(tag)) : [])
 					: [this.getting];
+
+			if (currencyPrice.isDisabled && price > this.pkoinTotalSupply) {
+				formMetaData = {
+					completed: false,
+					message: this.$t("dialogLabels.pkoin_price_over_total_supply_error"),
+					field: this.$refs.price.$el,
+				};
+				return { formMetaData };
+			};
 
 			/* Fill offer data */
 			this.sourceOffer.update({
@@ -782,7 +792,7 @@ export default {
 				metaData: serializedMetaData,
 				delivery,
 				safeDeal: serializedSafeDeal,
-				price: Number(data.pkoin || 0)
+				price,
 			});
 
 			/* Add/remove passed/rejected classes to photos uploader */
