@@ -145,6 +145,8 @@
 		"telegram_bot_connected": "Telegram бот је повезан",
 		"telegram_bot_disconnected": "Telegram бот није повезан",
 		"telegram_send_test_message": "Пошаљите пробну поруку",
+		"telegram_test_message_sent": "Послата тест порука",
+		"telegram_test_message_failed": "Грешка при слању пробне поруке: {error}",
 		"disconnect_telegram_bot_info": "Подешавања повезивања Telegram бота биће обрисана, обавештења неће бити испоручивана",
 
 		"vk_notifications": "VK обавештења",
@@ -156,6 +158,8 @@
 		"vk_bot_connected": "VK бот је повезан",
 		"vk_bot_disconnected": "Vk бот није повезан",
 		"vk_send_test_message": "Пошаљите пробну поруку",
+		"vk_test_message_sent": "Послата тест порука",
+		"vk_test_message_failed": "Грешка при слању пробне поруке: {error}",
 		"disconnect_vk_bot_info": "Подешавања повезивања VK бота биће обрисана, обавештења неће бити испоручивана",
 
 		"dont_show_again": "Не приказуј поново",
