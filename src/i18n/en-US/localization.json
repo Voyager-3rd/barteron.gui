@@ -267,7 +267,8 @@
 		"under": "Under {to}",
 		"range": "From {from} To {to}",
 		"over": "Over {from}",
-		"no_matter": "No matter"
+		"no_matter": "No matter",
+		"pkoin_price_over_total_supply": "Over 100%"
 	},
 
 	"exchangeOptions": {
@@ -376,6 +377,7 @@
 		"images_max_count_exceeded_error": "Maximum count of images exceeded",
 		"images_failed_upload_numbers_error": "Unable to upload images with numbers: {numbers}. If the images are larger than 1MB, please reduce their size.",
 		"get_from_to_transactions_availability_error": "The current version of the Bastyon app does not contain safe deal option. Use the web version or update the app (if a new version is available)",
+		"pkoin_price_over_total_supply_error": "The price in PKOIN exceeds the total supply of this cryptocurrency",
 		"payment_error": "An error occurred while transferring the amount",
 		"current_block_not_defined": "Failed to get the current block number in the blockchain",
 		"total_amount_smaller_amount_error": "You have less money in your account than you want to send",

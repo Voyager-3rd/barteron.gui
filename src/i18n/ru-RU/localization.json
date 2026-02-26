@@ -267,7 +267,8 @@
 		"under": "Ниже {to}",
 		"range": "От {from} До {to}",
 		"over": "Свыше {from}",
-		"no_matter": "Не важно"
+		"no_matter": "Не важно",
+		"pkoin_price_over_total_supply": "Более 100%"
 	},
 
 	"exchangeOptions": {
@@ -376,6 +377,7 @@
 		"images_max_count_exceeded_error": "Превышено максимальное количество изображений",
 		"images_failed_upload_numbers_error": "Не удалось загрузить изображения с номерами: {numbers}. Если объем изображений превышает 1 Мб, уменьшите их.",
 		"get_from_to_transactions_availability_error": "В текущей версии приложения Bastyon отсутствует опция безопасной сделки. Используйте веб-версию или обновите приложение (при наличии новой версии)",
+		"pkoin_price_over_total_supply_error": "Цена в PKOIN превышает общий объем выпуска данной криптовалюты",
 		"payment_error": "Произошла ошибка при переводе суммы",
 		"current_block_not_defined": "Не удалось получить номер текущего блока в блокчейне",
 		"total_amount_smaller_amount_error": "У вас на счету меньше денег чем вы хотите отправить",

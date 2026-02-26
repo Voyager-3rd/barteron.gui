@@ -150,6 +150,18 @@ export default {
 
 			return value;
 		},
+
+		pkoinPriceText() {
+			let result = "...";
+			if (this.pkoinPrice) {
+				if (this.pkoinPrice > this.pkoinTotalSupply) {
+					result = this.$t("priceLabels.pkoin_price_over_total_supply");
+				} else {
+					result = this.pricePrefix + this.$n(this.pkoinPrice, "shortPkoin");
+				};
+			};
+			return result;
+		},
 		
 		/**
 		 * Get exchange list
