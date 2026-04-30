@@ -30,7 +30,7 @@ export default {
 		 */
 		account() {
 			return this.sdk.barteron.accounts[this.hash];
-		}
+		},
 	},
 
 }

@@ -1,6 +1,7 @@
 import Profile from "@/components/profile/index.vue";
 import Wallet from "@/components/wallet/index.vue";
 import SafeDealProfile from "@/components/safe-deal/safe-deal-profile/index.vue";
+import ModeratorProfile from "@/components/moderator-profile/index.vue";
 import ProfileExchangeList from "@/components/barter/exchange/profile-list/index.vue";
 
 export default {
@@ -10,6 +11,7 @@ export default {
 		Profile,
 		Wallet,
 		SafeDealProfile,
+		ModeratorProfile,
 		ProfileExchangeList
 	},
 
@@ -46,6 +48,11 @@ export default {
 		isValidator() {
 			const settings = this.sdk.getSafeDealSettings();
 			return settings.validatorAddresses.includes(this.address);
+		},
+
+		isModerator() {
+			const settings = this.sdk.getSupportSettings();
+			return settings.moderatorAddresses.includes(this.address);
 		},
 	},
 

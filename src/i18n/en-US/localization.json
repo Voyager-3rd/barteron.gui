@@ -507,6 +507,7 @@
 		"survey_error": "An error occurred while sending your answers: {error}",
 		"common_error": "An error occurred: {error}",
 		"common_loading_error": "Data loading error: {error}",
+		"account_saving_error": "Failed to save account changes",
 		"disabled_permissions": "The following permissions are disabled: {error}. Click the \"Application Settings\" button to allow the access.",
 		"currency_rate_error_message": "Unable to get the currency rate for {currency}. You will be redirected to the main screen. Please try again.",
 		"app_geolocation_permission_error": "You have restricted access to geolocation. Click the \"Application Settings\" button to allow the access.",
@@ -672,6 +673,13 @@
 		"calculation_success_deal_item5": "Payment to seller: {value} PKOIN"		
 	},
 
+	"moderatorLabels": {
+		"moderator": "Moderator",
+		"status": "Status",
+		"moderator_status_available": "Available",
+		"moderator_status_unavailable": "Unavailable"
+	},
+
 	"feedbackLabels": {
 		"subject": "Barteron, feedback",
 		"title": "Leave your feedback here",
@@ -754,6 +762,7 @@
 	"currency_price_disabled_hint": "The price in {currency} currency will be updating automatically at the current PKOIN rate",
 	"price_prefix_text": "Mark the price as minimum (the word \"From\" will be added before the price)",
 	"select_currency_dialog": "Select currency",
+	"changes_are_being_saved": "Changes are being saved",
 
 	"may_match_exchanges": "May match with your exchanges",
 	"new_from_goods": "New from goods"

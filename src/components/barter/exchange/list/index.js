@@ -24,6 +24,10 @@ export default {
 			type: String,
 			default: "md"
 		},
+		hasRelay: {
+			type: Boolean,
+			default: false
+		},
 		editable: Boolean,
 		editMode: Boolean,
 		holderClass: String,

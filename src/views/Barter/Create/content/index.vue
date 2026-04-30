@@ -156,19 +156,26 @@
 						:tags="account?.tags || []"
 						:title="false"
 						:editable="true"
+						:hasRelay="account?.relay"
 						@change="(tags) => account.set({ tags })"
 					>
 						<template #default="{ instance }">
 							<input name="tags" type="hidden" :value="instance.vTags.join()">
 						</template>
+
+						<template #after>
+							<label v-if="account?.relay" class="v-label warning-level">
+								<i class="fa fa-spinner fa-spin"></i>
+								{{ $t("changes_are_being_saved") }}
+							</label>
+
+							<label v-else class="v-label">
+								<i class="fa fa-info-circle"></i>
+								{{ $t('my_list_text') }}
+							</label>
+						</template>
 					</ExchangeList>
 				</template>
-
-				<!-- Label: My list text -->
-				<label v-if="getting === 'my_list'" class="v-label">
-					<i class="fa fa-info-circle"></i>
-					{{ $t('my_list_text') }}
-				</label>							
 
 				<!-- Select: Tags (editable) -->
 				<template v-if="getting === 'something'">

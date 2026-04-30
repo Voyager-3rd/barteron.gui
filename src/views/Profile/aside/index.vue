@@ -39,10 +39,17 @@
 			/>
 		</div>
 
+		<!-- Moderator -->
+		<div class="box" v-if="sdk.metaDataAvailable() && isModerator">
+			<ModeratorProfile
+				:hash="address"
+			/>
+		</div>
+
 		<!-- Exchange -->
 		<div class="box">
 			<ProfileExchangeList 
-				 :hash="address"
+				:hash="address"
 			/>
 		</div>
 	</v-aside>

@@ -507,6 +507,7 @@
 		"survey_error": "Дошло је до грешке при слању одговора: {error}",
 		"common_error": "Дошло је до грешке: {error}",
 		"common_loading_error": "Грешка при учитавању података: {error}",
+		"account_saving_error": "Чување промена налога није успело",
 		"disabled_permissions": "Следеће дозволе су онемогућене: {error}. Кликните на \"Подешавања апликације\" и омогућите приступ.",
 		"currency_rate_error_message": "Није могуће добити курс за {currency}. Бићете преусмерени на главни екран. Молимо покушајте поново.",
 		"app_geolocation_permission_error": "Ограничили сте приступ геолокацији. Кликните на \"Подешавања апликације\" и омогућите приступ.",
@@ -672,6 +673,13 @@
 		"calculation_success_deal_item5": "Плаћање продавцу: {value} PKOIN"
 	},
 
+	"moderatorLabels": {
+		"moderator": "Модератор",
+		"status": "Статус",
+		"moderator_status_available": "Доступан",
+		"moderator_status_unavailable": "Недоступан"
+	},
+
 	"feedbackLabels": {
 		"subject": "Barteron, повратне информације",
 		"title": "Форма за повратне информације",
@@ -754,6 +762,7 @@
 	"currency_price_disabled_hint": "Цена у валути {currency} ће се аутоматски ажурирати према тренутном курсу PKOIN",
 	"price_prefix_text": "Означити цену као минималну (испред цене ће бити додата реч \"Од\")",
 	"select_currency_dialog": "Изаберите валуту",
+	"changes_are_being_saved": "Чување промена у току",
 
 	"may_match_exchanges": "Може одговарати вашим разменама",
 	"new_from_goods": "Новитети"

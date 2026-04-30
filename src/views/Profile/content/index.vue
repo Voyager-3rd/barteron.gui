@@ -57,6 +57,16 @@
 		</div>
 
 		<!-- without aside -->
+		<div 
+			v-if="sdk.metaDataAvailable() && isModerator" 
+			class="row sep no-aside"
+		>
+			<ModeratorProfile
+				:hash="address"
+			/>
+		</div>
+
+		<!-- without aside -->
 		<div class="row sep no-aside last">
 			<!-- Exchange -->
 			<div>

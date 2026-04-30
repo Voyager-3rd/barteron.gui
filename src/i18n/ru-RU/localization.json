@@ -507,6 +507,7 @@
 		"survey_error": "Произошла ошибка при отправке ответов: {error}",
 		"common_error": "Произошла ошибка: {error}",
 		"common_loading_error": "Ошибка загрузки данных: {error}",
+		"account_saving_error": "Не удалось сохранить изменения аккаунта",
 		"disabled_permissions": "Следующие разрешения отключены: {error}. Нажмите кнопку \"Настройки приложения\" и включите доступ.",
 		"currency_rate_error_message": "Не удалось получить курс валюты {currency}. Будет выполнен переход на главный экран. Повторите попытку.",
 		"app_geolocation_permission_error": "Вы ограничили доступ к геолокации. Нажмите кнопку \"Настройки приложения\" и включите доступ.",
@@ -672,6 +673,13 @@
 		"calculation_success_deal_item5": "Оплата продавцу: {value} PKOIN"
 	},
 
+	"moderatorLabels": {
+		"moderator": "Модератор",
+		"status": "Статус",
+		"moderator_status_available": "Доступен",
+		"moderator_status_unavailable": "Недоступен"
+	},
+
 	"feedbackLabels": {
 		"subject": "Бартерон, обратная связь",
 		"title": "Форма обратной связи",
@@ -754,6 +762,7 @@
 	"currency_price_disabled_hint": "Цена в валюте {currency} будет обновляться автоматически по текущему курсу PKOIN",
 	"price_prefix_text": "Пометить цену как минимальную (перед ценой добавится слово \"От\")",
 	"select_currency_dialog": "Выберите валюту",
+	"changes_are_being_saved": "Изменения сохраняются",
 
 	"may_match_exchanges": "Может совпадать с вашими обменами",
 	"new_from_goods": "Новинки"
