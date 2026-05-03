@@ -1,6 +1,8 @@
 import Score from "@/components/score/index.vue";
 import Comment from "@/components/votes/comment.vue";
 import Loader from "@/components/loader/index.vue";
+import ModerationRequestDialog from "@/components/voting-moderation/moderation-request-dialog/index.vue";
+import Vue from 'vue';
 
 export default {
 	name: "Votes",
@@ -8,7 +10,8 @@ export default {
 	components: {
 		Loader,
 		Score,
-		Comment
+		Comment,
+		ModerationRequestDialog,
 	},
 
 	props: {
@@ -45,7 +48,7 @@ export default {
 		}
 	},
 
-	inject: ["dialog"],
+	inject: ["dialog", "lightboxContainer"],
 
 	computed: {
 		details() {
@@ -127,11 +130,51 @@ export default {
 		 * 
 		 * @param {Number} score
 		 */
-		vote(score) {
-			if (score < 4) {
-				this.score = 0;
-				this.$refs.offerScore?.reset();
+		async vote(score) {
+			if (this.sdk.willOpenRegistration()) {
+				this.resetScore();
 				return;
+			};
+
+			if (score < 4) {
+				let success = this.sdk.metaDataAvailable() && await this.checkReputation();
+				if (success) {
+					const accessData = await this.findAccessData();
+
+					const 
+						accessAllowed = accessData?.status === "allowed",
+						accessRejected = accessData?.status === "rejected",
+						rejectionReason = accessData?.rejectionReason || "",
+						accessScore = accessData?.score || 0,
+						accessError = accessData?.error;
+
+					if (accessAllowed) {
+						if (score < accessScore) {
+							success = false;
+							this.showWarning(this.$t("voteLabels.score_is_lower_than_allowed_score", {score, accessScore}));
+						} else {
+							// passed
+						}
+					} else if (accessRejected) {
+						success = false;
+						this.showWarning(this.$t("voteLabels.access_to_score_rejected_by_moderator"));
+					} else {
+						success = false;
+						if (!(accessError)) {
+							const requestData = this.findRequestData();
+							if (requestData) {
+								this.showWarning(this.$t("voteLabels.waiting_for_moderator_response"));
+							} else {
+								this.showModerationRequestDialog(score);
+							};
+						};
+					};
+				};
+
+				if (!(success)) {
+					this.resetScore();
+					return;
+				};
 			};
 
 			if (!(this.isOfferScoreLoading)) {
@@ -160,17 +203,198 @@ export default {
 					if (!(this.isComponentAlive)) return;
 					this.isOfferScoreLoading = false;
 				});
-			}
+			};
+		},
+
+		async checkReputation() {
+			let result = true;
+
+			try {
+				const 
+					bastyonAccount = await this.sdk.getUserProfile(this.address),
+					reputation = 100; // bastyonAccount?.reputation || 0;
+					// TODO: DEBUG reputation !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+				if (reputation < 100) {
+					throw new Error("error#60");
+				};
+			} catch (error) {
+				result = false;
+				this.showError(error);
+			};
+
+			return result;
+		},
+
+		async findAccessData() {
+			let result = null;
+
+			const searchData = {
+				createdAt: Date.now() - 7 * 24 * 3600 * 1000,
+				offerId: this.item.hash,
+				userAddress: this.address,
+			};
+
+			const 
+				settings = this.sdk.getSupportSettings(),
+				addresses = settings.moderatorAddresses;
+
+			let accounts = null;
+			try {
+				accounts = await this.sdk.getBrtAccounts(addresses);
+			} catch (e) {
+				result = {
+					error: e,
+				};
+			};
+
+			if (accounts) {
+				const 
+					allAccountsAccessItems = accounts.map(m => m?.metaData?.votingModeration?.accessItems).filter(f => f),
+					flatItems = [].concat(...allAccountsAccessItems);
+				
+				result = flatItems.filter(f => f 
+					&& f.offerId === searchData.offerId
+					&& f.userAddress === searchData.userAddress
+					&& f.createdAt > searchData.createdAt
+				).pop();
+			};
+
+			return result;
+		},
+
+		findRequestData() {
+			const 
+				searchData = {
+					createdAt: Date.now() - 7 * 24 * 3600 * 1000,
+					offerId: this.item.hash,
+				},
+				items = this.account?.metaData?.votingModeration?.requestItems || [];
+
+			return items.filter(f => f
+				&& f.offerId === searchData.offerId 
+				&& f.createdAt > searchData.createdAt
+			).pop();
+		},
+
+		showModerationRequestDialog(score) {
+			const ComponentClass = Vue.extend(ModerationRequestDialog);
+			const instance = new ComponentClass({
+				propsData: {
+					score,
+				},
+			});
+			
+			instance.$on('onHide', vm => {
+			});
+
+			instance.$on('onSubmit', requestData => {
+				instance.hide();
+				setTimeout(() => {
+					this.submitModerationRequest(requestData);
+				}, 300);
+			});
+
+			instance.$mount();
+			this.lightboxContainer().appendChild(instance.$el);
+			instance.show();
+		},
+
+		async submitModerationRequest(requestData) {
+			this.dialog?.instance.view("load", this.$t("dialogLabels.search_for_available_moderator"));
+
+			const moderatorData = await this.getRandomModerator();
+
+			const
+				moderatorError = moderatorData?.error,
+				moderatorAddress = moderatorData?.address;
+
+			if (moderatorError) {
+				this.showError(moderatorError);
+				return;
+			} else if (!(moderatorAddress)) {
+				this.showWarning(this.$t("moderationRequestLabels.available_moderator_not_found"));
+				return;
+			};
+
+			const queryParams = {
+				offer: this.item.hash,
+				user: this.address,
+				score: requestData.score,
+			};
+
+			const 
+				chatMessage = this.$t("moderationRequestLabels.chat_message"),
+				paramsString = new URLSearchParams(queryParams).toString(),
+				requestLink = this.sdk.appLink(`barter/moderation?${ paramsString }`);
+
+			this.isChatLoading = true;
+			this.dialog?.instance.view("load", this.$t("dialogLabels.opening_room"));
+			this.sendMessage({
+				members: [moderatorAddress],
+				messages: [chatMessage, requestLink],
+				openRoom: true
+			}).then(() => {
+				this.dialog?.instance.hide();
+			}).catch(e => {
+				this.showError(e);
+			}).finally(() => {
+				this.isChatLoading = false;
+			});
+		},
+
+		async getRandomModerator() {
+			let result = null;
+
+			const 
+				settings = this.sdk.getSupportSettings(),
+				addresses = settings.moderatorAddresses;
+
+			let accounts = null;
+			try {
+				accounts = await this.sdk.getBrtAccounts(addresses);
+			} catch (e) {
+				result = {
+					error: e,
+				};
+			};
+
+			if (accounts) {
+				const 
+					items = accounts.filter(f => f 
+						&& f.address !== this.address 
+						&& f.metaData?.votingModeration?.moderator?.status === "available"
+					),
+					target = items[Math.floor(Math.random() * items.length)];
+
+				if (target) {
+					result = {
+						address: target.address,
+					};
+				};
+			};
+
+			return result;
+		},
+
+		resetScore() {
+			this.score = 0;
+			this.$refs.offerScore?.reset();
 		},
 
 		/**
 		 * Send comment
 		 */
-		submitComment() {
+		async submitComment() {
+			if (this.sdk.willOpenRegistration()) return;
+
 			const
 				form = this.$refs.form,
-				feed = this.$refs.vote,
-				formData = form.serialize();
+				feed = this.$refs.vote;
+
+			await feed?.trimContentAsync();
+				
+			const formData = form.serialize();
 
 			if (form.validate() && !this.isCommentLoading) {
 				this.isCommentLoading = true;
@@ -247,6 +471,7 @@ export default {
 
 		voteable() {
 			return this.offerExists 
+				&& !(this.isMyOffer)
 				&& this.form
 				&& !(this.offerScores.some(f => f.address === this.sdk.address && (f.relay || f.completed))
 					|| this.isOfferScoreLoading

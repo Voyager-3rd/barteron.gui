@@ -239,6 +239,7 @@
 	"profileLabels": {
 		"label": "Профил",
 		"edit": "Уреди профил",
+		"profile_is_being_updated": "Профил се ажурира",
 		"on_barteron_from": "На Barteron од {date}",
 		"profile_on_bastyon": "Профил на Bastyon",
 		"coins": "PKOIN",
@@ -482,6 +483,7 @@
 		"need_remove_unpublished_video": "Видео је учитан, али није објављен. Биће обрисан. Наставити?",
 		"unsaved_offer_creation_data": "Промене неће бити сачуване. Наставити?",
 		"pending_reg": "Молимо сачекајте док се ваш налог активира",
+		"search_for_available_moderator": "Потражите доступног модератора.",
 		"opening_room": "Отвара се чет. Молимо сачекајте.",
 		"sending_message": "Порука се шаље у чет. Молимо сачекајте.",
 		"sending_transaction": "Трансакција се шаље у чет. Молимо сачекајте.",
@@ -508,6 +510,7 @@
 		"common_error": "Дошло је до грешке: {error}",
 		"common_loading_error": "Грешка при учитавању података: {error}",
 		"account_saving_error": "Чување промена налога није успело",
+		"switching_moderator_status_error": "Тренутно нема доступних модератора. Промена статуса није могућа.",
 		"disabled_permissions": "Следеће дозволе су онемогућене: {error}. Кликните на \"Подешавања апликације\" и омогућите приступ.",
 		"currency_rate_error_message": "Није могуће добити курс за {currency}. Бићете преусмерени на главни екран. Молимо покушајте поново.",
 		"app_geolocation_permission_error": "Ограничили сте приступ геолокацији. Кликните на \"Подешавања апликације\" и омогућите приступ.",
@@ -572,7 +575,10 @@
 		"reviewNotPublished": "Рецензија није објављена",
 		"comment_prompt": "Додајте рецензију",
 		"placeholder": "Оставите своју рецензију о куповини",
-		"empty": "Још нема рецензија"
+		"empty": "Још нема рецензија",
+		"score_is_lower_than_allowed_score": "Резултат \"{score}\" је нижи од резултата који је договорио модератор: \"{accessScore}\". Молимо вас да наведете резултат који није нижи од договореног резултата.",
+		"access_to_score_rejected_by_moderator": "Модератор је одбио ваш захтев за давање ниске оцене. За детаље, контактирајте модератора у ћаскању.",
+		"waiting_for_moderator_response": "Већ сте поднели захтев за ниску оцену овог огласа. Молимо сачекајте одлуку."
 	},
 
 	"safeDealLabels": {
@@ -680,6 +686,10 @@
 		"moderator_status_unavailable": "Недоступан"
 	},
 
+	"moderationRequestLabels": {
+		"title": "Захтев за модерирање оцене"
+	},
+
 	"feedbackLabels": {
 		"subject": "Barteron, повратне информације",
 		"title": "Форма за повратне информације",
@@ -762,7 +772,6 @@
 	"currency_price_disabled_hint": "Цена у валути {currency} ће се аутоматски ажурирати према тренутном курсу PKOIN",
 	"price_prefix_text": "Означити цену као минималну (испред цене ће бити додата реч \"Од\")",
 	"select_currency_dialog": "Изаберите валуту",
-	"changes_are_being_saved": "Чување промена у току",
 
 	"may_match_exchanges": "Може одговарати вашим разменама",
 	"new_from_goods": "Новитети"

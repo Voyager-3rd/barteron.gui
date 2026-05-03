@@ -8,7 +8,7 @@ const supportData = {
         ],
 
         production: [
-            "PMkhdDuCM3k8xLRDBUnmBDcUMWjhfPbWbE",
+            "PMdhZ1gvZXAXmQ6z5ghHz86arfXorxNYgX",
         ],
     },
 }

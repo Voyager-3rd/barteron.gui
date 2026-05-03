@@ -90,20 +90,54 @@ export default {
 				votingModeration = metaData.votingModeration || {},
 				moderator = votingModeration.moderator || {};
 
-		
+			const checkingData = {
+				currentStatus: moderator.status,
+				nextStatus: this.status,
+			};
+
 			moderator.status = this.status;
 			votingModeration.moderator = moderator;
 			metaData.votingModeration = votingModeration;
 
 			this.isLoading = true;
 
-			this.account.set({ metaData }).then(() => {
+			this.checkSaving(checkingData).then(allowed => {
+				if (allowed) {
+					return this.account.set({ metaData });
+				} else {
+					this.cancel();
+					throw new Error(this.$t("dialogLabels.switching_moderator_status_error"));
+				};
+			}).then(() => {
 				this.editing = false;
 			}).catch(e => {
 				this.showError(e);
 			}).finally(() => {
 				this.isLoading = false;
 			});
+		},
+
+		checkSaving(checkingData) {
+			const needStatusCheck = (
+				checkingData?.currentStatus === this.statuses.available
+				&& checkingData?.nextStatus !== this.statuses.available
+			);
+
+			if (needStatusCheck) {
+				const 
+					settings = this.sdk.getSupportSettings(),
+					addresses = settings.moderatorAddresses.filter(f => f !== this.address);
+				
+				return this.sdk.getBrtAccounts(addresses).then(accounts => {
+					const allowed = accounts
+						.map(m => m?.metaData?.votingModeration?.moderator?.status)
+						.some(f => f === this.statuses.available);
+
+					return allowed;
+				});
+			} else {
+				return Promise.resolve(true);
+			};
 		},
 
 		cancel() {

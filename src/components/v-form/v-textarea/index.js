@@ -25,6 +25,16 @@ export default {
 				this.content = this.content.trim();
 			}
 		},
+
+		async trimContentAsync() {
+			this.trimContent();
+    		await this.$nextTick();
+		},
+
+		setFocus() {
+			const textarea = this.$refs.textarea;
+			textarea?.focus();
+		}
 	},
 
 	mounted() {

@@ -83,7 +83,7 @@
 			class="v-label warning-level"
 		>
 			<i class="fa fa-spinner fa-spin"></i>
-			{{ $t("changes_are_being_saved") }}
+			{{ $t("profileLabels.profile_is_being_updated") }}
 		</label>
 	</div>
 </template>

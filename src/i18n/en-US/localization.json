@@ -239,6 +239,7 @@
 	"profileLabels": {
 		"label": "Profile",
 		"edit": "Edit profile",
+		"profile_is_being_updated": "Profile is being updated",
 		"on_barteron_from": "On Barteron from {date}",
 		"profile_on_bastyon": "Profile on Bastyon",
 		"coins": "PKOIN",
@@ -482,6 +483,7 @@
 		"need_remove_unpublished_video": "The video has been uploaded but not published. It will be removed. Continue?",
 		"unsaved_offer_creation_data": "Changes will not be saved. Continue?",
 		"pending_reg": "Please wait until your account being activacted",
+		"search_for_available_moderator": "Search for an available moderator.",
 		"opening_room": "The chat is opening. Please wait.",
 		"sending_message": "Sending message to the chat. Please wait.",
 		"sending_transaction": "Sending transaction to the chat. Please wait.",
@@ -508,6 +510,7 @@
 		"common_error": "An error occurred: {error}",
 		"common_loading_error": "Data loading error: {error}",
 		"account_saving_error": "Failed to save account changes",
+		"switching_moderator_status_error": "There are currently no moderators available. Changing your status is not possible.",
 		"disabled_permissions": "The following permissions are disabled: {error}. Click the \"Application Settings\" button to allow the access.",
 		"currency_rate_error_message": "Unable to get the currency rate for {currency}. You will be redirected to the main screen. Please try again.",
 		"app_geolocation_permission_error": "You have restricted access to geolocation. Click the \"Application Settings\" button to allow the access.",
@@ -572,7 +575,10 @@
 		"reviewNotPublished": "Review not published",
 		"comment_prompt": "Add your review",
 		"placeholder": "Leave your review of your purchase here",
-		"empty": "There is no reviews yet"
+		"empty": "There is no reviews yet",
+		"score_is_lower_than_allowed_score": "The score \"{score}\" is lower than the score agreed upon by the moderator: \"{accessScore}\". Please provide a score no lower than the agreed upon score.",
+		"access_to_score_rejected_by_moderator": "Your request to give a low rating has been rejected by the moderator. For details, see the chat with the moderator.",
+		"waiting_for_moderator_response": "You have already submitted a request to rate this offer low. Please await a decision."
 	},
 
 	"safeDealLabels": {
@@ -680,6 +686,10 @@
 		"moderator_status_unavailable": "Unavailable"
 	},
 
+	"moderationRequestLabels": {
+		"title": "Request for rating moderation"
+	},
+
 	"feedbackLabels": {
 		"subject": "Barteron, feedback",
 		"title": "Leave your feedback here",
@@ -762,7 +772,6 @@
 	"currency_price_disabled_hint": "The price in {currency} currency will be updating automatically at the current PKOIN rate",
 	"price_prefix_text": "Mark the price as minimum (the word \"From\" will be added before the price)",
 	"select_currency_dialog": "Select currency",
-	"changes_are_being_saved": "Changes are being saved",
 
 	"may_match_exchanges": "May match with your exchanges",
 	"new_from_goods": "New from goods"
