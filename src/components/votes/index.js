@@ -196,8 +196,7 @@ export default {
 					}, 300);
 				}).catch(e => {
 					if (!(this.isComponentAlive)) return;
-					this.score = 0;
-					this.$refs.offerScore?.reset();
+					this.resetScore();
 					this.showError(e);
 				}).finally(() => {
 					if (!(this.isComponentAlive)) return;
@@ -254,9 +253,9 @@ export default {
 					flatItems = [].concat(...allAccountsAccessItems);
 				
 				result = flatItems.filter(f => f 
+					&& f.createdAt > searchData.createdAt
 					&& f.offerId === searchData.offerId
 					&& f.userAddress === searchData.userAddress
-					&& f.createdAt > searchData.createdAt
 				).pop();
 			};
 
@@ -272,8 +271,8 @@ export default {
 				items = this.account?.metaData?.votingModeration?.requestItems || [];
 
 			return items.filter(f => f
-				&& f.offerId === searchData.offerId 
 				&& f.createdAt > searchData.createdAt
+				&& f.offerId === searchData.offerId 
 			).pop();
 		},
 
@@ -324,23 +323,47 @@ export default {
 			};
 
 			const 
-				chatMessage = this.$t("moderationRequestLabels.chat_message"),
+				titleMessage = this.$t("moderationRequestLabels.moderation_request_title_message"),
+				reason = requestData.reason,
 				paramsString = new URLSearchParams(queryParams).toString(),
 				requestLink = this.sdk.appLink(`barter/moderation?${ paramsString }`);
+
+			let sendingFailed = false;
 
 			this.isChatLoading = true;
 			this.dialog?.instance.view("load", this.$t("dialogLabels.opening_room"));
 			this.sendMessage({
 				members: [moderatorAddress],
-				messages: [chatMessage, requestLink],
+				messages: [titleMessage, reason, requestLink],
 				openRoom: true
 			}).then(() => {
 				this.dialog?.instance.hide();
 			}).catch(e => {
+				sendingFailed = true;
 				this.showError(e);
 			}).finally(() => {
 				this.isChatLoading = false;
 			});
+
+			const addRequestItemToProfile = !(sendingFailed);
+			if (addRequestItemToProfile) {
+				const 
+					metaData = JSON.parse(JSON.stringify(this.account?.metaData || {})),
+					votingModeration = metaData.votingModeration || {},
+					requestItems = votingModeration.requestItems || [];
+
+				requestItems.push({
+					createdAt: Date.now(),
+					offerId: this.item.hash,
+				});
+				
+				votingModeration.requestItems = requestItems;
+				metaData.votingModeration = votingModeration;
+
+				this.account.set({ metaData }).catch(e => {
+					console.error(e);
+				});
+			};
 		},
 
 		async getRandomModerator() {

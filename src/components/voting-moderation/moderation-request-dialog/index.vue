@@ -26,7 +26,7 @@
 				id="input-reason"
 				class="field"
 				name="reason"
-				length="500"
+				length="1000"
 				:placeholder="$t('moderationRequestLabels.reason_placeholder')"
 			>
 			</v-textarea>
