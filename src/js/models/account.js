@@ -155,6 +155,7 @@ class Account {
 	 * @param {Object} [data]
 	 */
 	set(data) {
+		// TODO: clean old requestItems, accessItems
 		return this.sdk.setBrtAccount({ ...this.update(data) });
 	}
 

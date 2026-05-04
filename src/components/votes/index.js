@@ -146,7 +146,8 @@ export default {
 						accessRejected = accessData?.status === "rejected",
 						rejectionReason = accessData?.rejectionReason || "",
 						accessScore = accessData?.score || 0,
-						accessError = accessData?.error;
+						accessError = accessData?.error,
+						canUpdateAccount = !(this.account.relay);
 
 					if (accessAllowed) {
 						if (score < accessScore) {
@@ -165,7 +166,11 @@ export default {
 							if (requestData) {
 								this.showWarning(this.$t("voteLabels.waiting_for_moderator_response"));
 							} else {
-								this.showModerationRequestDialog(score);
+								if (canUpdateAccount) {
+									this.showModerationRequestDialog(score);
+								} else {
+									this.showWarning(this.$t("moderationRequestLabels.cannot_create_request_while_account_is_updating"));
+								};
 							};
 						};
 					};

@@ -337,6 +337,7 @@
 		"safe_deal": "Safe deal",
 		"purchase_directly": "Purchase directly",
 		"open_deal_chat": "Open deal chat",
+		"open_chat": "Open chat",
 		"update_status": "Update status",
 		"transfer_payment_to_validator": "Transfer payment to the guarantor",
 		"transfer_payment_to_seller": "Transfer payment to the seller",
@@ -576,7 +577,7 @@
 		"comment_prompt": "Add your review",
 		"placeholder": "Leave your review of your purchase here",
 		"empty": "There is no reviews yet",
-		"score_is_lower_than_allowed_score": "The score \"{score}\" is lower than the score agreed upon by the moderator: \"{accessScore}\". Please provide a score no lower than the agreed upon score.",
+		"score_is_lower_than_allowed_score": "The rating \"{score}\" is lower than the rating agreed upon by the moderator: \"{accessScore}\". Please provide a rating no lower than the agreed upon rating.",
 		"access_to_score_rejected_by_moderator": "Your request to give a low rating has been rejected by the moderator. For details, see the chat with the moderator.",
 		"waiting_for_moderator_response": "You have already submitted a request to rate this offer low. Please await a decision."
 	},
