@@ -54,6 +54,7 @@ export default {
 		},
 
 		// TODO: moderationRequestLabels - need translation !!!!!!!!!!!!!!!!!!!!!!
+		// TODO: add link preview in chat
 
 		async submit() {
 			const

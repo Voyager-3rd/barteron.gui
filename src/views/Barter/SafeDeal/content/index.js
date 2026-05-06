@@ -62,6 +62,10 @@ export default {
 			return this.$route.query.validator;
 		},
 
+		isReadyToUpdate() {
+			return !!(this.id && this.buyerAddress && this.sellerAddress && this.validatorAddress);
+		},
+
 		roomMembers() {
 			return [
 				this.buyerAddress, 
@@ -673,11 +677,13 @@ export default {
 		});
 	},
 
-	async beforeRouteUpdate(to, from, next) {
-		const needUpdate = (JSON.stringify(to.query) !== JSON.stringify(from.query));
-		if (needUpdate) {
-			this.updateStatus();
-		};
-		next();
+	watch: {
+		id() {
+			this.$2watch("sellerAddress").then(() => {
+				this.updateStatus();
+			}).catch(e => {
+				console.error(e);
+			});
+		},
 	},
 }

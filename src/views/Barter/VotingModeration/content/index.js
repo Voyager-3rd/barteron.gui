@@ -1,37 +1,24 @@
-// import AppErrors from "@/js/appErrors.js";
-// import Loader from "@/components/loader/index.vue";
-// import SafeDealStore from "@/stores/safeDeal.js";
+import Loader from "@/components/loader/index.vue";
 import Profile from "@/components/profile/index.vue";
 import Score from "@/components/score/index.vue";
-// import SafeDealStatus from "@/components/safe-deal/safe-deal-status/index.vue";
-// import SafeDealUtils from "@/js/safeDealUtils.js";
 
 export default {
 	name: "Content",
 
 	components: {
-		// Loader,
+		Loader,
 		Profile,
 		Score,
-		// SafeDealStatus,
 	},
 
 	inject: ["dialog"],
 
 	data() {
 		return {
-			// statusesLoading: false,
-			// statusesLoadingError: null,
-			// statusItems: [],
-			// currentStatus: "",
-			// buyerCheckStatus1Enabled: false,
-			// status1BuyerSafeDealValue: 0,
-			// validatorCheckStatus2Enabled: false,
-			// status2ValidatorDealResultVariant: "",
-			// txFromBuyerToValidator: [],
-			// txFromValidatorToSeller: [],
-			// txFromValidatorToBuyer: [],
-			// waitingForPaymentConfirmation: false,
+			accessStatusVariant: null,
+			isLoading: false,
+			isChatLoading: false,
+			requestCompleted: false,
 		}
 	},
 
@@ -45,10 +32,10 @@ export default {
 		},
 
 		score() {
-			return this.$route.query.score;
+			return Number(this.$route.query.score);
 		},
 
-		userHasAccess() {
+		isModerator() {
 			const 
 				settings = this.sdk.getSupportSettings(),
 				addresses = settings.moderatorAddresses;
@@ -60,7 +47,7 @@ export default {
 	methods: {
 		checkVotingModerationData() {
 			if (!(this.sdk.metaDataAvailable())) {
-				const error = new Error(this.$t("dialogLabels.get_from_to_transactions_availability_error"));
+				const error = new Error(this.$t("dialogLabels.account_meta_data_availability_error"));
 				this.showError(error, null, () => {
 					this.showOffer();
 				});
@@ -122,6 +109,9 @@ export default {
 			this.dialog?.instance.view("load", dialogMessage);
 			this.sendMessage(data, sendingOptions).then(() => {
 				this.dialog?.instance.hide();
+				if (options?.completeRequest) {
+					this.requestCompleted = true;
+				};
 			}).catch(e => {
 				this.showError(e);
 			}).finally(() => {
@@ -139,22 +129,75 @@ export default {
 				console.error(e);
 				this.showVersionConflictIfNeeded(e);
 			});
-		}
+		},
+
+		changeAccessStatusVariant(value) {
+			const options = [
+				"allowed",
+				"rejected",
+			];
+
+			const isValid = options.includes(value);
+			if (isValid) {
+				this.accessStatusVariant = value;
+			};
+		},
+
+		execute() {
+			if (!(this.checkVotingModerationData())) return;
+
+			const canUpdateAccount = !(this.account.relay);
+			if (!(canUpdateAccount)) {
+				this.showWarning(this.$t("votingModerationLabels.cannot_execute_while_account_is_updating"));
+				return;
+			};
+
+			const 
+				metaData = JSON.parse(JSON.stringify(this.account?.metaData || {})),
+				votingModeration = metaData.votingModeration || {},
+				accessItems = votingModeration.accessItems || [];
+
+			const newItem = {
+				createdAt: Date.now(),
+				offerId: this.offer.hash,
+				userAddress: this.userAddress,
+				score: this.score,
+				status: this.accessStatusVariant,
+			};
+
+			accessItems.push(newItem);
+
+			votingModeration.accessItems = accessItems;
+			metaData.votingModeration = votingModeration;
+
+			this.isLoading = true;
+
+			this.account.set({ metaData }).then(() => {
+				const messages = [ this.sdk.appLink(`barter/${ this.offer.hash }`) ];
+				if (newItem.status === "allowed") {
+					messages.push(this.$t("votingModerationLabels.request_allowed_message", {score: newItem.score}));
+				} else if (newItem.status === "rejected") {
+					messages.push(this.$t("votingModerationLabels.request_rejected_message"));
+
+					this.$refs.rejectionReason.trimContent();
+					const rejectionReason = this.$refs.rejectionReason.content;
+					if (rejectionReason) {
+						messages.push(this.$t("votingModerationLabels.rejection_reason_message", {rejectionReason}));
+					};
+				};
+
+				this.sendVotingModerationMessage(messages, {completeRequest: true});
+			}).catch(e => {
+				this.showError(e);
+			}).finally(() => {
+				this.isLoading = false;
+			});
+
+		},
 	},
 
 	mounted() {
-		// this.$2watch("sellerAddress").then(() => {
-		// 	this.updateStatus();
-		// }).catch(e => {
-		// 	console.error(e);
-		// });
+
 	},
 
-	async beforeRouteUpdate(to, from, next) {
-		const needUpdate = (JSON.stringify(to.query) !== JSON.stringify(from.query));
-		if (needUpdate) {
-			// this.updateStatus();
-		};
-		next();
-	},
 }

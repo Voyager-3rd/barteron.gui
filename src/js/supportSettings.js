@@ -9,6 +9,7 @@ const supportData = {
 
         production: [
             "PMdhZ1gvZXAXmQ6z5ghHz86arfXorxNYgX",
+            "PXYhCbTwPaUHrP6spJM5NY84TBpLQJtZi5",
         ],
     },
 }

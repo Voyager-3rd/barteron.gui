@@ -26,8 +26,8 @@ export default {
 			return this.content?.moderatorAddress;
 		},
 
-		userHasAccess() {
-			return this.content?.userHasAccess;
+		isModerator() {
+			return this.content?.isModerator;
 		},
 	},
 

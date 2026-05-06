@@ -1,11 +1,11 @@
 <template>
 	<v-aside 
-		v-if="userHasAccess"
+		v-if="isModerator"
 		class="voting-moderation"
 	>
 		<!-- Profile stats -->
 		<div class="box">
-			<strong class="subtitle part-title">{{ $t("votingModerationLabels.request_author") }}</strong>
+			<strong class="subtitle part-title">{{ $t("votingModerationLabels.user") }}</strong>
 			<Profile :hash="userAddress"/>
 			<div class="message">
 				<v-button @click="openVotingModerationRoom">
