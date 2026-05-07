@@ -53,7 +53,6 @@ export default {
 			this.$el.parentNode?.removeChild(this.$el);			
 		},
 
-		// TODO: moderationRequestLabels - need translation !!!!!!!!!!!!!!!!!!!!!!
 		// TODO: add link preview in chat
 
 		async submit() {

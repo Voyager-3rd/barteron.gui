@@ -215,8 +215,7 @@ export default {
 			try {
 				const 
 					bastyonAccount = await this.sdk.getUserProfile(this.address),
-					reputation = 100; // bastyonAccount?.reputation || 0;
-					// TODO: DEBUG reputation !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					reputation = bastyonAccount?.reputation || 0;
 
 				if (reputation < 100) {
 					throw new Error("error#60");
@@ -331,7 +330,7 @@ export default {
 
 			const 
 				titleMessage = this.$t("moderationRequestLabels.moderation_request_title_message"),
-				reason = requestData.reason,
+				reasonMessage = this.$t("moderationRequestLabels.reason_message", {reason: requestData.reason}),
 				paramsString = new URLSearchParams(queryParams).toString(),
 				requestLink = this.sdk.appLink(`barter/moderation?${ paramsString }`);
 
@@ -341,7 +340,7 @@ export default {
 			this.dialog?.instance.view("load", this.$t("dialogLabels.opening_room"));
 			this.sendMessage({
 				members: [moderatorAddress],
-				messages: [titleMessage, reason, requestLink],
+				messages: [titleMessage, reasonMessage, requestLink],
 				openRoom: true
 			}).then(() => {
 				this.dialog?.instance.hide();

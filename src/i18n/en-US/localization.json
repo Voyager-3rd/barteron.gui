@@ -690,7 +690,33 @@
 	},
 
 	"moderationRequestLabels": {
-		"title": "Request for rating moderation"
+		"title": "Rating Moderation Request",
+		"main_info1": "Specify the reason for the low rating and send the request to a moderator",
+		"main_info2": "After sending the request, a chat with a moderator will be created where you can add screenshots and additional details.",
+		"main_info3": "The moderator will notify you of the request outcome in the chat. If approved, you will be granted access to add the requested rating.",
+		"reason_placeholder": "Specify the reason for the low rating",
+		"moderation_request_title_message": "Request for moderation of a low rating for the offer",
+		"reason_message": "Reason: {reason}",
+		"available_moderator_not_found": "No available moderators found. Please try again later.",
+		"cannot_create_request_while_account_is_updating": "A rating moderation request cannot be created while the account is updating. Please try again in a few minutes."
+	},
+
+	"votingModerationLabels": {
+		"label": "Moderation of the offer rating",
+		"user": "User",
+		"link_for_moderator_only": "The request is intended for the moderator only",
+		"desired_score": "Desired rating",
+		"advice_to_moderator_part1": "Review the reasons for the low rating of the offer in the chat with the user and verify them.",
+		"advice_to_moderator_part2": "If necessary, contact the author of the offer and make a decision regarding the user's access to rate the offer.",
+		"provide_access": "Provide access",
+		"reject_request": "Reject request",
+		"make_decision": "Make a decision",
+		"rejection_reason_placeholder": "Specify the reason for rejection (optional)",
+		"cannot_execute_while_account_is_updating": "The account is updating. Please try again in a few minutes.",
+		"request_allowed_message": "You will be granted access to submit a rating of \"{score}\" in a few minutes (waiting for blockchain confirmation). Access is granted for 1 week.",
+		"request_rejected_message": "The request to submit a low rating for this offer has been rejected",
+		"rejection_reason_message": "Reason: {rejectionReason}",
+		"request_completion_message": "Thank you for your help with moderation!"
 	},
 
 	"feedbackLabels": {
