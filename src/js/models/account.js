@@ -116,7 +116,6 @@ class Account {
 		this.sdk.on("action", this.actionHandler);
 	}
 
-
 	/**
 	 * Update model properties
 	 * 
@@ -142,11 +141,33 @@ class Account {
 			};
 		};
 
+		this.removeInvalidVotingModerationItems();
+
 		return this;
 	}
 
 	isRelayProp(prop) {
 		return prop && this.relayProps?.includes(prop);
+	}
+
+	removeInvalidVotingModerationItems() {
+		const 
+			requestItems = this.metaData?.votingModeration?.requestItems,
+			accessItems = this.metaData?.votingModeration?.accessItems,
+			interval = Account.votingModerationItemsInterval,
+			dateNow = Date.now();
+
+		const
+			invalidRequestItemsExist = (requestItems || []).some(f => !(f.createdAt > dateNow - interval)),
+			invalidAccessItemsExist = (accessItems || []).some(f => !(f.createdAt > dateNow - interval));
+
+		if (invalidRequestItemsExist) {
+			this.metaData.votingModeration.requestItems = this.metaData.votingModeration.requestItems.filter(f => f.createdAt > dateNow - interval);
+		};
+
+		if (invalidAccessItemsExist) {
+			this.metaData.votingModeration.accessItems = this.metaData.votingModeration.accessItems.filter(f => f.createdAt > dateNow - interval);
+		};
 	}
 
 	/**
@@ -155,7 +176,6 @@ class Account {
 	 * @param {Object} [data]
 	 */
 	set(data) {
-		// TODO: clean old requestItems, accessItems
 		return this.sdk.setBrtAccount({ ...this.update(data) });
 	}
 
@@ -168,5 +188,12 @@ class Account {
 		Vue.delete(this.sdk.barteron._accounts, this.address);
 	}
 };
+
+Object.defineProperty(Account, "votingModerationItemsInterval", {
+	value: 7 * 24 * 3600 * 1000,
+	writable: false,
+	configurable: false,
+	enumerable: true
+});
 
 export default Account;

@@ -144,7 +144,6 @@ export default {
 					const 
 						accessAllowed = accessData?.status === "allowed",
 						accessRejected = accessData?.status === "rejected",
-						rejectionReason = accessData?.rejectionReason || "",
 						accessScore = accessData?.score || 0,
 						accessError = accessData?.error,
 						canUpdateAccount = !(this.account.relay);
@@ -233,11 +232,13 @@ export default {
 		async findAccessData() {
 			let result = null;
 
-			const searchData = {
-				createdAt: Date.now() - 7 * 24 * 3600 * 1000,
-				offerId: this.item.hash,
-				userAddress: this.address,
-			};
+			const 
+				interval = this.sdk.models.Account.votingModerationItemsInterval,
+				searchData = {
+					createdAt: Date.now() - interval,
+					offerId: this.item.hash,
+					userAddress: this.address,
+				};
 
 			const 
 				settings = this.sdk.getSupportSettings(),
@@ -269,8 +270,9 @@ export default {
 
 		findRequestData() {
 			const 
+				interval = this.sdk.models.Account.votingModerationItemsInterval,
 				searchData = {
-					createdAt: Date.now() - 7 * 24 * 3600 * 1000,
+					createdAt: Date.now() - interval,
 					offerId: this.item.hash,
 				},
 				items = this.account?.metaData?.votingModeration?.requestItems || [];
