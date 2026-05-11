@@ -51,11 +51,13 @@ export default {
 	methods: {
 		change(index) {
 			if (this.voteable && !this.voted) {
-				this.score = index;
-				this.voted = true;
-
-				this.$emit("change", this.score);
+				this.$emit("change", index);
 			}
+		},
+
+		setVoted(score) {
+			this.score = score;
+			this.voted = true;
 		},
 
 		reset() {

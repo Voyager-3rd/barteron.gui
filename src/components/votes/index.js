@@ -131,10 +131,7 @@ export default {
 		 * @param {Number} score
 		 */
 		async vote(score) {
-			if (this.sdk.willOpenRegistration()) {
-				this.resetScore();
-				return;
-			};
+			if (this.sdk.willOpenRegistration()) return;
 
 			if (score < 4) {
 				let success = this.sdk.metaDataAvailable() && await this.checkReputation();
@@ -175,15 +172,13 @@ export default {
 					};
 				};
 
-				if (!(success)) {
-					this.resetScore();
-					return;
-				};
+				if (!(success)) return;
 			};
 
 			if (!(this.isOfferScoreLoading)) {
 				this.isOfferScoreLoading = true;
 				this.score = score;
+				this.$refs.offerScore?.setVoted(score);
 				this.removeRejectedOfferScores();
 	
 				this.sdk.setBrtOfferVote({
