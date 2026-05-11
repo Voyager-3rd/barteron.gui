@@ -239,6 +239,7 @@
 	"profileLabels": {
 		"label": "Profile",
 		"edit": "Edit profile",
+		"profile_is_being_updated": "Profile is being updated",
 		"on_barteron_from": "On Barteron from {date}",
 		"profile_on_bastyon": "Profile on Bastyon",
 		"coins": "PKOIN",
@@ -336,6 +337,7 @@
 		"safe_deal": "Safe deal",
 		"purchase_directly": "Purchase directly",
 		"open_deal_chat": "Open deal chat",
+		"open_chat": "Open chat",
 		"update_status": "Update status",
 		"transfer_payment_to_validator": "Transfer payment to the guarantor",
 		"transfer_payment_to_seller": "Transfer payment to the seller",
@@ -362,6 +364,7 @@
 		"continue_working": "Continue working",
 		"support": "Support",
 		"apply": "Apply",
+		"execute": "Execute",
 		"reset": "Reset",
 		"submit": "Submit"
 	},
@@ -482,6 +485,7 @@
 		"need_remove_unpublished_video": "The video has been uploaded but not published. It will be removed. Continue?",
 		"unsaved_offer_creation_data": "Changes will not be saved. Continue?",
 		"pending_reg": "Please wait until your account being activacted",
+		"search_for_available_moderator": "Search for an available moderator.",
 		"opening_room": "The chat is opening. Please wait.",
 		"sending_message": "Sending message to the chat. Please wait.",
 		"sending_transaction": "Sending transaction to the chat. Please wait.",
@@ -507,6 +511,8 @@
 		"survey_error": "An error occurred while sending your answers: {error}",
 		"common_error": "An error occurred: {error}",
 		"common_loading_error": "Data loading error: {error}",
+		"account_saving_error": "Failed to save account changes",
+		"switching_moderator_status_error": "There are currently no moderators available. Changing your status is not possible.",
 		"disabled_permissions": "The following permissions are disabled: {error}. Click the \"Application Settings\" button to allow the access.",
 		"currency_rate_error_message": "Unable to get the currency rate for {currency}. You will be redirected to the main screen. Please try again.",
 		"app_geolocation_permission_error": "You have restricted access to geolocation. Click the \"Application Settings\" button to allow the access.",
@@ -514,6 +520,7 @@
 		"images_max_count_exceeded_error": "Maximum count of images exceeded",
 		"images_failed_upload_numbers_error": "Unable to upload images with numbers: {numbers}. If the images are larger than 1MB, please reduce their size.",
 		"get_from_to_transactions_availability_error": "The current version of the Bastyon app does not contain safe deal option. Use the web version or update the app (if a new version is available)",
+		"account_meta_data_availability_error": "The current version of the Bastyon app lacks the required functionality. Use the web version or update the app (if a new version is available)",
 		"pkoin_price_over_total_supply_error": "The price in PKOIN exceeds the total supply of this cryptocurrency",
 		"payment_error": "An error occurred while transferring the amount",
 		"current_block_not_defined": "Failed to get the current block number in the blockchain",
@@ -571,7 +578,10 @@
 		"reviewNotPublished": "Review not published",
 		"comment_prompt": "Add your review",
 		"placeholder": "Leave your review of your purchase here",
-		"empty": "There is no reviews yet"
+		"empty": "There is no reviews yet",
+		"score_is_lower_than_allowed_score": "The rating \"{score}\" is lower than the rating agreed upon by the moderator: \"{accessScore}\". Please provide a rating no lower than the agreed upon rating.",
+		"access_to_score_rejected_by_moderator": "Your request to give a low rating has been rejected by the moderator. For details, see the chat with the moderator.",
+		"waiting_for_moderator_response": "You have already submitted a request to rate this offer low. Please await a decision."
 	},
 
 	"safeDealLabels": {
@@ -670,6 +680,43 @@
 		"calculation_success_deal_item3": "Who pays the fee: {variant}",
 		"calculation_success_deal_item4": "Buyer paid: {value} PKOIN",
 		"calculation_success_deal_item5": "Payment to seller: {value} PKOIN"		
+	},
+
+	"moderatorLabels": {
+		"moderator": "Moderator",
+		"status": "Status",
+		"moderator_status_available": "Available",
+		"moderator_status_unavailable": "Unavailable"
+	},
+
+	"moderationRequestLabels": {
+		"title": "Rating Moderation Request",
+		"main_info1": "Specify the reason for the low rating and send the request to a moderator",
+		"main_info2": "After sending the request, a chat with a moderator will be created where you can add screenshots and additional details.",
+		"main_info3": "The moderator will notify you of the request outcome in the chat. If approved, you will be granted access to add the requested rating.",
+		"reason_placeholder": "Specify the reason for the low rating",
+		"moderation_request_title_message": "Request for moderation of a low rating for the offer",
+		"reason_message": "Reason: {reason}",
+		"available_moderator_not_found": "No available moderators found. Please try again later.",
+		"cannot_create_request_while_account_is_updating": "A rating moderation request cannot be created while the account is updating. Please try again in a few minutes."
+	},
+
+	"votingModerationLabels": {
+		"label": "Moderation of the offer rating",
+		"user": "User",
+		"link_for_moderator_only": "The request is intended for the moderator only",
+		"desired_score": "Desired rating",
+		"advice_to_moderator_part1": "Review the reasons for the low rating of the offer in the chat with the user and verify them.",
+		"advice_to_moderator_part2": "If necessary, contact the author of the offer and make a decision regarding the user's access to rate the offer.",
+		"provide_access": "Provide access",
+		"reject_request": "Reject request",
+		"make_decision": "Make a decision",
+		"rejection_reason_placeholder": "Specify the reason for rejection (optional)",
+		"cannot_execute_while_account_is_updating": "The account is updating. Please try again in a few minutes.",
+		"request_allowed_message": "You will be granted access to submit a rating of \"{score}\" in a few minutes (waiting for blockchain confirmation). Access is granted for 1 week.",
+		"request_rejected_message": "The request to submit a low rating for this offer has been rejected",
+		"rejection_reason_message": "Reason: {rejectionReason}",
+		"request_completion_message": "Thank you for your help with moderation!"
 	},
 
 	"feedbackLabels": {

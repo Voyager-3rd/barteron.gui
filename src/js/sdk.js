@@ -12,6 +12,7 @@ import Comment from "@/js/models/comment.js";
 import AppErrors from "@/js/appErrors.js";
 import deliverySettings from "@/js/deliverySettings.js";
 import safeDealSettings from "@/js/safeDealSettings.js";
+import supportSettings from "@/js/supportSettings.js";
 import banProcessor from "@/js/banUtils.js";
 
 /**
@@ -838,6 +839,39 @@ class SDK {
 	}
 
 	/**
+	 * Get account actions
+	 * 
+	 * @param {Object} options
+	 * 
+	 * @returns {Promise}
+	 */
+	getAccountActions(options = {pending: false}) {
+		return this.getActions().then(actions => {
+			let result = (actions || []).filter(item => this.isAccountAction(item));
+			if (options?.pending) {
+				result = result.filter(item => !(item.completed || item.rejected));
+			};
+			return result;
+		});
+	}
+
+	/**
+	 * Checking for account action
+	 * 
+	 * @param {Object} action
+	 * 
+	 * @returns {Boolean}
+	 */
+	isAccountAction(action) {
+		const
+			expObject = action.expObject || {},
+			keys = Object.keys(expObject),
+			accountKeys = 'address,geohash,static,radius,tags'.split(',');
+		
+		return (accountKeys.filter(item => !(keys.includes(item))).length == 0);
+	}
+
+	/**
 	 * Get offer actions
 	 * 
 	 * @param {Object} options
@@ -1103,6 +1137,10 @@ class SDK {
 
 	safeDealAvailable() {
 		return (this.getTransactionsApiVersion() >= 7);
+	}
+
+	metaDataAvailable() {
+		return (this.getTransactionsApiVersion() >= 8);
 	}
 
 	getFromToTransactions(
@@ -1438,6 +1476,10 @@ class SDK {
 		return safeDealSettings;
 	}
 
+	getSupportSettings() {
+		return supportSettings;
+	}
+
 	/**
 	 * Check access to localstroage
 	 * 
@@ -1636,7 +1678,7 @@ class SDK {
 		addresses = addresses || [];
 
 		return this.rpc("getbarteronaccounts", addresses).then(items => {
-			return (items || []).map(item => new Account(item));
+			return (items || []).map(item => this.barteron._accounts[item?.s1] || new Account(item));
 		});
 	}
 
@@ -1741,6 +1783,8 @@ class SDK {
 					/* Map responses with their hashes */
 					for (const key in details) {
 						if (key === "accounts") {
+							// need to create an account instead of a cache (this.barteron._accounts[account?.s1]) to update the account rating 
+							// but in relay mode, the cache will be forced to be used (see the file /models/account.js)
 							data[key] = details[key]?.map(account => new Account(account)) || [];
 						} else if (key === "offerScores") {
 							data[key] = details[key]?.filter(f => f.s2 === hash).map(item => new OfferScore(item)) || [];

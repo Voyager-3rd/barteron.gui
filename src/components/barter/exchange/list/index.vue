@@ -43,8 +43,8 @@
 
 				<!-- Insert tag -->
 				<li
-					class="add"
 					v-if="editing"
+					class="add"
 					@click="$refs.categorySelect.show()"
 				>
 					<i class="fa fa-plus"></i>
@@ -66,17 +66,18 @@
 				class="edit"
 			>
 				<slot
+					v-if="$slots.edit || $scopedSlots.edit"
 					name="edit"
 					:instance="instance"
-					v-if="$slots.edit || $scopedSlots.edit"
 				></slot>
 				
 				<template v-else>
 					<!-- Edit button -->
 					<v-button
-						@click="edit"
-						:vHtml="editText"
 						v-if="!editing"
+						:vHtml="editText"
+						:disabled="hasRelay"
+						@click="edit"
 					/>
 
 					<!-- Cancel and Save buttons -->
