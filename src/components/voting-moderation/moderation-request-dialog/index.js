@@ -53,8 +53,6 @@ export default {
 			this.$el.parentNode?.removeChild(this.$el);			
 		},
 
-		// TODO: add link preview in chat
-
 		async submit() {
 			const
 				form = this.$refs.form,
