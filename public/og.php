@@ -49,7 +49,7 @@ class OG {
 
 			$lang = $this->getBrowserLang();
 
-			if ($id && (substr($id, 0, strlen('search')) == 'search' || substr($id, 0, strlen('safedeal')) == 'safedeal')) {
+			if ($id && (substr($id, 0, strlen('search')) == 'search' || substr($id, 0, strlen('safedeal')) == 'safedeal' || substr($id, 0, strlen('moderation')) == 'moderation')) {
 				@list($page, $id) = explode('?', $id);
 				parse_str($id, $id);
 				$lang = @$id['lang'] ? strtolower($id['lang']) : $lang;
@@ -138,9 +138,6 @@ class OG {
 					$description = 'Open the deal to check the current status';
 					$image = "https://{$this->manifest['scope']}/s_icon.png";
 
-					$offerTitle = '';
-					$sellerAddress = false;
-
 					$offerResult = $this->rpc->brtoffersbyhashes(array_filter([
 						@$id['offer'] ? $this->clean($id['offer']) : null
 					]));
@@ -150,8 +147,8 @@ class OG {
 						$offerTitle = urldecode($offer->p->s2);
 						$sellerAddress = ($offer->s1) ? urldecode($offer->s1) : false;
 
-						$buyerName = $this->getSafeDealUserName($id, 'buyer');
-						$validatorName = $this->getSafeDealUserName($id, 'validator');
+						$buyerName = $this->getUserNameByAddress($id, 'buyer');
+						$validatorName = $this->getUserNameByAddress($id, 'validator');
 
 						$sellerName = '';
 						if ($sellerAddress != false) {
@@ -185,6 +182,43 @@ class OG {
 					break;
 				}
 
+				case 'moderation': {
+					$title = 'Rating Moderation Request';
+					$description = 'For moderators only';
+					$image = "https://{$this->manifest['scope']}/m_icon.png";
+
+					$offerResult = $this->rpc->brtoffersbyhashes(array_filter([
+						@$id['offer'] ? $this->clean($id['offer']) : null
+					]));
+
+					if ($offerResult != false){
+						$offer = $offerResult[0];
+						$offerTitle = urldecode($offer->p->s2);
+
+						$userName = $this->getUserNameByAddress($id, 'user');
+						$score = @$id['score'] ? $id['score'] : '?';
+
+						switch ($lang) {
+							case 'ru':
+								$title = 'Заявка на модерацию оценки';
+								$description = "Объявление: {$offerTitle}; Пользователь: {$userName}; Оценка: {$score}";
+								break;
+
+							default:
+								$title = 'Rating Moderation Request';
+								$description = "Offer: {$offerTitle}; User: {$userName}; Rating: {$score}";
+								break;
+						}
+
+					}
+
+					if($title) $this->currentOg['title'] = $title;
+					if($description) $this->currentOg['description'] = $description;
+					if($image) $this->currentOg['image'] = $image;
+
+					break;
+				}
+				
 				case 'profile': {
 					$title = false;
 					$description = false;
@@ -308,7 +342,7 @@ class OG {
 		return $default;
 	}
 
-	public function getSafeDealUserName($id, $key) {
+	public function getUserNameByAddress($id, $key) {
 		$result = '';
 		$address = @$id[$key] ? $id[$key] : false;
 		if ($address != false) {

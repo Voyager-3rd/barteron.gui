@@ -1,6 +1,8 @@
 import Score from "@/components/score/index.vue";
 import Comment from "@/components/votes/comment.vue";
 import Loader from "@/components/loader/index.vue";
+import ModerationRequestDialog from "@/components/voting-moderation/moderation-request-dialog/index.vue";
+import Vue from 'vue';
 
 export default {
 	name: "Votes",
@@ -8,7 +10,8 @@ export default {
 	components: {
 		Loader,
 		Score,
-		Comment
+		Comment,
+		ModerationRequestDialog,
 	},
 
 	props: {
@@ -45,7 +48,7 @@ export default {
 		}
 	},
 
-	inject: ["dialog"],
+	inject: ["dialog", "lightboxContainer"],
 
 	computed: {
 		details() {
@@ -127,16 +130,55 @@ export default {
 		 * 
 		 * @param {Number} score
 		 */
-		vote(score) {
+		async vote(score) {
+			if (this.sdk.willOpenRegistration()) return;
+
 			if (score < 4) {
-				this.score = 0;
-				this.$refs.offerScore?.reset();
-				return;
+				let success = this.sdk.metaDataAvailable() && await this.checkReputation();
+				if (success) {
+					const accessData = await this.findAccessData();
+
+					const 
+						accessAllowed = accessData?.status === "allowed",
+						accessRejected = accessData?.status === "rejected",
+						accessScore = accessData?.score || 0,
+						accessError = accessData?.error,
+						canUpdateAccount = !(this.account.relay);
+
+					if (accessAllowed) {
+						if (score < accessScore) {
+							success = false;
+							this.showWarning(this.$t("voteLabels.score_is_lower_than_allowed_score", {score, accessScore}));
+						} else {
+							// passed
+						}
+					} else if (accessRejected) {
+						success = false;
+						this.showWarning(this.$t("voteLabels.access_to_score_rejected_by_moderator"));
+					} else {
+						success = false;
+						if (!(accessError)) {
+							const requestData = this.findRequestData();
+							if (requestData) {
+								this.showWarning(this.$t("voteLabels.waiting_for_moderator_response"));
+							} else {
+								if (canUpdateAccount) {
+									this.showModerationRequestDialog(score);
+								} else {
+									this.showWarning(this.$t("moderationRequestLabels.cannot_create_request_while_account_is_updating"));
+								};
+							};
+						};
+					};
+				};
+
+				if (!(success)) return;
 			};
 
 			if (!(this.isOfferScoreLoading)) {
 				this.isOfferScoreLoading = true;
 				this.score = score;
+				this.$refs.offerScore?.setVoted(score);
 				this.removeRejectedOfferScores();
 	
 				this.sdk.setBrtOfferVote({
@@ -153,24 +195,230 @@ export default {
 					}, 300);
 				}).catch(e => {
 					if (!(this.isComponentAlive)) return;
-					this.score = 0;
-					this.$refs.offerScore?.reset();
+					this.resetScore();
 					this.showError(e);
 				}).finally(() => {
 					if (!(this.isComponentAlive)) return;
 					this.isOfferScoreLoading = false;
 				});
-			}
+			};
+		},
+
+		async checkReputation() {
+			let result = true;
+
+			try {
+				const 
+					bastyonAccount = await this.sdk.getUserProfile(this.address),
+					reputation = bastyonAccount?.reputation || 0;
+
+				if (reputation < 100) {
+					throw new Error("error#60");
+				};
+			} catch (error) {
+				result = false;
+				this.showError(error);
+			};
+
+			return result;
+		},
+
+		async findAccessData() {
+			let result = null;
+
+			const 
+				interval = this.sdk.models.Account.votingModerationItemsInterval,
+				searchData = {
+					createdAt: Date.now() - interval,
+					offerId: this.item.hash,
+					userAddress: this.address,
+				};
+
+			const 
+				settings = this.sdk.getSupportSettings(),
+				addresses = settings.moderatorAddresses;
+
+			let accounts = null;
+			try {
+				accounts = await this.sdk.getBrtAccounts(addresses);
+			} catch (e) {
+				result = {
+					error: e,
+				};
+			};
+
+			if (accounts) {
+				const 
+					allAccountsAccessItems = accounts.map(m => m?.metaData?.votingModeration?.accessItems).filter(f => f),
+					flatItems = [].concat(...allAccountsAccessItems);
+				
+				result = flatItems.filter(f => f 
+					&& f.createdAt > searchData.createdAt
+					&& f.offerId === searchData.offerId
+					&& f.userAddress === searchData.userAddress
+				).pop();
+			};
+
+			return result;
+		},
+
+		findRequestData() {
+			const 
+				interval = this.sdk.models.Account.votingModerationItemsInterval,
+				searchData = {
+					createdAt: Date.now() - interval,
+					offerId: this.item.hash,
+				},
+				items = this.account?.metaData?.votingModeration?.requestItems || [];
+
+			return items.filter(f => f
+				&& f.createdAt > searchData.createdAt
+				&& f.offerId === searchData.offerId 
+			).pop();
+		},
+
+		showModerationRequestDialog(score) {
+			const ComponentClass = Vue.extend(ModerationRequestDialog);
+			const instance = new ComponentClass({
+				propsData: {
+					score,
+				},
+			});
+			
+			instance.$on('onHide', vm => {
+			});
+
+			instance.$on('onSubmit', requestData => {
+				instance.hide();
+				setTimeout(() => {
+					this.submitModerationRequest(requestData);
+				}, 300);
+			});
+
+			instance.$mount();
+			this.lightboxContainer().appendChild(instance.$el);
+			instance.show();
+		},
+
+		async submitModerationRequest(requestData) {
+			this.dialog?.instance.view("load", this.$t("dialogLabels.search_for_available_moderator"));
+
+			const moderatorData = await this.getRandomModerator();
+
+			const
+				moderatorError = moderatorData?.error,
+				moderatorAddress = moderatorData?.address;
+
+			if (moderatorError) {
+				this.showError(moderatorError);
+				return;
+			} else if (!(moderatorAddress)) {
+				this.showWarning(this.$t("moderationRequestLabels.available_moderator_not_found"));
+				return;
+			};
+
+			const queryParams = {
+				offer: this.item.hash,
+				user: this.address,
+				score: requestData.score,
+			};
+
+			const 
+				titleMessage = this.$t("moderationRequestLabels.moderation_request_title_message"),
+				reasonMessage = this.$t("moderationRequestLabels.reason_message", {reason: requestData.reason}),
+				paramsString = new URLSearchParams(queryParams).toString(),
+				requestLink = this.sdk.appLink(`barter/moderation?${ paramsString }`);
+
+			let sendingFailed = false;
+
+			this.isChatLoading = true;
+			this.dialog?.instance.view("load", this.$t("dialogLabels.opening_room"));
+			this.sendMessage({
+				members: [moderatorAddress],
+				messages: [titleMessage, reasonMessage, requestLink],
+				openRoom: true
+			}).then(() => {
+				this.dialog?.instance.hide();
+			}).catch(e => {
+				sendingFailed = true;
+				this.showError(e);
+			}).finally(() => {
+				this.isChatLoading = false;
+			});
+
+			const addRequestItemToProfile = !(sendingFailed);
+			if (addRequestItemToProfile) {
+				const 
+					metaData = JSON.parse(JSON.stringify(this.account?.metaData || {})),
+					votingModeration = metaData.votingModeration || {},
+					requestItems = votingModeration.requestItems || [];
+
+				requestItems.push({
+					createdAt: Date.now(),
+					offerId: this.item.hash,
+				});
+				
+				votingModeration.requestItems = requestItems;
+				metaData.votingModeration = votingModeration;
+
+				this.account.set({ metaData }).catch(e => {
+					console.error(e);
+				});
+			};
+		},
+
+		async getRandomModerator() {
+			let result = null;
+
+			const 
+				settings = this.sdk.getSupportSettings(),
+				addresses = settings.moderatorAddresses;
+
+			let accounts = null;
+			try {
+				accounts = await this.sdk.getBrtAccounts(addresses);
+			} catch (e) {
+				result = {
+					error: e,
+				};
+			};
+
+			if (accounts) {
+				const 
+					items = accounts.filter(f => f 
+						&& f.address !== this.address 
+						&& f.metaData?.votingModeration?.moderator?.status === "available"
+					),
+					target = items[Math.floor(Math.random() * items.length)];
+
+				if (target) {
+					result = {
+						address: target.address,
+					};
+				};
+			};
+
+			return result;
+		},
+
+		resetScore() {
+			this.score = 0;
+			this.$refs.offerScore?.reset();
 		},
 
 		/**
 		 * Send comment
 		 */
-		submitComment() {
+		async submitComment() {
+			if (this.sdk.willOpenRegistration()) return;
+
 			const
 				form = this.$refs.form,
-				feed = this.$refs.vote,
-				formData = form.serialize();
+				feed = this.$refs.vote;
+
+			await feed?.trimContentAsync();
+				
+			const formData = form.serialize();
 
 			if (form.validate() && !this.isCommentLoading) {
 				this.isCommentLoading = true;
@@ -247,6 +495,7 @@ export default {
 
 		voteable() {
 			return this.offerExists 
+				&& !(this.isMyOffer)
 				&& this.form
 				&& !(this.offerScores.some(f => f.address === this.sdk.address && (f.relay || f.completed))
 					|| this.isOfferScoreLoading

@@ -99,11 +99,14 @@ export default {
 		this.loadDeals();
 	},
 
-	async beforeRouteUpdate(to, from, next) {
-		const needUpdate = (JSON.stringify(to.query) !== JSON.stringify(from.query));
-		if (needUpdate) {
-			this.loadDeals();
-		};
-		next();
+	watch: {
+		"$route.query": {
+			handler(queryTo, queryFrom) {
+				const needUpdate = (JSON.stringify(queryTo) !== JSON.stringify(queryFrom));
+				if (needUpdate) {
+					this.loadDeals();
+				};
+			},
+		},
 	},
 }

@@ -5,7 +5,7 @@ import {
 } from "@/stores/locale.js";
 
 export default {
-	name: "SafeDealProfile",
+	name: "ModeratorProfile",
 
 	components: {
 		
@@ -20,7 +20,6 @@ export default {
 	data() {
 		return {
 			status: null,
-			feePercent: 0,
 			editing: false,
 			isLoading: false,
 		}
@@ -63,7 +62,7 @@ export default {
 			const items = this.statusItems.map(item => ({
 				value: item,
 				icon: icons[item],
-				title: this.$t(`safeDealLabels.validator_status_${ item }`),
+				title: this.$t(`moderatorLabels.moderator_status_${ item }`),
 			}));
 
 			return items.map(item => ({
@@ -76,13 +75,9 @@ export default {
 	},
 
 	methods: {
-		fillSafeDeal() {
-			const 
-				settings = this.sdk.getSafeDealSettings(),
-				defaultValues = settings.defaultValidatorValues;
-
-			this.status = this.account?.safeDeal?.validator?.status || this.statuses.unavailable;
-			this.feePercent = this.account?.safeDeal?.validator?.feePercent || defaultValues.feePercent;
+		fillData() {
+			const votingModeration = this.account?.metaData?.votingModeration;
+			this.status = votingModeration?.moderator?.status || this.statuses.unavailable;
 		},
 
 		edit() {
@@ -90,21 +85,30 @@ export default {
 		},
 
 		save() {
-			if (!(this.checkData())) {
-				return;
+			const 
+				metaData = JSON.parse(JSON.stringify(this.account?.metaData || {})),
+				votingModeration = metaData.votingModeration || {},
+				moderator = votingModeration.moderator || {};
+
+			const checkingData = {
+				currentStatus: moderator.status,
+				nextStatus: this.status,
 			};
 
-			const 
-				safeDeal = JSON.parse(JSON.stringify(this.account?.safeDeal || {})),
-				validator = safeDeal.validator || {};
-
-			validator.status = this.status;
-			validator.feePercent = this.feePercent;
-			safeDeal.validator = validator;
+			moderator.status = this.status;
+			votingModeration.moderator = moderator;
+			metaData.votingModeration = votingModeration;
 
 			this.isLoading = true;
 
-			this.account.set({ safeDeal }).then(() => {
+			this.checkSaving(checkingData).then(allowed => {
+				if (allowed) {
+					return this.account.set({ metaData });
+				} else {
+					this.cancel();
+					throw new Error(this.$t("dialogLabels.switching_moderator_status_error"));
+				};
+			}).then(() => {
 				this.editing = false;
 			}).catch(e => {
 				this.showError(e);
@@ -113,16 +117,31 @@ export default {
 			});
 		},
 
-		checkData() {
-			const result = (0 < this.feePercent && this.feePercent < 99);
-			if (!(result)) {
-				this.showError(this.$t("dialogLabels.validator_fee_value_error"));
-			}
-			return result;
+		checkSaving(checkingData) {
+			const needStatusCheck = (
+				checkingData?.currentStatus === this.statuses.available
+				&& checkingData?.nextStatus !== this.statuses.available
+			);
+
+			if (needStatusCheck) {
+				const 
+					settings = this.sdk.getSupportSettings(),
+					addresses = settings.moderatorAddresses.filter(f => f !== this.address);
+				
+				return this.sdk.getBrtAccounts(addresses).then(accounts => {
+					const allowed = accounts
+						.map(m => m?.metaData?.votingModeration?.moderator?.status)
+						.some(f => f === this.statuses.available);
+
+					return allowed;
+				});
+			} else {
+				return Promise.resolve(true);
+			};
 		},
 
 		cancel() {
-			this.fillSafeDeal();
+			this.fillData();
 			this.editing = false;
 		},
 
@@ -135,24 +154,15 @@ export default {
 				this.status = newStatus;
 			};
 		},
-
-		changeFeePercentEvent(e) {
-			const
-				inputs = this.$refs.feePercent?.inputs,
-				input = inputs[0].value;
-			
-			this.feePercent = !(Number.isNaN(Number(input))) ? Math.min( Math.max(Number(input),0), 99) : 0;
-		},
-
 	},
 
 	mounted() {
-		this.fillSafeDeal();
+		this.fillData();
 	},
 
 	watch: {
 		account() {
-			this.fillSafeDeal();
+			this.fillData();
 		},
 
 		locale() {

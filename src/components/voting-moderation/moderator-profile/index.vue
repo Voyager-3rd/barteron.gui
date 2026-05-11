@@ -1,11 +1,11 @@
 <template>
-	<div class="safe-deal-profile">
+	<div class="moderator-profile">
 
-		<strong class="title">{{ $t("safeDealLabels.validator") }}:</strong>
+		<strong class="title">{{ $t("moderatorLabels.moderator") }}:</strong>
 
 		<div class="row status-holder">
 			<div class="col no-offset">
-				<span>{{ $t("safeDealLabels.status") }}:</span>
+				<span>{{ $t("moderatorLabels.status") }}:</span>
 			</div>
 
 			<div class="col">
@@ -14,30 +14,6 @@
 					:disabled="!(editing) || isLoading"
 					:dropdown="statusDropdownList"
 					@selected="selectStatusEvent"
-				/>
-			</div>
-		</div>
-
-		<div class="row fee-percent-holder">
-			<div class="col no-offset">
-				<span>{{ $t("safeDealLabels.fee_percent") }}:</span>
-			</div>
-
-			<div class="col">
-				<v-input
-					class="fee-percent"
-					:id="['fee-percent']"
-					:value="[feePercent]"
-					ref="feePercent"
-					min="0"
-					max="99"
-					type="number"
-					vSize="md"
-					:disabled="!(editing) || isLoading"
-					:vEvents="{
-						change: changeFeePercentEvent,
-						input: changeFeePercentEvent,
-					}"
 				/>
 			</div>
 		</div>
@@ -79,7 +55,7 @@
 		</div>
 
 		<label 
-			v-if="account?.relay && account?.isRelayProp('safeDeal')" 
+			v-if="account?.relay && account?.isRelayProp('votingModeration')" 
 			class="v-label warning-level"
 		>
 			<i class="fa fa-spinner fa-spin"></i>

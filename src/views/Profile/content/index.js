@@ -1,6 +1,7 @@
 import Profile from "@/components/profile/index.vue";
 import Wallet from "@/components/wallet/index.vue";
 import SafeDealProfile from "@/components/safe-deal/safe-deal-profile/index.vue";
+import ModeratorProfile from "@/components/voting-moderation/moderator-profile/index.vue";
 import ProfileExchangeList from "@/components/barter/exchange/profile-list/index.vue";
 import BarterList from "@/components/barter/list/index.vue";
 import Votes from "@/components/votes/index.vue";
@@ -24,6 +25,7 @@ export default {
 		Profile,
 		Wallet,
 		SafeDealProfile,
+		ModeratorProfile,
 		ProfileExchangeList,
 		BarterList,
 		Votes
@@ -73,6 +75,11 @@ export default {
 		isValidator() {
 			const settings = this.sdk.getSafeDealSettings();
 			return settings.validatorAddresses.includes(this.address);
+		},
+
+		isModerator() {
+			const settings = this.sdk.getSupportSettings();
+			return settings.moderatorAddresses.includes(this.address);
 		},
 
 		/**
@@ -157,6 +164,33 @@ export default {
 	},
 
 	methods: {
+		async applyPendingActions() {
+			try {
+				const pendingActions = await this.sdk.getAccountActions({pending: true}).catch(e => {
+					console.error(e);
+				});
+
+				(pendingActions || []).forEach(f => {
+					const 
+						expObject = f.expObject,
+						forThisAccount = (expObject?.address === this.address),
+						hash = (expObject?.hash || f.transaction);
+
+					if (forThisAccount) {
+						const account = this.sdk.barteron.accounts[this.address];
+						const data = {
+							...expObject,
+							hash,
+							relay: true,
+						};
+						account?.update(data);
+					};
+				});
+			} catch (e) {
+				console.error(e);
+			};
+		},
+
 		createRoom() {
 			if (this.isMyProfile) return;
 			if (this.sdk.willOpenRegistration()) return;
@@ -246,7 +280,7 @@ export default {
 					editionActions.forEach(f => {
 						const 
 							expObject = f.expObject,
-							hash = (expObject.hash || f.transaction);
+							hash = (expObject?.hash || f.transaction);
 
 						if (expObject) {
 							const offer = new this.sdk.models.Offer({
@@ -353,6 +387,7 @@ export default {
 				this.updateFavoriteList();
 			}
 		});
+		this.applyPendingActions();
 	},
 
 	beforeRouteEnter (to, from, next) {

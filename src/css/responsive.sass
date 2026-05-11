@@ -38,12 +38,14 @@
 		.no-sidebar
 			display: none
 
-	.safe-deal-header
+	.safe-deal-header,
+	.voting-moderation-header
 		.title
 			display: none
 
 	.profile,
-	.safe-deal-content
+	.safe-deal-content,
+	.voting-moderation-content
 		.no-aside
 			display: none
 
@@ -140,6 +142,9 @@
 			&.safe-deal
 				display: none
 
+			&.voting-moderation
+				display: none
+
 		#aside
 			padding: $r
 			position: fixed
@@ -174,7 +179,8 @@
 			.no-sidebar
 				display: block
 
-		.safe-deal-header
+		.safe-deal-header,
+		.voting-moderation-header
 			.title
 				display: block
 
@@ -183,7 +189,8 @@
 				flex-direction: row
 
 		.profile,
-		.safe-deal-content
+		.safe-deal-content,
+		.voting-moderation-content
 			.no-aside
 				display: block
 

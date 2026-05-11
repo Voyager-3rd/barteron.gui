@@ -55,6 +55,15 @@ const routes = [
 		}
 	},
 	{
+		path: "/barter/moderation",
+		name: "VotingModeration",
+		components: {
+			default: () => import("@/views/Barter/VotingModeration/index.vue"),
+			aside: () => import("@/views/Barter/VotingModeration/aside/index.vue"),
+			content: () => import("@/views/Barter/VotingModeration/content/index.vue"),
+		}
+	},
+	{
 		path: "/barter/:id",
 		name: "barterItem",
 		components: {

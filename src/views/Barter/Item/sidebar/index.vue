@@ -31,7 +31,6 @@
 			<ExchangeList
 				v-if="isMyOffer"
 				:tags="account?.tags || []"
-				@change="(tags) => account.set({ tags })"
 			>
 				<template #after>
 					<dl class="list">
