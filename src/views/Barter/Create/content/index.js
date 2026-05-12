@@ -1145,6 +1145,8 @@ export default {
 					offerHasBeenPublished: true,
 				},
 			});
+
+			this.$_registerDialog(instance);
 			
 			instance.$on('onHide', vm => {});
 

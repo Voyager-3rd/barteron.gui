@@ -350,6 +350,8 @@ export default {
 				propsData: {
 				},
 			});
+
+			this.$_registerDialog(instance);
 			
 			instance.$mount();
 			this.lightboxContainer?.appendChild(instance.$el);

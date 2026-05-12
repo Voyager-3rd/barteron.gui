@@ -130,7 +130,9 @@ export default {
 					selected: (CurrencyStore.currency || ""),
 				},
 			});
-			
+
+			this.$_registerDialog(instance);
+
 			instance.$on('onSelect', selected => {
 				if (selected && (selected !== CurrencyStore.currency)) {
 					CurrencyStore.currency = selected;
