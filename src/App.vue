@@ -134,8 +134,7 @@ export default {
 		return {
 			dialog: new Proxy({}, { get: () => this.dialog }),
 			lightboxContainer: () => this.lightboxContainer,
-			categorySelectDialog: () => this.categorySelectDialog,
-			setCategorySelectProps: (data) => this.setCategorySelectProps(data),
+			categorySelectDialog: (props) => this.getCategorySelectDialog(props),
 			setHeaderVisibility: (value, options) => this.setHeaderVisibility(value, options),
 		};
 	},
@@ -307,8 +306,17 @@ export default {
 			});
 		},
 
-		setCategorySelectProps(data) {
-			Vue.set(this, "categorySelectProps", (data || {}));
+		getCategorySelectDialog(props) {
+			this.categorySelectProps = props || {};
+
+			const dialog = this.categorySelectDialog;
+			dialog.$off();
+
+			dialog.$once("onHide", () => {
+				this.categorySelectProps = {};
+			});
+
+			return dialog;
 		},
 
 		attachKeyboardObserver() {

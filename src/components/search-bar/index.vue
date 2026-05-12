@@ -1,14 +1,8 @@
 <template>
 	<form action="#" class="search-bar">
-		<CategorySelect
-			ref="categorySelect"
-			:marked="[id]"
-			:value="id"
-			@selected="selected"
-		/>
 		<v-button
 			id="show-categories-button"
-			@click="$refs.categorySelect.show()"
+			@click="showCategorySelectDialog"
 		>
 			<i class="fa fa-bars"></i>
 			<span>{{ $t('buttonLabels.categories') }}</span>

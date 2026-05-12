@@ -45,20 +45,11 @@
 				<li
 					v-if="editing"
 					class="add"
-					@click="$refs.categorySelect.show()"
+					@click="showCategorySelectDialog"
 				>
 					<i class="fa fa-plus"></i>
 				</li>
 			</ul>
-
-			<CategorySelect
-				v-if="editable"
-				ref="categorySelect"
-				:title="categorySelectTitle"
-				:marked="vTags"
-				mode="exchange"
-				@selected="insert"
-			/>
 
 			<!-- Tags edit -->
 			<div

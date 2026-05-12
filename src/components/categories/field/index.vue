@@ -3,12 +3,12 @@
 		:class="{
 			'category-field': true,
 			'filled': id,
-			'focus-within': $refs?.categorySelect?.visible
+			'focus-within': dialogVisible,
 		}"
 	>
 		<div
 			class="category-field-holder"
-			@click="$refs.categorySelect.show()"
+			@click="showCategorySelectDialog"
 		>
 			<ul>
 				<li
@@ -38,14 +38,6 @@
 			:value="id"
 			type="hidden"
 		>
-
-		<CategorySelect
-			ref="categorySelect"
-			:marked="[id]"
-			:value="id"
-			mode="offer"
-			@selected="selected"
-		/>
 	</div>
 </template>
 
