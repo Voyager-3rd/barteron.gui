@@ -1,11 +1,7 @@
-import CategorySelect from "@/components/categories/select/index.vue";
-
 export default {
 	name: "CategoryField",
 
-	components: {
-		CategorySelect
-	},
+	inject: ["categorySelectDialog"],
 
 	props: {
 		name: {
@@ -21,7 +17,8 @@ export default {
 
 	data() {
 		return {
-			id: null
+			id: null,
+			dialogVisible: false,
 		}
 	},
 
@@ -32,13 +29,33 @@ export default {
 		 * @returns {Array}
 		 */
 		catParents() {
-			const select = this.$refs.categorySelect;
-
-			return this?.id ? select?.getParents(this.id) : [];
+			return this?.id ? this.categories.getParentsById(this.id) : [];
 		}
 	},
 
 	methods: {
+		showCategorySelectDialog() {
+			const dialog = this.categorySelectDialog({
+				marked: [this.id],
+				value: this.id,
+				mode: "offer",
+			});
+
+			dialog.$once("selected", (id) => {
+				this.selected(id);
+			});
+
+			dialog.$once("onShow", () => {
+				this.dialogVisible = true;
+			});
+
+			dialog.$once("onHide", () => {
+				this.dialogVisible = false;
+			});
+
+			dialog.show();
+		},
+
 		/**
 		 * Clear field
 		 */

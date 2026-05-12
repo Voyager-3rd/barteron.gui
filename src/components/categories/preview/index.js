@@ -11,7 +11,7 @@ export default {
 		PreviewSlide,
 	},
 
-	inject: ["dialog", "categorySelectDialog", "setCategorySelectProps"],
+	inject: ["dialog", "categorySelectDialog"],
 
 	data() {
 		return {
@@ -233,27 +233,16 @@ export default {
 		showCategorySelectDialog(parentId) {
 			this.setCarouselCurrentPage();
 			
-			this.setCategorySelectProps({
+			const dialog = this.categorySelectDialog({
 				value: parentId,
-				marked: undefined,
-				title: undefined,
-				mode: undefined,
 				resetScroll: true,
 			});
 
-			const showAfterPropsSetting = () => {
-				const dialog = this.categorySelectDialog();
-				dialog.$once("selected", (id) => {
-					this.categorySelected(id);
-				});
-				dialog.$once("onHide", () => {
-					dialog.$off();
-					this.setCategorySelectProps(null);
-				});
-				dialog.show();
-			}
+			dialog.$once("selected", (id) => {
+				this.categorySelected(id);
+			});
 
-			this.$nextTick(showAfterPropsSetting);
+			dialog.show();
 		},
 
 		categorySelected(id) {
