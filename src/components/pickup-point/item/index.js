@@ -225,6 +225,8 @@ export default {
 					actionButtonSettings,
 				},
 			});
+
+			this.$_registerDialog(instance);
 			
 			instance.$on('onDialogAction', vm => {
 				this.dialogAction();

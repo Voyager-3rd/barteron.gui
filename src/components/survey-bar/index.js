@@ -27,6 +27,8 @@ export default {
 			const instance = new ComponentClass({
 				propsData: {},
 			});
+
+			this.$_registerDialog(instance);
 			
 			instance.$on('onSubmit', vm => {
 				this.close(true);
