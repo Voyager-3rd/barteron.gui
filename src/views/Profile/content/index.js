@@ -216,6 +216,8 @@ export default {
 					viewMode: "regular",
 				},
 			});
+
+			this.$_registerDialog(instance);
 			
 			instance.$on('onHide', vm => {
 			});

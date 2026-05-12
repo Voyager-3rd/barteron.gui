@@ -83,6 +83,8 @@ export default {
 					viewMode: "regular",
 				},
 			});
+
+			this.$_registerDialog(instance);
 			
 			instance.$on('onHide', vm => {
 			});
@@ -97,6 +99,8 @@ export default {
 			const instance = new ComponentClass({
 				propsData: {},
 			});
+
+			this.$_registerDialog(instance);
 			
 			instance.$on('onHide', vm => {
 			});
@@ -111,6 +115,8 @@ export default {
 			const instance = new ComponentClass({
 				propsData: {},
 			});
+
+			this.$_registerDialog(instance);
 			
 			instance.$on('onHide', vm => {
 			});

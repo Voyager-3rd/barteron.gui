@@ -574,6 +574,8 @@ export default {
 					items: this.myOffers,
 				}
 			});
+
+			this.$_registerDialog(instance);
 			
 			instance.$on('onSelect', vm => {
 				const targetOffer = this.myOffers[vm.selected];
@@ -766,6 +768,8 @@ export default {
 						validatorFeeVariant: this.item.safeDeal?.validatorFeeVariant || "",
 					},
 				});
+
+				this.$_registerDialog(instance);
 				
 				instance.$on('onSelect', (dealType) => {
 					resolve(dealType);
@@ -789,6 +793,8 @@ export default {
 						forcedSelectedAddress: options?.forcedSelectedAddress,
 					},
 				});
+
+				this.$_registerDialog(instance);
 				
 				instance.$on('onSelect', (validator) => {
 					resolve(validator);

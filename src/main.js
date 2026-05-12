@@ -618,6 +618,33 @@ const isComponentAliveMixin = {
 
 Vue.mixin(isComponentAliveMixin);
 
+const activeDialogsMixin = {
+	methods: {
+		$_registerDialog(instance) {
+			if (!(this.$_activeDialogs)) {
+				this.$_activeDialogs = [];
+			};
+			this.$_activeDialogs.push(instance);
+			instance.$on('onHide', () => {
+				this.$_activeDialogs = this.$_activeDialogs.filter(f => f !== instance);
+			});
+		},
+	},
+
+	beforeDestroy() {
+		if (this.$_activeDialogs?.length > 0) {
+			this.$_activeDialogs.forEach(instance => {
+				if (typeof instance?.hide === 'function') {
+					instance.hide();
+				};
+			});
+			this.$_activeDialogs = [];
+		};
+	},
+};
+
+Vue.mixin(activeDialogsMixin);
+
 /**
  * StartUp
  */

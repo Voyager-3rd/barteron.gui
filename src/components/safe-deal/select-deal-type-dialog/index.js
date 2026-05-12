@@ -64,6 +64,8 @@ export default {
 			const instance = new ComponentClass({
 				propsData: {},
 			});
+
+			this.$_registerDialog(instance);
 			
 			instance.$on('onHide', vm => {
 			});
