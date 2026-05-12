@@ -1,11 +1,5 @@
-import CategorySelect from "@/components/categories/select/index.vue";
-
 export default {
 	name: "SearchBar",
-
-	components: {
-		CategorySelect
-	},
 
 	data() {
 		return {
@@ -13,7 +7,7 @@ export default {
 		}
 	},
 
-	inject: ["dialog"],
+	inject: ["dialog", "categorySelectDialog"],
 
 	computed: {
 		/**
@@ -27,6 +21,19 @@ export default {
 	},
 
 	methods: {
+		showCategorySelectDialog() {
+			const dialog = this.categorySelectDialog({
+				marked: [this.id],
+				value: this.id,
+			});
+
+			dialog.$once("selected", (id) => {
+				this.selected(id);
+			});
+
+			dialog.show();
+		},
+
 		/**
 		 * Selected category id from lightbox
 		 * 

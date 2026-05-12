@@ -1,14 +1,8 @@
 <template>
 	<div class="categories-option">
-		<CategorySelect
-			ref="categorySelect"
-			:marked="[id]"
-			:value="id"
-			@selected="selected"
-		/>
 		<v-button
 			id="show-categories-button"
-			@click="$refs.categorySelect.show()"
+			@click="showCategorySelectDialog"
 		>
 			<i class="fa fa-bars"></i>
 		</v-button>

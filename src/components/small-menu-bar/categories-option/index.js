@@ -1,13 +1,7 @@
-import CategorySelect from "@/components/categories/select/index.vue";
-
 export default {
 	name: "CategoriesOption",
 
-	components: {
-		CategorySelect
-	},
-
-	inject: ["dialog"],
+	inject: ["dialog", "categorySelectDialog"],
 
 	computed: {
 		id() {
@@ -16,6 +10,19 @@ export default {
 	},
 
 	methods: {
+		showCategorySelectDialog() {
+			const dialog = this.categorySelectDialog({
+				marked: [this.id],
+				value: this.id,
+			});
+
+			dialog.$once("selected", (id) => {
+				this.selected(id);
+			});
+
+			dialog.show();
+		},
+
 		selected(id) {
 			this.$router.push({
 				name: "category",

@@ -1,11 +1,7 @@
-import CategorySelect from "@/components/categories/select/index.vue";
-
 export default {
 	name: "ExchangeList",
 
-	components: {
-		CategorySelect
-	},
+	inject: ["categorySelectDialog"],
 
 	props: {
 		tags: {
@@ -80,6 +76,25 @@ export default {
 		 */
 		isExist(id) {
 			return this.vTags.some(t => Number(t) === Number(id));
+		},
+
+		showCategorySelectDialog() {
+			const 
+				lastId = [...this.vTags].pop(),
+				value = this.categories.findById(lastId)?.parent;
+
+			const dialog = this.categorySelectDialog({
+				title: this.categorySelectTitle,
+				marked: this.vTags,
+				value,
+				mode: "exchange",
+			});
+
+			dialog.$once("selected", (id) => {
+				this.insert(id);
+			});
+
+			dialog.show();
 		},
 
 		/**
