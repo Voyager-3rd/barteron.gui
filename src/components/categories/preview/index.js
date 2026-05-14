@@ -18,6 +18,8 @@ export default {
 			parentItem: null,
 			carouselCurrentPages: {},
 			previewWidth: null,
+			categoriesPreviewGap: 0,
+			itemSlideWidth: 136,
 		};
 	},
 
@@ -258,11 +260,37 @@ export default {
 		updatePreviewWidth() {
 			this.previewWidth = this.$refs.carousel?.$el?.clientWidth;
 		},
+
+		calculateCategoriesPreviewGap() {
+			const containerWidth = this.$el?.getBoundingClientRect().width;
+			if (this.isUpToTabletScreen() && containerWidth) {
+				const 
+					currentN = containerWidth / this.itemSlideWidth,
+					currentVisibleItemPart = currentN - Math.trunc(currentN),
+					minPart = (containerWidth < 350 ? 0.25 : 0.30),
+					maxPart = 0.70,
+					noGapRequired = (minPart <= currentVisibleItemPart && currentVisibleItemPart < maxPart);
+
+				if (noGapRequired) {
+					this.categoriesPreviewGap = 0;
+				} else {
+					const visibleItemPart = maxPart;
+					const N = Math.max(1, Math.floor(containerWidth / this.itemSlideWidth - visibleItemPart));
+					const remainingSpace = containerWidth - (N + visibleItemPart) * this.itemSlideWidth;
+					this.categoriesPreviewGap = Math.max(0, remainingSpace / N);
+				};
+			} else {
+				this.categoriesPreviewGap = 0;
+			}
+		},
 	},
 
 	mounted() {
 		this.$2watch("$refs.carousel").then(() => {
 			this.updatePreviewWidth();
+			this.calculateCategoriesPreviewGap();
+
+			window.addEventListener("resize", this.calculateCategoriesPreviewGap);
 		}).catch(e => {
 			console.error(e);
 		});
@@ -274,5 +302,9 @@ export default {
 
 	activated() {
 		this.restoreCarouselCurrentPage();
+	},
+
+	beforeDestroy() {
+		window.removeEventListener("resize", this.calculateCategoriesPreviewGap);
 	},
 }

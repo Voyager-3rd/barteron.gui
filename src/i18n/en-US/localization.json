@@ -220,7 +220,7 @@
 		"address": "Address",
 		"address_not_specified": "Address not specified",
 		"how_to_get": "How to get",
-		"pickup_point_creation_is_forbidden": "The pickup points functionality is currently in public testing. If you want to open a pickup point, please contact support@bastyon.com first",
+		"pickup_point_creation_is_forbidden": "The pickup points functionality is currently in public testing. If you want to open a pickup point, please contact {supportEmail} first.",
 		"hint_for_delivery_option_selection": "Select the option to receive the goods on the map or in the list",
 		"hint_for_purchase_at_pickup_point": "The \"Buy\" option will open a chat to complete the purchase",
 		"hint_for_purchase_at_pickup_point_with_safe_deal": "The \"Buy\" option will open the guarantor selection list and a chat to complete the purchase",
@@ -363,6 +363,7 @@
 		"download_app": "Download application",
 		"continue_working": "Continue working",
 		"support": "Support",
+		"copy_email": "Copy email",
 		"apply": "Apply",
 		"execute": "Execute",
 		"reset": "Reset",
@@ -505,6 +506,7 @@
 		"disconnecting_telegram_bot": "Do you want to disconnect the telegram bot?",
 		"vk_username_undefined": "The account address is not set",
 		"disconnecting_vk_bot": "Do you want to disconnect the VK bot?",
+		"support_info": "Send us an email at: {supportEmail}",
 
 		"image_error": "Image upload error: {error}",
 		"node_error": "Node error has occured: {error}",
@@ -522,6 +524,7 @@
 		"get_from_to_transactions_availability_error": "The current version of the Bastyon app does not contain safe deal option. Use the web version or update the app (if a new version is available)",
 		"account_meta_data_availability_error": "The current version of the Bastyon app lacks the required functionality. Use the web version or update the app (if a new version is available)",
 		"pkoin_price_over_total_supply_error": "The price in PKOIN exceeds the total supply of this cryptocurrency",
+		"price_not_specified_error": "The price not specified",
 		"payment_error": "An error occurred while transferring the amount",
 		"current_block_not_defined": "Failed to get the current block number in the blockchain",
 		"total_amount_smaller_amount_error": "You have less money in your account than you want to send",
@@ -720,6 +723,8 @@
 	},
 
 	"feedbackLabels": {
+		"email_copied": "The email address has been copied to the clipboard",
+		"email_copy_failed": "Failed to copy email address",
 		"subject": "Barteron, feedback",
 		"title": "Leave your feedback here",
 		"name": "Enter your name here",

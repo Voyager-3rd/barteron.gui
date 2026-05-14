@@ -1,7 +1,5 @@
 @import "@/css/vars.sass"
 
-$item-slide-width: 136px
-
 .categories-preview
 	margin-top: $r * 4
 	margin-bottom: $r * 8
@@ -18,10 +16,10 @@ $item-slide-width: 136px
 	.categories-preview-carousel
 		.vs-carousel
 			.vs-carousel__wrapper
-				gap: 0
+				gap: var(--categories-preview-gap)
 		
 			.vs-carousel__slide
-				width: $item-slide-width
+				width: var(--item-slide-width)
 				display: block
 				flex: none
 
