@@ -1,6 +1,8 @@
 export default {
 	name: "Feedback",
 
+	inject: ["dialog"],
+
 	data() {
 		return {
 			lightbox: false,
@@ -21,11 +23,7 @@ export default {
 		click() {
 			// this.lightbox = true;
 
-			const
-				subject = this.$t("feedbackLabels.subject"),
-				link = `mailto:support@bastyon.com?subject=${subject}`;
-
-			this.sdk.openExternalLink(link);
+			this.showSupportDialog();
 		},
 
 		/**

@@ -220,7 +220,7 @@
 		"address": "Адрес",
 		"address_not_specified": "Адрес не указан",
 		"how_to_get": "Как добраться",
-		"pickup_point_creation_is_forbidden": "Функционал ПВЗ сейчас находится в публичном тестировании. Если вы хотите открыть ПВЗ, свяжитесь сначала с support@bastyon.com",
+		"pickup_point_creation_is_forbidden": "Функционал ПВЗ сейчас находится в публичном тестировании. Если вы хотите открыть ПВЗ, пожалуйста, отправьте запрос на {supportEmail}.",
 		"hint_for_delivery_option_selection": "Выберите вариант получения товара на карте или в списке",
 		"hint_for_purchase_at_pickup_point": "Опция \"Купить\" откроет чат для оформления покупки",
 		"hint_for_purchase_at_pickup_point_with_safe_deal": "Опция \"Купить\" откроет список выбора гаранта и чат для оформления покупки",
@@ -363,6 +363,7 @@
 		"download_app": "Скачать приложение",
 		"continue_working": "Продолжить работу",
 		"support": "Поддержка",
+		"copy_email": "Копировать email",
 		"apply": "Применить",
 		"execute": "Выполнить",
 		"reset": "Сбросить",
@@ -505,6 +506,7 @@
 		"disconnecting_telegram_bot": "Отключить телеграм-бот?",
 		"vk_username_undefined": "Адрес аккаунта не задан",
 		"disconnecting_vk_bot": "Отключить VK-бот?",
+		"support_info": "Отправьте нам письмо на адрес электронной почты: {supportEmail}",
 		
 		"image_error": "Ошибка загрузки изображений: {error}",
 		"node_error": "Произошла ошибка на ноде: {error}",
@@ -721,6 +723,8 @@
 	},
 
 	"feedbackLabels": {
+		"email_copied": "Адрес email скопирован в буфер обмена",
+		"email_copy_failed": "Не удалось скопировать адрес email",
 		"subject": "Бартерон, обратная связь",
 		"title": "Форма обратной связи",
 		"name": "Введите ваше имя здесь",

@@ -220,7 +220,7 @@
 		"address": "Адреса",
 		"address_not_specified": "Адреса није наведена",
 		"how_to_get": "Како доћи",
-		"pickup_point_creation_is_forbidden": "Функционал тачака преузимања је тренутно у јавном тестирању. Ако желите да отворите тачку преузимања, најпре контактирајте support@bastyon.com",
+		"pickup_point_creation_is_forbidden": "Функционал тачака преузимања је тренутно у јавном тестирању. Ако желите да отворите тачку преузимања, најпре контактирајте {supportEmail}.",
 		"hint_for_delivery_option_selection": "Изаберите опцију за пријем робе на мапи или на листи",
 		"hint_for_purchase_at_pickup_point": "Опција \"Купити\" отвориће чет за оформљавање куповине",
 		"hint_for_purchase_at_pickup_point_with_safe_deal": "Опција \"Купити\" отвориће листу за избор гаранта и чет за оформљавање куповине",
@@ -363,6 +363,7 @@
 		"download_app": "Преузми апликацију",
 		"continue_working": "Настави са радом",
 		"support": "Подршка",
+		"copy_email": "Копирај email",
 		"apply": "Примени",
 		"execute": "Извршити",
 		"reset": "Ресетуј",
@@ -505,6 +506,7 @@
 		"disconnecting_telegram_bot": "Искључите Телеграм бот?",
 		"vk_username_undefined": "Адреса налога није подешена",
 		"disconnecting_vk_bot": "Искључите VK бот?",
+		"support_info": "Пошаљите нам имејл на: {supportEmail}",
 		
 		"image_error": "Грешка при учитавању слика: {error}",
 		"node_error": "Дошло је до грешке на ноди: {error}",
@@ -721,6 +723,8 @@
 	},
 
 	"feedbackLabels": {
+		"email_copied": "Адреса е-поште је копирана у међуспремник",
+		"email_copy_failed": "Копирање имејл адресе није успело",
 		"subject": "Barteron, повратне информације",
 		"title": "Форма за повратне информације",
 		"name": "Унесите ваше име овде",
