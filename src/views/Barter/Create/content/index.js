@@ -812,6 +812,15 @@ export default {
 				return { formMetaData };
 			};
 
+			if (!(price) && this.getting !== "for_nothing") {
+				formMetaData = {
+					completed: false,
+					message: this.$t("dialogLabels.price_not_specified_error"),
+					field: this.$refs.price.$el,
+				};
+				return { formMetaData };
+			};
+
 			/* Fill offer data */
 			this.sourceOffer.update({
 				address: this.sdk.address,
