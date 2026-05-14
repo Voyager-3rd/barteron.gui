@@ -63,6 +63,8 @@ export default {
 				isLoading: false,
 			},
 			mapActionData: {},
+
+			isSubmitting: false,
 		}
 	},
 
@@ -977,10 +979,13 @@ export default {
 		 * Submit form data
 		 */
 		submit() {
+			this.isSubmitting = true;
+
 			const params = this.offerCreationParams();
 			if (!(params.isAllowed)) {
 				const error = new Error(params.blockingMessage);
 				this.showError(error);
+				this.isSubmitting = false;
 				return;
 			};
 
@@ -992,6 +997,7 @@ export default {
 				const { message, isWarning, field } = serializationFormMetaData;
 				field && this.scrollTo(field);
 				message && (isWarning ? this.showWarning(message) : this.showError(message));
+				this.isSubmitting = false;
 				return;
 			};
 
@@ -1032,54 +1038,56 @@ export default {
 						bottom: 10,
 						right: 10
 					} */
-				}, true)
-					.then(urls => {
-						/* Replace data:image with given urls */
-						if (urls?.length) {
-							for (let i in images) {
-								if (images[i].startsWith("http")) continue;
+				}, true).then(urls => {
+					/* Replace data:image with given urls */
+					if (urls?.length) {
+						for (let i in images) {
+							if (images[i].startsWith("http")) continue;
 
-								const index = upload.findIndex(image => image === images[i]);
-								if (index > -1) images[i] = urls[index];
-							}
-
+							const index = upload.findIndex(image => image === images[i]);
+							if (index > -1) images[i] = urls[index];
 						}
+					}
 
-						/* Show dialog */
-						form.dialog.view("load", this.$t("dialogLabels.data_node"));
+					/* Show dialog */
+					form.dialog.view("load", this.$t("dialogLabels.data_node"));
 
-						/* Send request to create or update(hash) an offer */
-						this.sourceOffer.set({
-							hash,
-							images: Object.values(images),
-							published: "published"
-						}).then((data) => {
-							if (data.transaction) {
-								this.offer.newVideoAdded = false;
-								this.offerPublished = true;
-								this.skipLeaveGuard = true;
-								form.dialog.hide();
-								const offerHash = hash?.length < 64 ? data.transaction : hash;
-								this.performActionsAfterPublishing(form, offerHash);
-							} else {
-								const 
-									code = data.error?.code ?? (typeof(data.rejected) === "number" ? data.rejected : undefined),
-									error = this.sdk.errorMessage(code);
+					/* Send request to create or update(hash) an offer */
+					this.sourceOffer.set({
+						hash,
+						images: Object.values(images),
+						published: "published"
+					}).then((data) => {
+						if (data.transaction) {
+							this.offer.newVideoAdded = false;
+							this.offerPublished = true;
+							this.skipLeaveGuard = true;
+							form.dialog.hide();
+							const offerHash = hash?.length < 64 ? data.transaction : hash;
+							this.performActionsAfterPublishing(form, offerHash);
+						} else {
+							const 
+								code = data.error?.code ?? (typeof(data.rejected) === "number" ? data.rejected : undefined),
+								error = this.sdk.errorMessage(code);
 
-								console.error(error);
-								form.dialog.view("error", this.$t("dialogLabels.node_error", { error }));
-							}
-						}).catch(e => {
-							const error = this.sdk.errorMessage(e);
 							console.error(error);
 							form.dialog.view("error", this.$t("dialogLabels.node_error", { error }));
-						});
-					})
-					.catch(error => {
+						}
+					}).catch(e => {
+						const error = this.sdk.errorMessage(e);
 						console.error(error);
-						form.dialog.view("error", this.$t("dialogLabels.image_error", { error: error.message }));
+						form.dialog.view("error", this.$t("dialogLabels.node_error", { error }));
+					}).finally(() => {
+						this.isSubmitting = false;
 					});
+				}).catch(error => {
+					this.isSubmitting = false;
+					console.error(error);
+					form.dialog.view("error", this.$t("dialogLabels.image_error", { error: error.message }));
+				});
 			} else {
+				this.isSubmitting = false;
+
 				/* Scroll view to first rejected input */
 				const field = (() => {
 					if (!(formValid)) {
