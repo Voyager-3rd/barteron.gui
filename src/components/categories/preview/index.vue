@@ -2,7 +2,13 @@
 	<div class="categories-preview">
 		<h1 class="title">{{ $t(parentItem?.name || 'offer_categories') }}</h1>
 		<div class="categories-preview-carousel">
-			<carousel ref="carousel">
+			<carousel 
+				ref="carousel"
+				:style="{ 
+					'--categories-preview-gap': categoriesPreviewGap + 'px',
+					'--item-slide-width': itemSlideWidth + 'px',
+				}"
+			>
 				<slide
 					v-for="(groupedItem, index) in groupedList()"
 					:key="groupedItem.map(m => m.key).join('_')"

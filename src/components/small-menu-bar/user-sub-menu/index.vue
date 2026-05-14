@@ -21,7 +21,7 @@
 					<img :src="avatar" :alt="user?.name">
 				</picture>
 			</a>
-			<span class="fa fa-plus sub-menu-icon"></span>
+			<span class="fa fa-caret-down sub-menu-icon"></span>
 		</div>
 	</v-button>
 </template>

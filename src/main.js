@@ -181,6 +181,21 @@ Vue.prototype.shared = Vue.observable({
 			return result;
 		},
 
+		isUpToTabletScreen() {
+			let result = false;
+			const value = getComputedStyle(document.documentElement).getPropertyValue('--device-size-tablet');
+			if (value) {
+				const 
+					query = `screen and (max-width: ${value})`,
+					matches = (window.matchMedia(query).matches);
+				
+				if (matches) {
+					result = true
+				}
+			}
+			return result;
+		},
+
 		/**
 		 * Vue2 watch
 		 * 
