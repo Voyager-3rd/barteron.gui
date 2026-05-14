@@ -601,7 +601,7 @@
 				<!-- vButton: Cancel -->
 				<v-button
 					vType="bulma-stroke"
-					:disabled="offerPublished"
+					:disabled="offerPublished || isSubmitting"
 					@click="cancel"
 				>{{ $t('buttonLabels.cancel') }}</v-button>
 
@@ -609,13 +609,13 @@
 					<!-- vButton: Preview -->
 					<v-button
 						vType="bulma-stroke"
-						:disabled="offerPublished || currencyRatesLoading || currencyRateError"
+						:disabled="offerPublished || currencyRatesLoading || currencyRateError || isSubmitting"
 						@click="preview"
 					>{{ $t('buttonLabels.preview') }}</v-button>
 
 					<!-- vButton: Publish -->
 					<v-button 
-						:disabled="offerPublished || currencyRatesLoading || currencyRateError"
+						:disabled="offerPublished || currencyRatesLoading || currencyRateError || isSubmitting"
 						@click="submit"
 					>{{ $t('buttonLabels.publish') }}</v-button>
 				</div>
