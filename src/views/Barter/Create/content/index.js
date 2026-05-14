@@ -597,12 +597,13 @@ export default {
 			if (this.isPickupPointCategory()) {
 				const 
 					settings = this.sdk.getDeliverySettings(),
-					addressFilter = settings?.addressFilter;
+					addressFilter = settings?.addressFilter,
+					supportEmail = this.sdk.getSupportSettings().supportEmail;
 
 				if (addressFilter?.isEnabled) {
 					isAllowed = addressFilter?.items?.includes(this.sdk.address);
 					if (!(isAllowed)) {
-						blockingMessage = this.$t("deliveryLabels.pickup_point_creation_is_forbidden");
+						blockingMessage = this.$t("deliveryLabels.pickup_point_creation_is_forbidden", {supportEmail});
 					};
 				}
 			};

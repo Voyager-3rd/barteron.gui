@@ -613,7 +613,38 @@ Vue.prototype.shared = Vue.observable({
 			this.dialog?.instance.view("error", this.sdk.errorMessage(e, options)).then(() => {
 				callback?.();
 			});
-		}
+		},
+		
+		showSupportDialog() {
+			const 
+				dialogInstance = this.dialog?.instance,
+				supportEmail = this.sdk.getSupportSettings().supportEmail;
+
+			if (!(dialogInstance)) return;
+
+			const data = {
+				icon: "fa-headset",
+				text: this.$t("dialogLabels.support_info", {supportEmail}),
+				buttons: [
+					{ text: this.$t("buttonLabels.close"), vType: "blue", vSize: "sm", click: () => dialogInstance.hide(false) },
+					{ text: this.$t("buttonLabels.copy_email"), vType: "blue", vSize: "sm", click: () => dialogInstance.hide(true) },
+				],
+			};
+
+			dialogInstance
+				.view("question", data)
+				.then(state => {
+					if (state) {
+						navigator.clipboard.writeText(supportEmail).then(() => {
+							this.sdk.alertMessage(this.$t("feedbackLabels.email_copied"));
+						}).catch(e => {
+							console.error(e);
+							const message = this.$t("feedbackLabels.email_copy_failed") + ` (${e.message})`;
+							this.sdk.alertMessage(message);
+						});
+					}
+				});
+		},
 	}
 });
 

@@ -16,8 +16,10 @@ const supportData = {
 
 const 
     env = process.env.NODE_ENV,
-    moderatorAddresses = supportData.moderatorAddresses[env] || [];
+    moderatorAddresses = supportData.moderatorAddresses[env] || [],
+    supportEmail = "support@bastyon.com";
 
 export default {
     moderatorAddresses,
+    supportEmail,
 };

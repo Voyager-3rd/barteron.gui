@@ -145,11 +145,7 @@ export default {
 		},
 
 		support() {
-			const
-				subject = this.$t("feedbackLabels.subject"),
-				link = `mailto:support@bastyon.com?subject=${subject}`;
-
-			this.sdk.openExternalLink(link);
+			this.showSupportDialog();
 		},
 
 	},
