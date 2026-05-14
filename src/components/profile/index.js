@@ -17,6 +17,10 @@ export default {
 			type: Boolean,
 			default: false
 		},
+		showProfileSharingButton: {
+			type: Boolean,
+			default: false
+		},
 		showValidationConditions: {
 			type: Boolean,
 			default: false
@@ -155,6 +159,14 @@ export default {
 			this.sdk.openBastyonProfile(this.user?.name).catch(e => {
 				console.error(e);
 			});
+		},
+
+		shareProfile() {
+			const data = {
+				path: `profile/${this.hash}`,
+				caption: this.$t("profileLabels.profile_on_barteron"),
+			};
+			this.sdk.share(data);
 		},
 	},
 }

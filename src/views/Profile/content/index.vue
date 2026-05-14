@@ -12,7 +12,8 @@
 		<div class="row sep no-aside d-sep">
 			<Profile 
 				:hash="address"
-				:hideBastyonProfileButton="isMyProfile"
+				:hideBastyonProfileButton="false"
+				:showProfileSharingButton="true"
 			/>
 
 			<div 

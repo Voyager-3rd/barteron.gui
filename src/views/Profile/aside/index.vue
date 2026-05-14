@@ -4,7 +4,8 @@
 		<div class="box">
 			<Profile 
 				:hash="address"
-				:hideBastyonProfileButton="isMyProfile"
+				:hideBastyonProfileButton="false"
+				:showProfileSharingButton="true"
 			/>
 
 			<div 

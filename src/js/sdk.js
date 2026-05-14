@@ -755,7 +755,7 @@ class SDK {
 		};
 
 		const formattedData = {
-			path: `barter/${ data.hash }`,
+			path: data.path || `barter/${ data.hash }`,
 			sharing: {
 				title: "",
 				text: { body: data.caption },

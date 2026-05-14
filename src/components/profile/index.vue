@@ -66,14 +66,25 @@
 		<!-- Bastyon profile -->
 		<div
 			v-if="bastyonProfileAvailable() && !(hideBastyonProfileButton)"
-			class="row bastyon-profile"
+			class="row gap-sm bastyon-profile"
 		>
 			<v-button
+				class="profile-button"
 				vType="bulma-stroke"
 				@click="openBastyonProfile"
 			>
 				<i class="fa fa-user"></i>
 				<span>{{ $t("profileLabels.profile_on_bastyon") }}</span>
+			</v-button>
+
+			<v-button 
+				v-if="showProfileSharingButton"
+				class="share-button"
+				vType="bulma-stroke"
+				:title="$t('profileLabels.share_profile_link')"
+				@click="shareProfile"
+			>
+				<i class="fa fa-share-alt"></i>
 			</v-button>
 		</div>
 
